@@ -1,0 +1,22 @@
+<div class="h100 flex fColumn gap30 pad20 pRel" style="padding-bottom: 90px;">
+    <h2>Post da Gestire</h2>
+    <ng-container *ngIf="!loading">
+
+        <ng-container *ngIf="(socialPosts$ | async) as socialPosts">
+            <p *ngIf="!socialPosts.length">Nessun Post su Instagram da gestire.</p>
+            <p *ngIf="(currentSocialPost$ | async) as currentSocialPost">{{ currentSocialPost.idx+1 }}/{{socialPosts.length}}</p>
+        </ng-container>
+
+
+        <div *ngIf="(currentSocialPost$ | async) as currentSocialPost" class="flex fColumn gap20 w100 oAuto">
+            <div class="w100 oAuto" style="height: 500px;">
+                <iframe class="w100 oAuto" [src]="currentSocialPost.url" frameborder="0"></iframe>
+            </div>
+            <div class="flex w100 fRow jBet aCenter mT10">
+                <button class="btnOutline br5" style="width: 100px;" (click)="discard()">rifiuta</button>
+                <button class="btnFilledIndro br5" style="width: 100px;" (click)="approve()">APPROVA</button>
+            </div>
+        </div>
+    </ng-container>
+    <p *ngIf="!!loading"></p>
+</div>

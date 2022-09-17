@@ -1,0 +1,27 @@
+<div class="flex fColumn pad20 gap20 w100">
+    <ng-container *ngIf="!loading">
+        <h2>{{origin === 'IG_POST' ? 'Post su Instagram Approvato' : 'Carta Fedeltà Completata'}}</h2>
+        <form class="flex fColumn gap10 w100" [formGroup]="discountForm">
+            <label for="discountTypeSelect">Scegli tra Percentuale o Euro:</label>
+            <select formControlName="type" name="discountType" id="discountTypeSelect" class="indroButton f1 br5 w100 mB10">
+                <option disabled selected [value]="null"> -- Seleziona -- </option>
+                <option value="EUR">Euro</option>
+                <option value="PERC">Percentuale</option>
+            </select>
+            
+            <label for="discountTypeSelect">Valore:</label>
+            <input formControlName="amount" class="indroButton f1 br5 w100 mB10" type="number" min="1" max="100" step="1" placeholder="5">
+            
+            <label for="discountTypeSelect">Spesa Minima (Senza il simbolo dell'Euro):</label>
+            <input formControlName="minimum_expense" class="indroButton f1 br5 w100 mB10" type="number" min="1" max="1000" step="1" placeholder="15">
+
+            <!-- <ng-container *ngIf="origin === 'IG_POST'">
+                <label for="discountTypeSelect">Sconti disponibili al mese:</label>
+                <input formControlName="monthly_limit" class="indroButton f1 br5 w100 mB10" type="number" min="1" max="1000" step="1" placeholder="100">
+            </ng-container> -->
+            
+            <button type="button" [disabled]="discountForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="updateDiscount()">SALVA</button>
+        </form>
+    </ng-container>
+    <p *ngIf="!!loading"></p>
+</div>

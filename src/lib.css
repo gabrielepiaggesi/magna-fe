@@ -1,0 +1,382 @@
+.flex {
+    display: flex;
+}
+.fRow {
+    flex-direction: row;
+}
+.fColumn {
+    flex-direction: column;
+}
+.fCenter {
+    align-items: center;
+    justify-content: center;
+}
+.jCenter {
+    justify-content: center;
+}
+.aCenter {
+    align-items: center;
+}
+.jBet {
+    justify-content: space-between;
+}
+.jAro {
+    justify-content: space-around;
+}
+.jEnd {
+    justify-content: end;
+}
+.gap2 {
+    gap: 2px;
+}
+.gap5 {
+    gap: 5px;
+}
+.gap10 {
+    gap: 10px;
+}
+.gap15 {
+    gap: 15px;
+}
+.gap20 {
+    gap: 20px;
+}
+.gap30 {
+    gap: 30px;
+}
+.gap40 {
+    gap: 40px;
+}
+.gap60 {
+    gap: 60px;
+}
+.pad3 {
+    padding: 3px;
+}
+.pad5 {
+    padding: 5px;
+}
+.pad10 {
+    padding: 10px;
+}
+.pad15 {
+    padding: 15px;
+}
+.pad20 {
+    padding: 20px;
+}
+.pad40 {
+    padding: 40px;
+}
+.grid {
+    display: grid;
+}
+.n2Col {
+    grid-template-columns: repeat(2, 1fr);
+}
+.n3Col {
+    grid-template-columns: repeat(3, 1fr);
+}
+.n4Col {
+    grid-template-columns: repeat(4, 1fr);
+}
+.n5Col {
+    grid-template-columns: repeat(5, 1fr);
+}
+.n2Col7030 {
+    grid-template-columns: 70% 30%;
+}
+.n2Col6535 {
+    grid-template-columns: 65% 35%;
+}
+.n2Col6040 {
+    grid-template-columns: 60% 40%;
+}
+.n1Col {
+    grid-template-columns: repeat(1, 1fr);
+}
+.n2Row {
+    grid-template-rows: 50% 50%;
+}
+.mAuto {
+    margin: auto;
+}
+.oHidden {
+    overflow: hidden;
+}
+.oAuto {
+    overflow: auto;
+}
+.oYAuto {
+    overflow-y: auto;
+}
+.br5 {
+    border-radius: 5px;
+}
+.fWrap {
+    flex-wrap: wrap;
+}
+.fBold {
+    font-weight: bold;
+}
+.fSemiBold {
+    font-weight: 500;
+}
+.maxH100 {
+    max-height: 100px;
+}
+.maxH150 {
+    max-height: 150px;
+}
+.maxH200 {
+    max-height: 200px;
+}
+.w20 {
+    width: 20%;
+}
+.w30 {
+    width: 30%;
+}
+.w40 {
+    width: 40%;
+}
+.w50 {
+    width: 50%;
+}
+.w80 {
+    width: 80%;
+}
+.w100 {
+    width: 100%;
+}
+.dN {
+    display: none;
+}
+.pRel {
+    position: relative;
+}
+.z6 {
+    z-index: 6;
+}
+textarea {
+    width: 100%;
+    padding: 15px;
+    font-size: 21px;
+    resize: none;
+    border: 1px solid rgba(53, 121, 96, 0.5);
+    outline: none;
+    font-family: inherit;
+}
+.mr20 {
+    margin-right: 20px;
+}
+.mt120 {
+    margin-top: 120px;
+}
+.mt60 {
+    margin-top: 60px;
+}
+.fileRow {
+    padding: 20px;
+    width: 100%;
+    background-color: rgba(230, 230, 230, 1);
+    border-radius: 5px;
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+}
+.hFitCont {
+    height: fit-content;
+}
+.boxSha {
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+}
+.brC {
+    border: 1px solid rgba(0, 128, 128, 0.25);
+}
+.h100 {
+    height: 100%;
+}
+.bgrW {
+    background-color: white;
+}
+.mB20 {
+    margin-bottom: 20px;
+}
+.mB10 {
+    margin-bottom: 10px;
+}
+.mB15 {
+    margin-bottom: 15px;
+}
+.mB5 {
+    margin-bottom: 5px;
+}
+.mB40 {
+    margin-bottom: 40px;
+}
+.mB60 {
+    margin-bottom: 60px;
+}
+.mB80 {
+    margin-bottom: 80px;
+}
+.mT20 {
+    margin-top: 20px;
+}
+.mT30 {
+    margin-top: 30px;
+}
+.mT10 {
+    margin-top: 10px;
+}
+.mT15 {
+    margin-top: 15px;
+}
+.mT5 {
+    margin-top: 5px;
+}
+.mT40 {
+    margin-top: 40px;
+}
+.mT60 {
+    margin-top: 60px;
+}
+.mT80 {
+    margin-top: 80px;
+}
+.f1 {
+    flex: 1;
+}
+.cP {
+    cursor: pointer;
+}
+.divImage {
+    background-position: center;
+    background-size: cover;
+}
+.q50 {
+    width: 50px;
+    height: 50px;
+}
+.q100 {
+    width: 100px;
+    height: 100px;
+}
+.q150 {
+    width: 150px;
+    height: 150px;
+}
+.pXL {
+    font-weight: bold;
+    font-size: 27px;
+    margin: 0;
+}
+.pL {
+    font-weight: 500;
+    font-size: 18px;
+    margin: 0;
+}
+.pM {
+    font-weight: normal;
+    font-size: 16px;
+    margin: 0;
+}
+.pS {
+    font-weight: normal;
+    font-size: 14px;
+    margin: 0;
+}
+.letSpa {
+    letter-spacing: 1px;
+}
+.aBase {
+    align-items: self-end;
+}
+.aStart {
+    align-items: flex-start;
+}
+.bgICard {
+    background: #f8f9fa;
+}
+.tCenter {
+    text-align: center;
+}
+
+.br10 {
+    border-radius: 10px;
+}
+
+button {
+    outline: none;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.btnFilled {
+    background-color: #23922F;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+    border: 1px solid #23922F;
+}
+.btnFilledIndro {
+    background-color: #5F7FBE;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+    border: 1px solid #5F7FBE;
+}
+.btnOutline {
+    background-color: white;
+    color: #5F7FBE;
+    border: 1px solid #5F7FBE;
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+}
+.indroButton {
+    font-size: 17px;
+    font-weight: 400;
+    height: 48px;
+    line-height: 48px;
+    border: 1px solid rgba(62, 16, 63, 0.30);
+    color: rgba(62, 16, 63, 0.85);
+    padding: 0 15px;
+}
+button:disabled {
+    opacity: 0.7 !important;
+    cursor: not-allowed !important;
+}
+.indroButton::placeholder {
+    font-weight: 300 !important;
+}
+.section {
+    background-color: rgba(62, 16, 63, 0.05);
+}
+.bgrY {
+    background-color: #89dd62;
+}
+.bgrP {
+    background-color: #7cf0d7;
+}
+.bgrB {
+    background-color: #1753b6;
+}
+.card {
+    border-radius: 5px;
+    border: 1px solid lightgrey;
+    /* background-color: white; */
+}
+.textCenter {
+    text-align: center;
+}
+select {
+    padding: 12.5px !important;
+}

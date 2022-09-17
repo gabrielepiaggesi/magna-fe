@@ -1,0 +1,17 @@
+<div class="h100 flex fColumn gap30 pad20 pRel" style="padding-bottom: 90px;">
+    <h2>Sconti e Carte Fedeltà</h2>
+    <ng-container *ngIf="!loading">
+        <div *ngFor="let discount of (discounts$ | async)">
+            <app-discount-preview [discount]="discount" (click)="go('discount/'+discount.id+'/'+discount.business_name)"></app-discount-preview>
+        </div>
+        <!-- <br> -->
+        <div *ngFor="let fidelityCard of (fidelityCards$ | async)">
+            <app-fidelity-preview [fidelity]="fidelityCard" (click)="go('fidelity/'+fidelityCard.id+'/'+fidelityCard.business_name)"></app-fidelity-preview>
+        </div>
+    </ng-container>
+    <p *ngIf="!!loading"></p>
+</div>
+<div class="flex fRow aCenter w100 footer">
+    <button class="btnFilledIndro w100 f1" (click)="go('incIntro')">AGGIUNGI</button>
+    <button class="btnOutline w100 f1" (click)="go('businesses')">AZIENDA</button>
+</div>

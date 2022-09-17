@@ -1,0 +1,10 @@
+<div class="flex fColumn fCenter pad40 w100">
+    <form *ngIf="!loading" class="flex fColumn gap10 w100 mT40" [formGroup]="loginForm">
+        <h2>Login</h2>
+        <input formControlName="email" class="indroButton f1 br5 w100" type="email" placeholder="Email">
+        <input formControlName="password" class="indroButton f1 br5 w100" type="password" placeholder="Password">
+        <button type="button" [disabled]="loginForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="login()">ACCEDI</button>
+        <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p>
+    </form>
+    <p *ngIf="!!loading"></p>
+</div>

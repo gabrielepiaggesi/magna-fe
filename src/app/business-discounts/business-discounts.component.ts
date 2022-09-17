@@ -1,0 +1,50 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { ApiService } from '../api.service';
+import { AppService } from '../app.service';
+
+@Component({
+  selector: 'app-business-discounts',
+  templateUrl: './business-discounts.component.html',
+  styleUrls: ['./business-discounts.component.scss']
+})
+export class BusinessDiscountsComponent implements OnInit {
+  public loading = false;
+  public businessId!: number;
+  public socialPostDiscount$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
+  public fidelityCardDiscount$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
+
+  constructor(
+    private router: Router,
+    private activateRouter: ActivatedRoute,
+    private apiService: ApiService,
+    public appService: AppService
+  ) {
+    this.activateRouter.params.subscribe(
+      (params) => (this.businessId = +params['businessId'])
+    );
+  }
+
+  ngOnInit(): void {
+    this.businessId && this.getDiscounts();
+  }
+
+  go(path: string) {
+    this.router.navigateByUrl(path);
+  }
+
+  public getDiscounts() {
+    this.loading = true;
+    this.apiService
+      .getBusinessDiscounts(this.businessId)
+      .then((discounts: any) => {
+        const socialPostDiscounts = discounts.filter((d: any) => d.origin === 'IG_POST');
+        const fidelityCardDiscounts = discounts.filter((d: any) => d.origin === 'FIDELITY_CARD');
+        socialPostDiscounts.length && this.socialPostDiscount$.next(socialPostDiscounts[0]);
+        fidelityCardDiscounts.length && this.fidelityCardDiscount$.next(fidelityCardDiscounts[0]);
+      })
+      .catch((e: any) => console.error(e))
+      .finally(() => (this.loading = false));
+  }
+}

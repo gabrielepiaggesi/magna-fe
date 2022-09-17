@@ -1,0 +1,25 @@
+<ng-container *ngIf="!loading">
+    <div *ngIf="(business$ | async) as business" class="h100 flex fColumn gap30 pad20 pRel"
+        style="padding-bottom: 90px;">
+        <h2>{{business?.name}}</h2>
+        <div class="card pad20 cP" (click)="go('business-discounts/'+business.id)">
+            <p>Premi / Buoni Sconto</p>
+        </div>
+        <div class="card pad20 cP" (click)="go('business-cards/'+business.id)">
+            <p>Carta Fedeltà</p>
+        </div>
+        <div class="card pad20 cP" (click)="go('business-social-posts/'+business.id)">
+            <p>Instagram Posts</p>
+        </div>
+        <div class="card pad20 cP" (click)="go('business-reviews/'+business.id)">
+            <p>Commenti dei Clienti</p>
+        </div>
+        <div class="card pad20 cP bgrY" (click)="go('business-check/discount/'+business.id)">
+            <p>Convalida Premio</p>
+        </div>
+        <div class="card pad20 cP bgrP" (click)="go('business-check/fidelity-card/'+business.id)">
+            <p>Segna Carta Fedeltà</p>
+        </div>
+    </div>
+</ng-container>
+<p *ngIf="!!loading"></p>

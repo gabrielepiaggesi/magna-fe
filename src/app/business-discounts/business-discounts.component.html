@@ -1,0 +1,20 @@
+<ng-container *ngIf="!loading">
+    <div class="h100 flex fColumn gap30 pad20 pRel"
+        style="padding-bottom: 90px;">
+        <h2>Sconti nella tua Attività</h2>
+        <div *ngIf="!(socialPostDiscount$ | async)" class="card pad20 cP" (click)="go('new-business-discount/' + businessId + '/IG_POST')">
+            <p>Crea Premio per Post su Instagram</p>
+        </div>
+        <div *ngIf="!(fidelityCardDiscount$ | async)" class="card pad20 cP" (click)="go('new-business-discount/' + businessId + '/FIDELITY_CARD')">
+            <p>Crea Premio Carta Fedeltà Completata</p>
+        </div>
+
+        <div *ngIf="(socialPostDiscount$ | async) as socialPostDiscount" class="card pad20 cP" (click)="go('business-discount/' + businessId + '/' + socialPostDiscount.id)">
+            <p>Premio per Post su Instagram</p>
+        </div>
+        <div *ngIf="(fidelityCardDiscount$ | async) as fidelityCardDiscount" class="card pad20 cP" (click)="go('business-discount/' + businessId + '/' + fidelityCardDiscount.id)">
+            <p>Premio per Carta Fedeltà Completata</p>
+        </div>
+    </div>
+</ng-container>
+<p *ngIf="!!loading"></p>

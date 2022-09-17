@@ -1,0 +1,30 @@
+
+.incName {
+    font-size: 21px;
+    font-weight: 600;
+}
+.discountInfo {
+    font-size: 15px;
+    font-weight: 300;
+    padding-bottom: 10px;
+    border-bottom: 1px solid lightgrey;
+}
+.discountAlert {
+    font-size: 15px;
+    font-weight: 400;
+    padding-bottom: 10px;
+    color: red;
+}
+.badge {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    background-color: transparent;
+    border: 1px solid black;
+
+    .cross {
+        font-size: 50px;
+        margin-bottom: 3px;
+        font-weight: 300;
+    }
+}

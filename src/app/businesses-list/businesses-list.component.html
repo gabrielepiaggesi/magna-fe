@@ -1,0 +1,14 @@
+<div class="h100 flex fColumn gap30 pad20 pRel" style="padding-bottom: 90px;">
+    <h2>Le tue Attività</h2>
+    <ng-container *ngIf="!loading">
+        <div *ngFor="let business of (businesses$ | async)">
+            <div class="card pad20 cP" (click)="go('business/' + business.id)">
+                <p>{{business.name}}</p>
+            </div>
+        </div>
+    </ng-container>
+    <p *ngIf="!!loading"></p>
+</div>
+<div class="flex fRow aCenter w100 footer">
+    <button class="btnFilledIndro w100 f1" (click)="go('new-business')">NUOVA</button>
+</div>

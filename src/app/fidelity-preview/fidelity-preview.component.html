@@ -1,0 +1,21 @@
+<div class="cP flex fColumn gap15 pad15 br5 card bgrP">
+    <div class="flex fColumn gap5">
+        <p class="incName">{{_fidelity?.business_name}}</p>
+        <!-- <p class="discountInfo">
+            Ottieni uno sconto di {{_fidelity?.value}}{{_fidelity?.type && _fidelity?.type == 'PERC' ? '%' : '€'}}, 
+            minimo di spesa di {{_fidelity?.minPrice}}€
+        </p> -->
+        <p class="discountInfo">
+            Ottieni un premio ogni {{_fidelity?.expenses_amount}} consumazioni.
+        </p>
+    </div>
+    <div class="flex fRow aCenter fWrap gap10">
+        <div *ngFor="let slot of _fidelity?.expenses_array; let idx = index;" 
+        class="badge flex fRow fCenter">
+            <span class="cross" *ngIf="idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown)">X</span>
+        </div>
+    </div>
+    <p *ngIf="_fidelity?.expenses_array.length <= (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)" class="discountAlert">
+        Hai diritto a uno sconto! Mostra alla cassa il QR
+    </p>
+</div>

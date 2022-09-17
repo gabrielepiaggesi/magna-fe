@@ -1,0 +1,30 @@
+<div [attr.class]="checkType === 'fidelity-card' ? 'flex fColumn pad20 gap20 w100 bgrP' : 'flex fColumn pad20 gap20 w100 bgrY'">
+    <ng-container *ngIf="!loading">
+        <h2>{{ checkType === 'fidelity-card' ? 'Carta Fedeltà' : 'Premio!' }}</h2>
+        <form class="flex fColumn gap10 w100" [formGroup]="entityForm">
+            
+            <label for="discountTypeSelect">{{ checkType === 'fidelity-card' ? 'ID Carta:' : 'ID Premio:' }}</label>
+            <input formControlName="id" class="indroButton f1 br5 w100 mB10" type="number" min="1" max="20" step="1" placeholder="5">
+            
+            <button 
+                *ngIf="checkType === 'fidelity-card'" 
+                type="button" 
+                [disabled]="entityForm.invalid" 
+                class="btnFilledIndro f1 br5 w100" 
+                (click)="checkFidelityCard()"
+            >
+                SEGNA CARTA
+            </button>
+            <button 
+                *ngIf="checkType === 'discount'" 
+                type="button" 
+                [disabled]="entityForm.invalid" 
+                class="btnFilledIndro f1 br5 w100" 
+                (click)="checkDiscount()"
+            >
+                USA PREMIO
+            </button>
+        </form>
+    </ng-container>
+    <p *ngIf="!!loading"></p>
+</div>

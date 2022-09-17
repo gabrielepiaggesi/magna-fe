@@ -1,0 +1,16 @@
+<div class="h100 flex fColumn gap30 pad20 pRel" style="padding-bottom: 90px;">
+    <h2>Commenti dai Clienti</h2>
+    <ng-container *ngIf="!loading">
+        <ng-container *ngIf="(reviews$ | async) as reviews">
+            <div *ngFor="let review of reviews">
+                <div class="card flex fColumn pad20 cP gap10">
+                    <!-- https://angular.io/api/common/DatePipe -->
+                    <p class="fBold">{{review.created_at | date:'d/M/yy, H:mm'}}</p>
+                    <p>{{review.text}}</p>
+                </div>
+            </div>
+            <p *ngIf="!reviews.length">Nessun Commento ricevuto.</p>
+        </ng-container>
+    </ng-container>
+    <p *ngIf="!!loading"></p>
+</div>

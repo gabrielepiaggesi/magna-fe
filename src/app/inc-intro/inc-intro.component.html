@@ -1,0 +1,93 @@
+<div class="flex fColumn gap30 pad20">
+    <ng-container *ngIf="!loading">
+        <div *ngIf="step == 1" class="flex fColumn gap10 mT40">
+            <p id="slogan" class="mB10">Inserisci il codice del locale per iniziare.</p>
+            <form class="flex fColumn gap15" action="" [formGroup]="incForm">
+                <input formControlName="id" class="indroButton f1 br5" type="number" placeholder="Codice Locale">
+                <button [disabled]="incForm.invalid" (click)="getBusiness()" class="f1 br5 btnFilledIndro"
+                    type="button">AVANTI</button>
+            </form>
+        </div>
+        <ng-container *ngIf="(business$ | async) as business">
+            <div *ngIf="step == 2" class="flex fColumn gap30">
+                <div>
+                    <p id="description">Sei a:</p>
+                    <p class="incName">{{business.name}}</p>
+                </div>
+                <div class="flex fColumn gap20 pad10 card bgrP">
+                    <p>La Carta Fedelta di questo locale prevede un buono <strong>sconto del 20%</strong> ogni 8
+                        acquisti.
+                    </p>
+                    <button (click)="addFidelityCard()" class="f1 br5 btnFilledIndro">AGGIUNGI CARTA FEDELTA</button>
+                </div>
+                <div class="flex fColumn gap20 pad10 card bgrP">
+                    <p>
+                        Se fai un Post su Instagram taggando questo locale, con un <strong>account PUBBLICO</strong>,
+                        e se il titolare lo approverà, avrai un buono <strong>sconto del 20%</strong> per la prossima
+                        volta.
+                    </p>
+                    <p>
+                        In questo locale l'85% dei post vengono approvati entro 1 settimana dall'invio.
+                    </p>
+                    <button (click)="next()" class="f1 br5 btnFilledIndro">SCONTO INSTAGRAM</button>
+                </div>
+                <div class="flex fColumn gap20 pad10 card bgrP">
+                    <p>Lascia una recensione o un consiglio al locale, <strong>totalmente in ANONIMO!</strong> Sarà
+                        visibile
+                        solo al titolare, non è pubblico.</p>
+                    <button (click)="step = 5" class="f1 br5 btnFilledIndro">SCRIVI COMMENTO</button>
+                </div>
+                <!-- <div class="flex fColumn gap20 pad10 card bgrP">
+                    <p>La funzionalità "SONO QUI" permette di vedere gli <strong>account instagram delle persone
+                            presenti</strong> nel locale, se anche loro hanno cliccato "SONO QUI".
+                        Cliccando, anche il tuo username instagram sarà visibile. Utile <strong>se ti piace
+                            qualcuno/a</strong> e capisci che anche l'altro/a ricambia.
+                    </p>
+                    <div class="flex fColumn gap5 jCenter">
+                        <button class="f1 br5 btnFilledIndro">SONO QUI</button>
+                        <small class="w100 textCenter">sarai visibile per 1 ora</small>
+                    </div>
+                </div> -->
+            </div>
+
+            <div *ngIf="step == 3" class="flex fColumn gap40">
+                <p id="slogan" class="mB10 textCenter">Nuovo Post Instagram</p>
+                <div class="flex fColumn gap10 rules">
+                    <!-- <p class="fBold textCenter">Regole:</p> -->
+                    <p>Il tuo account deve essere pubblico, almeno fino all’utilizzo del buono sconto.</p>
+                    <p>Inquadrare almeno un piatto o una parte del locale.</p>
+                    <p>Taggare sul Post la nostra pagina Instagram.</p>
+                    <p>Scrivere una frase di apprezzamento nella bio.</p>
+                    <form class="flex fColumn gap15" action="" [formGroup]="socialPostForm">
+                        <label for="postUrl">Fai il post su Instagram taggando il locale, e poi copia il link del post
+                            qui
+                            sotto.</label>
+                        <input formControlName="url" class="indroButton f1 br5" id="postUrl" type="text" placeholder="Link del Post">
+                    </form>
+                </div>
+                <button [disabled]="socialPostForm.invalid" class="f1 br5 btnFilledIndro" (click)="sendSocialPostUrl()" type="button">INVIA LINK POST</button>
+            </div>
+
+            <div *ngIf="step == 4" class="flex fColumn fCenter gap5 mT40">
+                <p class="incName textCenter">Grazie!</p>
+                <p class="incName textCenter">Il titolare controllerà al più presto il tuo post.</p>
+                <p id="description textCenter">l’85% dei Post vengono approvati :)</p>
+                <button (click)="goHome()" style="width: 200px;" class="br5 btnOutline mT40 textCenter"
+                    type="button">CHIUDI</button>
+            </div>
+
+            <div *ngIf="step == 5" class="flex fColumn gap40">
+                <p id="slogan" class="mB10 textCenter">Scrivi commento ANONIMO.</p>
+                <div class="flex fColumn gap10 rules">
+                    <form class="flex fColumn gap15" action="" [formGroup]="reviewForm">
+                        <label for="review">Ciò che scriverai è visibile solo al titolare, e non è una recensione
+                            pubblica.
+                            Inutile insultare.</label>
+                        <input formControlName="text" class="indroButton f1 br5" id="review" type="text" placeholder="Mi sono trovato...">
+                    </form>
+                </div>
+                <button [disabled]="reviewForm.invalid" class="f1 br5 btnFilledIndro" (click)="sendReview()" type="button">INVIA COMMENTO</button>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>

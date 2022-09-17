@@ -1,0 +1,9 @@
+<div class="flex fColumn fCenter pad20 w100">
+    <form *ngIf="!loading" class="flex fColumn gap10 w100" [formGroup]="newBusinessForm">
+        <h2>Nuova Attività</h2>
+        <input formControlName="name" class="indroButton f1 br5 w100 mT30" type="text" placeholder="Nome">
+        <button type="button" [disabled]="newBusinessForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="addNewBusinessi()">CREA</button>
+        <!-- <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p> -->
+    </form>
+    <p *ngIf="!!loading"></p>
+</div>

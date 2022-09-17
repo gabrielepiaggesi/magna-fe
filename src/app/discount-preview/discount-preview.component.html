@@ -1,0 +1,12 @@
+<div class="cP flex fRow gap15 pad15 br5 card bgrY">
+    <div class="qrCode">
+        <img src="https://boofcv.org/images/thumb/3/35/Example_rendered_qrcode.png/400px-Example_rendered_qrcode.png" alt="">
+    </div>
+    <div class="flex fColumn gap10 discountInfo">
+        <p class="incName">{{discount?.business_name}}</p>
+        <p class="discountInfo">
+            {{discount?.discount_amount}}{{ discount?.discount_type == 'PERC' ? '%' : '€' }}, 
+            minimo di spesa di {{discount?.discount_minimum_expense}}€
+        </p>
+    </div>
+</div>

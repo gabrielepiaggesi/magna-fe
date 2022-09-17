@@ -1,0 +1,25 @@
+.qrCode {
+    img {
+        width: 200px;
+        height: 200px;
+    }
+    p {
+        color: green;
+        font-size: 21px;
+        font-weight: 600;
+    }
+}
+.infos {
+    font-size: 18px;
+    font-weight: 300;
+    padding-bottom: 20px;
+    border-bottom: 1px solid lightgrey;
+
+    .incName {
+        font-weight: 600;
+    }
+}
+.rules {
+    font-size: 18px;
+    font-weight: 300;
+}
