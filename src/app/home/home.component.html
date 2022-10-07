@@ -1,17 +1,35 @@
-<div class="h100 flex fColumn gap30 pad20 pRel" style="padding-bottom: 90px;">
-    <h2>Sconti e Carte Fedeltà</h2>
+<div class="h110 flex fColumn gap20 pad10 pRel" style="padding-bottom: 90px;">
     <ng-container *ngIf="!loading">
-        <div *ngFor="let discount of (discounts$ | async)">
-            <app-discount-preview [discount]="discount" (click)="go('discount/'+discount.id+'/'+discount.business_name)"></app-discount-preview>
-        </div>
-        <!-- <br> -->
-        <div *ngFor="let fidelityCard of (fidelityCards$ | async)">
-            <app-fidelity-preview [fidelity]="fidelityCard" (click)="go('fidelity/'+fidelityCard.id+'/'+fidelityCard.business_name)"></app-fidelity-preview>
-        </div>
+        <ng-container *ngIf="(discounts$ | async) as discounts">
+            <div *ngFor="let discount of discounts">
+                <app-discount-preview [discount]="discount" (click)="open('discount', discount)"></app-discount-preview>
+            </div>
+            <div *ngIf="!discounts.length" class="flex fRow fCenter pad15 br10 bgrR boxSha disc" (click)="go('redeem')">
+                <p>Per avere sconti, completa una carta fedeltà, o invita amici tramite il tuo codice personale, se qualcuno lo usa, tu ricevi uno sconto!  <i class="fa-solid fa-gift"></i></p>
+            </div>
+            <div class="spacer"></div>
+        </ng-container>
+
+        <ng-container *ngIf="(fidelityCards$ | async) as fidelityCards">
+            <div *ngFor="let fidelityCard of fidelityCards">
+                <app-fidelity-preview [fidelity]="fidelityCard" [discountPresent]="discountsBusinessIds.includes(fidelityCard.business_id)" (click)="open('fidelity-card', fidelityCard)"></app-fidelity-preview>
+            </div>
+            <div *ngIf="!fidelityCards.length" class="flex fRow fCenter pad10 br10 bgrG boxSha">
+                <p>Aggiungi la Carta Fedeltà del Ristorante cliccando sul +, nel menù sotto. Inserisci il codice del locale, o inquadra il QR sul tavolo.</p>
+            </div>
+            <div *ngIf="!!(appService.showHack | async) && showHack" class="flex fColumn pad20 bgrG gap10 br10 pRel" (click)="go('redeem')">
+                <div class="tRBadge tRBadgeBor bgrR">
+                    <i class="fa-solid fa-xmark" style="margin-left: auto;" (click)="showHack = false"></i>
+                </div>
+                <h4 class="fw7">Ti diamo 50€ per ogni locale che convinci a usare COMEBACK!</h4>
+            </div>
+        </ng-container>
     </ng-container>
-    <p *ngIf="!!loading"></p>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div>
-<div class="flex fRow aCenter w100 footer">
-    <button class="btnFilledIndro w100 f1" (click)="go('incIntro')">AGGIUNGI</button>
-    <button class="btnOutline w100 f1" (click)="go('businesses')">AZIENDA</button>
-</div>
+
+
+<app-overlay *ngIf="entityOpened && entityTypeOpened" class="bgrWl" (close)="closeOverlay()">
+    <app-fidelity-qr *ngIf="entityTypeOpened === 'fidelity-card'" [discountPresent]="discountsBusinessIds.includes(entityOpened.business_id)" [fidelityCard]="entityOpened" (close)="closeOverlay($event, true)"></app-fidelity-qr>
+    <app-discount-qr *ngIf="entityTypeOpened === 'discount'" [discount]="entityOpened" (close)="closeOverlay(null, true)"></app-discount-qr>
+</app-overlay>

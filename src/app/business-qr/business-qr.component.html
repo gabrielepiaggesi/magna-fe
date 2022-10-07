@@ -1,0 +1,13 @@
+<ng-container *ngIf="!loading">
+    <div *ngIf="businessId" class="h110 flex fColumn gap20 pad10 pRel"
+        style="padding-bottom: 90px;">
+        <button *ngIf="businessId" 
+            type="button" 
+            class="btn1 mT160 f1 br10 w100 pad15 bgrG" 
+            (click)="go('business-check/'+businessId)"
+        >
+            CONVALIDA QR
+        </button>
+    </div>
+</ng-container>
+<div *ngIf="!!loading" class="spinner mAuto"></div>

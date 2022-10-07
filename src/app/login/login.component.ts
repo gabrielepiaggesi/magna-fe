@@ -27,6 +27,10 @@ export class LoginComponent implements OnInit {
       .then((dto: any) => {
         this.appService.logUser(dto);
         this.apiService.setToken(dto.token);
+        try {
+          (window as any).plugins.OneSignal.setExternalUserId(dto.user.id + '');
+          (window as any).plugins.OneSignal.setEmail(dto.user.email);
+        } catch(e) { console.error('ONESIGNAL_ERROR', e); }
         this.router.navigateByUrl('home');
       })
       .catch((e: any) => console.error(e))

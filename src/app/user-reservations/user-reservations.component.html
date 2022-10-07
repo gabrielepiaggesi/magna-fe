@@ -1,0 +1,13 @@
+<div class="h110 flex fColumn gap20 pad10 pRel" style="padding-bottom: 90px !important;">
+    <button class="btn brN br10 pad10 boxSha" (click)="getReservations()"><i class="fa-solid fa-arrows-rotate"></i> AGGIORNA</button>
+    <ng-container *ngIf="!loading">
+        <div *ngFor="let reservation of (reservations$ | async)">
+            <app-reservation-preview [isUser]="true" [showBadge]="false" [reservation]="reservation" (click)="openRes(reservation)"></app-reservation-preview>
+        </div>
+    </ng-container>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+</div>
+
+<app-overlay *ngIf="(currentRes$ | async) as cuRes" class="bgrWl" (close)="currentRes$.next(undefined)">
+    <app-reservation mode="user" [reservation]="cuRes" (close)="getReservations()"></app-reservation>
+</app-overlay>

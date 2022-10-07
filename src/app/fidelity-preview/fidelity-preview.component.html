@@ -1,21 +1,48 @@
-<div class="cP flex fColumn gap15 pad15 br5 card bgrP">
-    <div class="flex fColumn gap5">
-        <p class="incName">{{_fidelity?.business_name}}</p>
-        <!-- <p class="discountInfo">
-            Ottieni uno sconto di {{_fidelity?.value}}{{_fidelity?.type && _fidelity?.type == 'PERC' ? '%' : '€'}}, 
-            minimo di spesa di {{_fidelity?.minPrice}}€
-        </p> -->
-        <p class="discountInfo">
-            Ottieni un premio ogni {{_fidelity?.expenses_amount}} consumazioni.
-        </p>
+<div class="cP flex fColumn gap20 pad10 br10 bgrP fidBox pRel">
+    <div *ngIf="discountPresent" class="tRBadge tRBadgeBor bgrR">
+        <p>Hai Sconto</p>
     </div>
+
+    <div class="flex fRow aCenter gap10">
+        <div class="flex fRow fCenter imgBox">
+            <i class="fa-solid fa-store businessImg crG bgrY"></i>
+            <!-- <img src="https://d2egcvq7li5bpq.cloudfront.net/it/images/restaurants/209196.gif" alt=""> -->
+        </div>
+        <div class="flex fColumn discountBio f1">
+            <p class="incName">{{_fidelity?.business_name}}</p>
+            <p class="discountInfo">
+                Premio ogni {{_fidelity?.expenses_amount - 1}} consumazioni.
+            </p>
+        </div>
+        <div class="flex fRow fCenter pad5 br5 bgrW qrCode" [ngClass]="{ 'op3': discountPresent }">
+            <img src="https://boofcv.org/images/thumb/3/35/Example_rendered_qrcode.png/400px-Example_rendered_qrcode.png" alt="">
+        </div>
+    </div>
+
     <div class="flex fRow aCenter fWrap gap10">
-        <div *ngFor="let slot of _fidelity?.expenses_array; let idx = index;" 
-        class="badge flex fRow fCenter">
-            <span class="cross" *ngIf="idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown)">X</span>
+        <div 
+            *ngFor="let slot of _fidelity?.expenses_array; let idx = index; let last = last;" 
+            class="badge badgeBgr flex fRow fCenter"
+            [ngClass]="{
+                'done': (!last || !discountPresent) && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown),
+                'bgrR': discountPresent && last
+            }"
+        >
+            <ng-container *ngIf="_fidelity?.expenses_array.length <= (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)">
+                <span class="cross" *ngIf="!last && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown)">{{idx+1}}</span>
+                <i *ngIf="last" style="font-size: 23px;" class="fa-solid fa-gift"></i>
+            </ng-container>
+            <ng-container *ngIf="_fidelity?.expenses_array.length > (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)">
+                <!-- <span class="cross" *ngIf="!last && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown)">{{idx+1}}</span> -->
+                <span class="cross" *ngIf="!last">{{idx+1}}</span>
+                <i *ngIf="last" style="font-size: 23px;" class="fa-solid fa-gift"></i>
+            </ng-container>
         </div>
     </div>
     <p *ngIf="_fidelity?.expenses_array.length <= (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)" class="discountAlert">
         Hai diritto a uno sconto! Mostra alla cassa il QR
     </p>
+    <!-- <p *ngIf="discountPresent" class="discountAlert">
+        Sconto disponibile!
+    </p> -->
 </div>

@@ -1,50 +1,82 @@
-<div class="flex fColumn gap30 pad20">
+<div *ngIf="step == 6" class="flex fColumn h100 f1">
+    <div class="flex fRow w100 bgrWl" style="height: 5px;">
+    </div>
+    <div class="flex fRow f1">
+        <div class="flex fRow w100 bgrWl" style="width: 20px;">
+        </div>
+        <div *ngIf="!loading" class="flex fRow w100 br10 f1 qrWindow">
+        </div>
+        <div *ngIf="!!loading" class="flex fRow w100 br10 f1 fCenter loadWindow">
+            <p>Caricamento...</p>
+        </div>
+        <div class="flex fRow w100 bgrWl" style="width: 20px;">
+        </div>
+    </div>
+    <div class="flex fColumn fCenter pad20 w100 bgrWl">
+        <button 
+            type="button" 
+            class="btnFilledIndro f1 br10 w100" 
+            (click)="cancelScan()"
+        >
+            ANNULLA
+        </button>
+        <button style="visibility: hidden; height: 0px; width: 0px;" (click)="getBusiness()" class="f1 br10 btnFilledIndro" id="doneButton" type="button"></button>
+    </div>
+</div>
+
+
+
+<div *ngIf="step !== 6" class="h110 flex fColumn gap30 pad10">
     <ng-container *ngIf="!loading">
         <div *ngIf="step == 1" class="flex fColumn gap10 mT40">
-            <p id="slogan" class="mB10">Inserisci il codice del locale per iniziare.</p>
+            <!-- <p id="slogan" class="mB10">Inserisci il codice del locale per iniziare.</p> -->
             <form class="flex fColumn gap15" action="" [formGroup]="incForm">
-                <input formControlName="id" class="indroButton f1 br5" type="number" placeholder="Codice Locale">
-                <button [disabled]="incForm.invalid" (click)="getBusiness()" class="f1 br5 btnFilledIndro"
+                <input formControlName="id" class="indroButton f1 br10" type="number" placeholder="Codice Locale">
+                <button [disabled]="incForm.invalid" (click)="getBusiness()" class="f1 br10 btnFilledIndro"
                     type="button">AVANTI</button>
             </form>
+            <p class="textCenter">Oppure</p>
+            <button (click)="scanQR()" class="f1 br10 btnFilledIndro bgrG" type="button">SCAN QR LOCALE</button>
+            <br>
+            <button (click)="goHome()" class="f1 br10 btnOutline" type="button">ANNULLA</button>
         </div>
         <ng-container *ngIf="(business$ | async) as business">
             <div *ngIf="step == 2" class="flex fColumn gap30">
-                <div>
+                <!-- <div>
                     <p id="description">Sei a:</p>
                     <p class="incName">{{business.name}}</p>
-                </div>
-                <div class="flex fColumn gap20 pad10 card bgrP">
-                    <p>La Carta Fedelta di questo locale prevede un buono <strong>sconto del 20%</strong> ogni 8
-                        acquisti.
+                </div> -->
+                <div class="flex fColumn gap20 pad10 br10 boxSha bgrW">
+                    <p>La Carta Fedelta prevede un <strong>PREMIO</strong> una volta completata. Cliccando sulla Carta potrai anche <strong>PRENOTARE</strong> e guadagnare sconti!
                     </p>
-                    <button (click)="addFidelityCard()" class="f1 br5 btnFilledIndro">AGGIUNGI CARTA FEDELTA</button>
+                    <button (click)="addFidelityCard()" class="f1 br10 btnFilledIndro">AGGIUNGI CARTA FEDELTA</button>
                 </div>
-                <div class="flex fColumn gap20 pad10 card bgrP">
+                <div class="flex fColumn gap20 pad10 br10 boxSha bgrW">
+                    <p>Lascia una recensione o un consiglio al locale, <strong>totalmente in ANONIMO!</strong> Sarà
+                        visibile
+                        solo al titolare, non è pubblico.</p>
+                    <button (click)="step = 5" class="f1 br10 btnFilledIndro">SCRIVI COMMENTO</button>
+                </div>
+                <div class="flex fColumn gap20 pad10 br10 boxSha bgrW">
                     <p>
                         Se fai un Post su Instagram taggando questo locale, con un <strong>account PUBBLICO</strong>,
-                        e se il titolare lo approverà, avrai un buono <strong>sconto del 20%</strong> per la prossima
+                        e se il titolare lo approverà, avrai un <strong>PREMIO</strong> per la prossima
                         volta.
                     </p>
                     <p>
                         In questo locale l'85% dei post vengono approvati entro 1 settimana dall'invio.
                     </p>
-                    <button (click)="next()" class="f1 br5 btnFilledIndro">SCONTO INSTAGRAM</button>
+                    <button (click)="next()" class="f1 br10 btnFilledIndro">SCONTO INSTAGRAM</button>
                 </div>
-                <div class="flex fColumn gap20 pad10 card bgrP">
-                    <p>Lascia una recensione o un consiglio al locale, <strong>totalmente in ANONIMO!</strong> Sarà
-                        visibile
-                        solo al titolare, non è pubblico.</p>
-                    <button (click)="step = 5" class="f1 br5 btnFilledIndro">SCRIVI COMMENTO</button>
-                </div>
-                <!-- <div class="flex fColumn gap20 pad10 card bgrP">
+                <button (click)="goHome()" class="f1 br10 btnOutline" type="button">ANNULLA</button>
+                <!-- <div class="flex fColumn gap20 pad10 br10 boxSha bgrW">
                     <p>La funzionalità "SONO QUI" permette di vedere gli <strong>account instagram delle persone
                             presenti</strong> nel locale, se anche loro hanno cliccato "SONO QUI".
                         Cliccando, anche il tuo username instagram sarà visibile. Utile <strong>se ti piace
                             qualcuno/a</strong> e capisci che anche l'altro/a ricambia.
                     </p>
                     <div class="flex fColumn gap5 jCenter">
-                        <button class="f1 br5 btnFilledIndro">SONO QUI</button>
+                        <button class="f1 br10 btnFilledIndro">SONO QUI</button>
                         <small class="w100 textCenter">sarai visibile per 1 ora</small>
                     </div>
                 </div> -->
@@ -66,13 +98,14 @@
                     </form>
                 </div>
                 <button [disabled]="socialPostForm.invalid" class="f1 br5 btnFilledIndro" (click)="sendSocialPostUrl()" type="button">INVIA LINK POST</button>
+                <button (click)="goHome()" class="f1 br10 btnOutline" type="button">ANNULLA</button>
             </div>
 
             <div *ngIf="step == 4" class="flex fColumn fCenter gap5 mT40">
                 <p class="incName textCenter">Grazie!</p>
                 <p class="incName textCenter">Il titolare controllerà al più presto il tuo post.</p>
                 <p id="description textCenter">l’85% dei Post vengono approvati :)</p>
-                <button (click)="goHome()" style="width: 200px;" class="br5 btnOutline mT40 textCenter"
+                <button (click)="goHome()" style="width: 200px;" class="br10 btnOutline mT40 textCenter"
                     type="button">CHIUDI</button>
             </div>
 
@@ -87,7 +120,9 @@
                     </form>
                 </div>
                 <button [disabled]="reviewForm.invalid" class="f1 br5 btnFilledIndro" (click)="sendReview()" type="button">INVIA COMMENTO</button>
+                <button (click)="goHome()" class="f1 br10 btnOutline" type="button">ANNULLA</button>
             </div>
         </ng-container>
     </ng-container>
+    <div *ngIf="!!loading" class="spinner"></div>
 </div>

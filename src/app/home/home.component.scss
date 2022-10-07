@@ -1,6 +1,40 @@
 .footer {
     position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
+    left: 10px;
+    right: 10px;
+    box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.disc i {
+    font-size: 21px;
+    opacity: 0.8;
+}
+.ig {
+    font-size: 23px;
+    font-weight: 600;
+}
+.title {
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 44px;
+
+    color: #424242;
+    opacity: 0.8;
+
+    // border: 2px solid #FFFFFF;
+    // text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff,
+             1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff, 0px 0px 4px rgba(0, 0, 0, 0.25);
+}
+.tRBadge i {
+    font-size: 17px;
+    width: 17px;
+    text-align: center;
+    opacity: 1;
 }

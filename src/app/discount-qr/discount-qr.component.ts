@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -7,18 +8,16 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./discount-qr.component.scss']
 })
 export class DiscountQrComponent implements OnInit {
-  public discountId!: number;
-  public businessName!: string;
+  @Output() close = new EventEmitter();
+  @Input() discount!: any;
 
-  constructor(private activateRouter: ActivatedRoute) {
-    this.activateRouter.params.subscribe(
-      (params) => {
-        this.discountId = +params['discountId'];
-        this.businessName = params['businessName'];
-      }
-    );
+  constructor(public loc: Location) {
   }
   ngOnInit(): void {
+  }
+
+  public getQrRaw() {
+    return `https://comebackwebapp.web.app/?businessId=${this.discount.business_id}&entityId=${this.discount.id}&entityType=fidelityCard`;
   }
 
 }

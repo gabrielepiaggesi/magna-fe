@@ -1,14 +1,76 @@
-<div class="h100 flex fColumn gap30 pad20 pRel" style="padding-bottom: 90px;">
-    <h2>Le tue Attività</h2>
+<div class="h110 flex fColumn gap20 pad10 pRel" style="padding-bottom: 90px;">
+    <!-- <h2>Le tue Attività</h2> -->
     <ng-container *ngIf="!loading">
-        <div *ngFor="let business of (businesses$ | async)">
+        <p>Sei titolare di qualche attività commerciale come un ristorante? Aggiungi qui sotto</p>
+        <div class="list br10 bgrW">
+            <div *ngFor="let business of (businesses$ | async)" class="element" (click)="go('reservations/' + business.id)">
+                <p>{{business.name}}</p>
+            </div>
+            <div class="element" (click)="go('new-business')">
+                <p>NUOVA</p>
+            </div>
+        </div>
+        <p>Le tue informazioni:</p>
+        <div *ngIf="(user$ | async) as user" class="list br10 bgrW">
+            <div class="element">
+                <p>NUMERO UTENTE: {{user.id}}</p>
+            </div>
+            <div *ngIf="user.referral_code" class="element">
+                <p>CODICE UTENTE: {{user.referral_code}}</p>
+            </div>
+            <div class="element">
+                <p>Email UTENTE: {{user.email}}</p>
+            </div>
+            <div class="element" (click)="outing = true">
+                <p>Disconnetti / Esci dall'account</p>
+            </div>
+        </div>
+        <p>Notifiche Dalle Attività/Locali:</p>
+        <div *ngIf="(fidelityCards$ | async) as fidelityCards" class="list br10 bgrW">
+            <div *ngFor="let fidelityCard of fidelityCards" class="element">
+                <div class="flex fRow aCenter gap10 w100">
+                    <input style="transform: scale(1.5);" type="checkbox" [checked]="fidelityCard.notify" (change)="manageNotification($event, fidelityCard)">
+                    <span>{{fidelityCard.business_name}}</span>
+                </div>
+            </div>
+        </div>
+        <p>Altro:</p>
+        <div class="list br10 bgrW">
+            <div class="element">
+                <p>Per assistenza contattare via email a comebackwebapp@gmail.com</p>
+            </div>
+            <div class="element mT80" (click)="deleting = true">
+                <p>Elimina il mio Account</p>
+            </div>
+        </div>
+        <!-- <div *ngFor="let business of (businesses$ | async)">
             <div class="card pad20 cP" (click)="go('business/' + business.id)">
                 <p>{{business.name}}</p>
             </div>
         </div>
+        <div>
+            <div class="card pad20 cP" (click)="go('new-business')">
+                <p>NUOVA</p>
+            </div>
+        </div> -->
     </ng-container>
-    <p *ngIf="!!loading"></p>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div>
-<div class="flex fRow aCenter w100 footer">
-    <button class="btnFilledIndro w100 f1" (click)="go('new-business')">NUOVA</button>
-</div>
+
+<app-overlay *ngIf="deleting" class="bgrWl" (close)="deleting = false">
+    <div *ngIf="!loading" class="flex fColumn mT80 gap20 h100 bgrWl">
+        <h2 class="fw400">Sicuro di voler <strong style="color: red;">ELIMINARE</strong> il tuo account?</h2>
+        <button class="btn1 boxSha brN pad15 bgrGr br10 w100" (click)="deleting = false">INDIETRO</button>
+        <button class="btn1 boxSha brN pad15 bgrW br10 w100 mT80" (click)="deleteAccount()">SI ELIMINAMI ORA</button>
+    </div>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+</app-overlay>
+
+<app-overlay *ngIf="outing" class="bgrWl" (close)="outing = false">
+    <div *ngIf="!loading" class="flex fColumn mT80 gap20 h100 bgrWl">
+        <h2>Sicuro di voler uscire dal tuo account?</h2>
+        <button class="btn1 boxSha brN pad15 bgrW br10 w100" (click)="logout()">SI ESCI ORA</button>
+        <button class="btn1 boxSha brN pad15 bgrGr br10 w100" (click)="outing = false">INDIETRO</button>
+    </div>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+</app-overlay>

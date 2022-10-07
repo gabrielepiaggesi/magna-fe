@@ -1,0 +1,23 @@
+<div class="flex fColumn fCenter gap20 pad10 w100">
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+
+    <div class="flex fColumn pad20 bgrG gap10" *ngIf="!!(appService.showHack | async)">
+        <h3 class="fw7">Ti diamo 50€ per ogni locale che convinci a usare COMEBACK!</h3>
+        <p class="fw3">Il Locale iscrivendosi a Comeback con il tuo codice, avrà il primo mese come prova gratuita del servizio, senza costi di disdetta. <strong>Se il locale continua</strong> a usare Comeback per almeno un altro mese, ti accreditiamo 50€.
+            <strong>Se convinci 10 locali, ti becchi 500€.</strong>
+        </p>
+        <p style="text-decoration: underline;" (click)="openHack()">come iniziare</p>
+    </div>
+
+
+    <form *ngIf="!loading" class="flex fColumn gap10 w100" [formGroup]="referralForm">
+        <!-- <label for="uuidInput">Codice</label> -->
+        <input id="uuidInput" formControlName="uuid" class="indroButton f1 br10 w100 mT30 textCenter" type="text" placeholder="codice promo di un amico">
+        <button type="button" [disabled]="referralForm.invalid" class="btn1 brN pad15 bgrR f1 br10 w100" style="font-size: 17px;" (click)="redeem()">RISCATTA SCONTO</button>
+    </form>
+    <br>
+    <div class="flex fColumn gap10">
+        <h4 class="fw7">Vuoi il tuo CODICE promo da inviare sui social o agli amici per guadagnare sconti?</h4>
+        <h5 class="fw4">Clicca su una tua Carta Fedeltà e vai su "INVITA E GUADAGNA", per ogni nuovo amico che userà il tuo codice, tu ricevi uno sconto in quel ristorante!</h5>
+    </div>
+</div>

@@ -38,7 +38,7 @@ export class ApiService {
     // }
   }
 
-  public setToken(token: string) {
+  public setToken(token: string|undefined) {
     this.TOKEN = token;
   }
 
@@ -761,6 +761,18 @@ export class ApiService {
     return jsonRes;
   }
 
+  public async getBusinessReservations(businessId: number) {
+    const response = await fetch(
+      `${this.BASE_URL}/reservation/getBusinessReservations/${businessId}`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getBusinessReservations');
+    }
+    return jsonRes;
+  }
+
   public async getUserDiscounts() {
     const response = await fetch(
       `${this.BASE_URL}/userDiscount/getUserDiscounts`,
@@ -810,6 +822,23 @@ export class ApiService {
     const jsonRes = await response.json();
     if (!response.ok || (response.status >= 400 && response.status <= 500)) {
       throw new Error(jsonRes?.message || 'Could not createNewBusiness');
+    }
+    return jsonRes;
+  }
+
+  public async updateBusiness(dto: any, businessId: number) {
+    const opts = {
+      method: 'POST',
+      body: JSON.stringify(dto),
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/business/updateBusiness/${businessId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not updateBusiness');
     }
     return jsonRes;
   }
@@ -954,6 +983,18 @@ export class ApiService {
     return jsonRes;
   }
 
+  public async getLastAppVersion() {
+    const response = await fetch(
+      `${this.BASE_URL}/auth/appVersion`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getLastAppVersion');
+    }
+    return jsonRes;
+  }
+
   public async discardSocialPost(userSocialPostId: number) {
     const opts = {
       method: 'POST',
@@ -1068,4 +1109,194 @@ export class ApiService {
     return jsonRes;
   }
 
+  public async addUserReservation(dto: any, businessId: number) {
+    const opts = {
+      method: 'POST',
+      body: JSON.stringify(dto),
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/reservation/addReservation/${businessId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not addUserReservation');
+    }
+    return jsonRes;
+  }
+
+  public async updateBusinessReservation(dto: any, resId: number) {
+    const opts = {
+      method: 'POST',
+      body: JSON.stringify(dto),
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/reservation/updateBusinessReservation/${resId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not updateBusinessReservation');
+    }
+    return jsonRes;
+  }
+
+  public async getReservation(reservationId: number) {
+    const response = await fetch(
+      `${this.BASE_URL}/reservation/getReservation/${reservationId}`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getReservation');
+    }
+    return jsonRes;
+  }
+
+  public async getUserReservations() {
+    const response = await fetch(
+      `${this.BASE_URL}/reservation/getUserReservations`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getUserReservations');
+    }
+    return jsonRes;
+  }
+
+  public async getUserReferral(businessId: number, userId: number) {
+    const response = await fetch(
+      `${this.BASE_URL}/userReferral/getUserReferral/${userId}/${businessId}`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getUserReferral');
+    }
+    return jsonRes;
+  }
+
+  public async generateUserReferral(businessId: number, userId: number) {
+    const opts = {
+      method: 'POST',
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/userReferral/generateUserReferral/${userId}/${businessId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not generateUserReferral');
+    }
+    return jsonRes;
+  }
+
+  public async generateUserDiscountFromReferral(uuid: string) {
+    const opts = {
+      method: 'POST',
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/userReferral/generateUserDiscountFromReferral/${uuid}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not generateUserDiscountFromReferral');
+    }
+    return jsonRes;
+  }
+
+  public async getBusinessEmployees(businessId: number) {
+    const response = await fetch(
+      `${this.BASE_URL}/business/getUserBusinesses/${businessId}`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getUserBusinesses');
+    }
+    return jsonRes;
+  }
+
+  public async removeUserBusiness(businessId: number, userId: number) {
+    const opts = {
+      method: 'POST',
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/business/removeUserBusiness/${businessId}/${userId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not removeUserBusiness');
+    }
+    return jsonRes;
+  }
+
+  public async addUserBusiness(businessId: number, userId: number) {
+    const opts = {
+      method: 'POST',
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/business/addUserBusiness/${businessId}/${userId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not addUserBusiness');
+    }
+    return jsonRes;
+  }
+
+  public async getLoggedUser() {
+    const response = await fetch(
+      `${this.BASE_URL}/user/getLoggedUser`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getLoggedUser');
+    }
+    return jsonRes;
+  }
+
+  public async deleteUser() {
+    const opts = {
+      method: 'POST',
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/user/deleteUser`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not deleteUser');
+    }
+    return jsonRes;
+  }
+
+  public async sendNotificationToClients(dto: any, businessId: number) {
+    const opts = {
+      method: 'POST',
+      body: JSON.stringify(dto),
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/business/sendNotificationToClients/${businessId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not sendNotificationToClients');
+    }
+    return jsonRes;
+  }
 }

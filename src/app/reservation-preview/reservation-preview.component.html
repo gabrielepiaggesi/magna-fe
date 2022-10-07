@@ -1,0 +1,71 @@
+<div class="flex fRow aCenter pad10 discountBox br10 gap10 pRel"
+    [ngClass]="{ 
+        'bgrR': reservation?.status === 'pending', 
+        'bgrG': reservation?.status === 'accepted', 
+        'bgrGr': reservation?.status === 'completed', 
+        'bgrW': reservation?.status === 'declined'
+    }"
+>
+    <div *ngIf="showBadge && reservation.new" class="tRBadge bgrBl">
+        <p *ngIf="reservation?.status === 'pending'">Nuovo</p>
+        <p *ngIf="reservation?.status === 'declined'">Ops</p>
+        <p *ngIf="reservation?.status === 'accepted'">Recente</p>
+        <p *ngIf="reservation?.status === 'completed'">Arrivati</p>
+    </div>
+    <div class="flex fRow fCenter dashedBoRight">
+        <div class="flex fRow aCenter pad5 br5 bgrW">
+            <i class="fa-solid fa-xmark"></i>&nbsp;<p>{{ reservation?.people_amount }}</p>
+        </div>
+    </div>
+    <div class="flex fColumn discountBio f1">
+        <p *ngIf="reservation.business_name" class="incName">{{reservation?.business_name}} - {{reservation?.name}}</p>
+        <p *ngIf="!reservation.business_name" class="incName">{{reservation?.name}}</p>
+        <p class="discountInfo">
+            <span *ngIf="reservation?.status === 'pending'">IN ATTESA</span>
+            <span *ngIf="reservation?.status === 'accepted'">
+                CONFERMATA
+                <span *ngIf="reservation?.table_number">
+                    -&nbsp;Tav.{{ reservation?.table_number }}&nbsp;
+                </span>
+            </span>
+            <span *ngIf="reservation?.status === 'completed'">
+                FINITA
+                <span *ngIf="reservation?.table_number">
+                    -&nbsp;Tav.{{ reservation?.table_number }}&nbsp;
+                </span>
+            </span>
+            <ng-container *ngIf="reservation?.status === 'declined'">
+                <span *ngIf="!reservation?.sub_status">RIFIUTATA</span>
+                <span *ngIf="reservation.sub_status === 'user_canceled'">ANNULLATA</span>
+                <span *ngIf="reservation.sub_status === 'full'">SIAMO PIENI</span>
+                <span *ngIf="reservation.sub_status === 'business_canceled'">CANCELLATA</span>
+                <span *ngIf="reservation.sub_status === 'new_date'">PROPOSTA NUOVO ORARIO</span>
+            </ng-container>
+            <span *ngIf="reservation?.status === 'canceled'">ANNULLATA</span>
+        </p>
+        <p *ngIf="!isUser" class="discountValue">
+            {{ getDate(reservation?.user_date) }}
+            <!-- {{ reservation?.user_date | date:'EE, d MMM, H:mm':'+0000' }} -->
+        </p>
+        <p *ngIf="isUser" class="discountValue">
+            {{ getDate(reservation?.user_date) }}
+        </p>
+    </div>
+    <div class="imgBox">
+        <i *ngIf="reservation?.status === 'pending'" class="fa-regular fa-clock"></i>
+        <i *ngIf="reservation?.status === 'accepted'" class="fa-solid fa-circle-check"></i>
+        <i *ngIf="reservation?.status === 'completed'" class="fa-solid fa-circle-check"></i>
+        <i *ngIf="reservation?.status === 'declined'" class="fa-solid fa-ban"></i>
+        <i *ngIf="reservation?.status === 'canceled'" class="fa-solid fa-xmark"></i>
+    </div>
+</div>
+<div *ngIf="showDescription && reservation?.note" class="flex fRow aCenter pad10 discountBox br10 gap10 pRel mT20"
+    [ngClass]="{ 
+        'bgrR': reservation?.status === 'pending', 
+        'bgrG': reservation?.status === 'accepted', 
+        'bgrGr': reservation?.status === 'completed', 
+        'bgrW': reservation?.status === 'declined'
+    }"
+>
+    <p>{{reservation?.note}}</p>
+</div>

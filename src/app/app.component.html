@@ -1,2 +1,42 @@
-<app-header *ngIf="!!(appService.loggedIn | async) && page != 'home' && page != 'login' && page != 'signup'"></app-header>
-<router-outlet></router-outlet>
+
+<app-header *ngIf="!updateApp"
+    [showBack]="!!page && isNotPage(['login', 'signup', 'home', 'incIntro', 'check', 'reservations'])"
+></app-header>
+<div [attr.class]="
+    isNotPage(['login', 'signup', 'incIntro', 'fidelity/', 'discount/', 'check','social']) && !updateApp ? 'h100 oAuto container padTop padBottom' : 'h100 oAuto container padTop'
+">
+    <div *ngIf="!!updateApp" class="flex fRow fCenter pad40">
+        <p class="fBold">Aggiorna l'App!</p>
+    </div>
+    <router-outlet *ngIf="!updateApp"></router-outlet>
+</div>
+<div class="flex fRow aCenter pad20 jBet footer" *ngIf="isNotPage(['login', 'signup', 'incIntro', 'fidelity/', 'discount/', 'check', 'social']) && !updateApp">
+
+    <ng-container *ngIf="appMode === 'app'">
+        <i class="fa-solid fa-house" (click)="go('home')"></i>
+        <i class="fa-solid fa-gift" (click)="go('redeem')"></i>
+        <!-- <i class="fa-solid fa-qrcode" (click)="go('incIntro/any')"></i> -->
+        <i class="fa-solid fa-plus ig" (click)="go('incIntro/any')"></i>
+        <!-- <i class="fa-solid fa-circle-plus"></i> -->
+        <!-- <i class="fa-regular fa-square-plus ig"></i> -->
+
+        <i class="fa-regular fa-rectangle-list" (click)="go('user-reservations')"></i>
+        <i id="gearIcon" class="fa-solid fa-gear" (click)="go('businesses')"></i>
+    </ng-container>
+
+    <ng-container *ngIf="appMode === 'business'">
+        <i class="fa-solid fa-house" (click)="go('home')"></i>
+        <i class="fa-solid fa-qrcode" (click)="go('business-qr', true)"></i>
+        <i class="fa-regular fa-rectangle-list" (click)="go('reservations', true)"></i>
+        <i class="fa-solid fa-store" (click)="go('business', true)"></i>
+        <i id="gearIcon" class="fa-solid fa-gear" (click)="go('businesses')"></i>
+    </ng-container>
+
+    <!-- <i class="fa-solid fa-house" (click)="go('home')"></i>
+    <i class="fa-solid fa-qrcode" (click)="go('incIntro/any')"></i>
+    <i class="fa-brands fa-instagram ig" (click)="go('incIntro/ig')"></i>
+    <i class="fa-solid fa-gear" (click)="go('settings')"></i>
+    <i class="fa-solid fa-store" (click)="go('businesses')"></i> -->
+
+</div>
+

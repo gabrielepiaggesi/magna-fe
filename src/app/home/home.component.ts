@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ApiService } from '../api.service';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,10 @@ import { ApiService } from '../api.service';
 })
 export class HomeComponent implements OnInit {
   public loading = false;
+  public entityTypeOpened!: 'discount'|'fidelity-card';
+  public entityOpened!: any;
+  public discountsBusinessIds: number[] = [];
+  public showHack = true;
   public discounts$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   public fidelityCards$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   public discounts = [
@@ -62,21 +67,42 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router, private apiService: ApiService) { }
+  constructor(private router: Router, private apiService: ApiService, public appService: AppService) { }
 
   ngOnInit(): void {
+    this.showHack = true;
     this.getDiscounts();
     this.getFidelityCards();
   }
 
-  go(path: string) {
+  public go(path: string) {
     this.router.navigateByUrl(path);
+  }
+
+  public open(type: 'discount'|'fidelity-card', entity: any) {
+    this.entityTypeOpened = type;
+    this.entityOpened = entity;
+  }
+
+  public closeOverlay(event = null, refresh = false) {
+    if (event === 'discount') {
+      this.entityTypeOpened = 'discount';
+      const discountsWithBusinessId = this.discounts$.getValue().filter((d: any) => d.business_id === this.entityOpened.business_id);
+      if (discountsWithBusinessId.length) {
+        this.entityOpened = discountsWithBusinessId[0];
+      } else { this.entityOpened = null; }
+    } else {
+      this.entityOpened = null;
+    }
+    refresh && this.ngOnInit();
   }
 
   public getDiscounts() {
     this.loading = true;
     this.apiService.getUserDiscounts()
       .then((discounts: any) => {
+        const discountsBusinessIds = discounts.map((d: any) => d.business_id);
+        this.discountsBusinessIds = discountsBusinessIds;
         this.discounts$.next(discounts);
       })
       .catch((e: any) => console.error(e))

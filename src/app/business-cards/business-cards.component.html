@@ -1,9 +1,9 @@
-<div class="flex fColumn pad20 gap20 w100">
+<div class="flex fColumn pad10 gap20 w100">
     <ng-container *ngIf="!loading">
-        <h2>Carta Fedeltà</h2>
+        <!-- <h2>Carta Fedeltà</h2> -->
         <form class="flex fColumn gap10 w100" [formGroup]="cardForm">
             
-            <label for="discountTypeSelect">Quanti acquisti/consumazioni per ricevere il premio?</label>
+            <label for="discountTypeSelect">Dopo quante consumazioni/pagamenti per ricevere lo sconto?</label>
             <input formControlName="expenses_amount" class="indroButton f1 br5 w100 mB10" type="number" min="1" max="20" step="1" placeholder="5">
             
             <button *ngIf="!!(fidelityCard$ | async)" type="button" [disabled]="cardForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="updateFidelityCard()">SALVA</button>
@@ -12,5 +12,5 @@
             <label class="mT10">Ricordati di impostare il premio nella sezione "Buoni Sconto".</label>
         </form>
     </ng-container>
-    <p *ngIf="!!loading"></p>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div>

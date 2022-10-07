@@ -1,0 +1,55 @@
+.discountBox {
+    background: #B33131;
+    box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: white;
+}
+.dashedBoRight {
+    border-right: 2px dashed white;
+    padding-right: 10px;
+}
+.qrCode {
+    img {
+        width: 60px;
+        height: 60px;
+    }
+}
+.discountBio {
+    .incName {
+        font-family: 'Nunito Sans', sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+    }
+    .discountInfo {
+        font-family: 'Nunito Sans', sans-serif;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 14px;
+    }
+    .discountValue {
+        font-family: 'Nunito Sans', sans-serif;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 21px;
+    }
+}
+.imgBox {
+    img {
+        width: 40px;
+        border-radius: 40px;
+        border: 3px solid white;
+    }
+}
+
+
+@keyframes tabSelected {
+    from {
+        background-color: transparent;
+        box-shadow: none;
+    }
+    to { 
+        background-color: white;
+        box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.10);
+    }
+}

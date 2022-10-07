@@ -6,7 +6,11 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AppService {
   public loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public showHack: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public headerData: BehaviorSubject<{ title?: string, type?: string }|undefined> = new BehaviorSubject<{ title?: string, type?: string }|undefined>(undefined);
   public user: any;
+  public appVersion = undefined;
+  public businessId$: BehaviorSubject<number|undefined> = new BehaviorSubject<number|undefined>(undefined);
 
   constructor() {
   }

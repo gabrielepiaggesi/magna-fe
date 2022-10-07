@@ -1,15 +1,124 @@
-<div class="flex fColumn gap20 pad40">
+<!-- <div class="flex fColumn gap20 pad40">
     <div class="w70 mAuto flex fColumn fCenter gap20 mT20 qrCode">
         <small>{{fidelityCardId}}</small>
-        <img src="https://boofcv.org/images/thumb/3/35/Example_rendered_qrcode.png/400px-Example_rendered_qrcode.png" alt="">
+        <qrcode [qrdata]="fidelityCardId+''" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
         <p class="textCenter">Mostra il QR alla cassa</p>
     </div>
     <div class="flex fColumn gap10 mT20 infos">
         <p>Presso: <span class="incName">{{businessName}}</span></p>
-        <!-- <p>Valore: <span class="incName">5€, per un minimo di spesa di 50€.</span></p> -->
     </div>
     <div class="flex fColumn gap20 rules">
-        <!-- <p class="fBold textCenter">Regole:</p> -->
         <p>Per tracciare il tuo acquisto sulla Carta Fedeltà fai scannerizzare questo QR-CODE alla cassa, o al momento del pagamento.</p>
     </div>
+</div> -->
+
+
+<div class="flex fColumn gap30 mT20 h100">
+    <ng-container *ngIf="step == 1">
+        <div class="flex fColumn w100 fCenter gap20 mT80">
+            <button *ngIf="discountPresent" class="f1 br10 btn1 bgrR boxSha pad15 brN w100"
+                (click)="close.emit('discount')">MOSTRA SCONTO</button>
+            <button *ngIf="discountPresent" class="f1 br10 btn1 bgrBl boxSha pad15 brN w100" (click)="step = 2">SEGNA
+                CARTA SENZA USO SCONTO</button>
+            <button *ngIf="!discountPresent" class="f1 br10 btn1 bgrBl boxSha pad15 brN w100" (click)="step = 2">SEGNA
+                CARTA</button>
+            <div class="spacer"></div>
+            <button *ngIf="!!fidelityCard?.accept_reservations" class="f1 br10 btn1 bgrG boxSha pad15 brN w100" (click)="step = 3">PRENOTA</button>
+            <button class="f1 br10 btn1 bgrGr boxSha pad15 brN w100" (click)="getReferral()">GUADAGNA SCONTI QUI</button>
+            <button *ngIf="fidelityCard?.business_phone_number" class="f1 br10 btn1 bgrW boxSha pad15 brN w100" (click)="call()"><i class="fa-solid fa-phone"></i>&nbsp;{{ fidelityCard?.business_phone_number }}</button>
+            <button *ngIf="fidelityCard?.business_website" class="f1 br10 btn1 bgrW boxSha pad15 brN w100" (click)="web()"><i class="fa-solid fa-globe"></i>&nbsp;Sito Web</button>
+            <button *ngIf="fidelityCard?.business_address" class="f1 br10 btn1 bgrW boxSha pad15 brN w100" (click)="map()"><i class="fa-solid fa-location-dot"></i>&nbsp;{{ fidelityCard?.business_address }}</button>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="step == 2">
+        <div class="flex fColumn fCenter gap10 mT80">
+            <small class="w100 textCenter f1 fw6">Codice Carta: {{fidelityCard?.id}}</small>
+            <div class="flex fRow fCenter bgrG pad20 br10 boxSha">
+                <qrcode class="br10" [qrdata]="getQrRaw()" [width]="300" [errorCorrectionLevel]="'M'"></qrcode>
+            </div>
+            <h3 class="fw600" class="textCenter">Mostra il QR alla cassa</h3>
+            <button class="f1 br10 btn1 bgrW boxSha pad15 brN mT20" (click)="close.emit()">FATTO</button>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="step == 3">
+        <form class="flex fColumn gap20" [formGroup]="newRes">
+            <div>
+                <h2 class="fw7" for="appt">Prenotazione</h2>
+                <small>{{ fidelityCard?.business_name }}</small>
+            </div>
+            <input formControlName="name" class="indroButton f1 br10 w100" type="text" placeholder="Nome">
+            <input formControlName="peopleAmount" class="indroButton f1 br10 w100" type="number"
+                pattern="[0-9]*" min="1" step="1" placeholder="Quante persone">
+            <div class="flex fRow aCenter gap10 jBet">
+                <input formControlName="userDate" [min]="today" class="indroButton f1 br10 w100 waN" id="dateInp" lang="it-IT" type="date" 
+                placeholder="Data">
+
+                <input formControlName="userTime" lang="it-IT" class="indroButton f1 br10 w100 waN" type="time" id="appt" name="appt"
+                    min="06:00" max="23:30" placeholder="20:00" required>
+                <!-- <small>A che ora oggi? (per forza oggi)</small> -->
+            </div>
+            <input formControlName="phoneNumber" class="indroButton f1 br10 w100" type="tel" placeholder="+393444444">
+            <input formControlName="note" maxlength="50" class="indroButton f1 br10 w100" type="text"
+                placeholder="Note oppure specifica il servizio che vuoi...">
+            <button [disabled]="newRes.invalid" class="f1 br10 btn1 bgrGr boxSha pad15 brN" type="button"
+                (click)="addReservation()">INVIA</button>
+            <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="step = 1">ANNULLA</button>
+        </form>
+    </ng-container>
+
+    <ng-container *ngIf="reservationId && step == 4">
+        <div class="flex fColumn gap30">
+            <ng-container *ngIf="!(reservation$ | async)">
+                <ng-container *ngIf="!intervalEnded">
+                    <h2 class="fw7">In attesa di una risposta dal ristorante...</h2>
+                    <div class="spinner"></div>
+                    <button *ngIf="fidelityCard?.business_phone_number" class="f1 br10 btn1 bgrGr boxSha pad15 brN" (click)="call()"><i class="fa-solid fa-phone"></i>&nbsp;{{ fidelityCard?.business_phone_number }}</button>
+                </ng-container>
+                <ng-container *ngIf="!!intervalEnded">
+                    <h2 class="fw7">È passato un po di tempo, chiama il locale per informazioni.</h2>
+                    <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="startingCurrentReservation()">aggiorna</button>
+                    <button *ngIf="fidelityCard?.business_phone_number" class="f1 br10 btn1 bgrGr boxSha pad15 brN" (click)="call()"><i class="fa-solid fa-phone"></i>&nbsp;{{ fidelityCard?.business_phone_number }}</button>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="(reservation$ | async) as res">
+                <h2 *ngIf="res.status === 'accepted'" class="fw7">Prenotazione Confermata!</h2>
+                <ng-container *ngIf="res.status === 'declined'">
+                    <h2 *ngIf="!res.sub_status" class="fw7">Prenotazione Rifiutata.</h2>
+                    <h2 *ngIf="res.sub_status === 'business_canceled'" class="fw7">Prenotazione Cancellata dal Locale.
+                    </h2>
+                    <h2 *ngIf="res.sub_status === 'full'" class="fw7">Prenotazione Rifiutata. Il Locale è pieno!.</h2>
+                    <h2 *ngIf="res.sub_status === 'new_date'" class="fw7">Per questo orario la prenotazione è stata
+                        respinta. Il Locale vi invita a riprovare una prenotazione per le {{ res.business_time |
+                        date:'H:mm':'+0000' }}.</h2>
+                </ng-container>
+            </ng-container>
+        </div>
+    </ng-container>
+
+
+    <ng-container *ngIf="step == 5">
+        <div class="flex fColumn gap30">
+            <ng-container *ngIf="!loading">
+                <ng-container *ngIf="!(referral$ | async)">
+                    <h3>Genera un codice da condividere sui social o agli amici, ogni volta che lo usano per la prima volta, tu guadagni uno sconto in questo ristorante!</h3>
+                    <button class="f1 br10 btn1 bgrG boxSha pad15 brN" (click)="generate()">GENERA CODICE</button>
+                    <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="step = 1">ANNULLA</button>
+                </ng-container>
+                <ng-container *ngIf="(referral$ | async) as referral">
+                    <div class="flex fColumn gap5 w100">
+                        <h3>Condividi sui social o agli amici il tuo codice, ogni volta viene usato, tu guadagni uno sconto in questo ristorante!</h3>
+                        <h5 class="fw4">Mandalo per whatsapp, o fai un post su Instagram e mettilo nella bio/descrizione del post! Indica che va riscattato con l'app Comeback!.</h5>
+                    </div>
+                    <div class="flex fColumn gap10 w100">
+                        <input class="indroButton pad15 textCenter fw600 br10" style="font-size: 23px;" type="text" [value]="referral.uuid" disabled>
+                        <button class="f1 br10 btn1 bgrGr boxSha pad15 brN" (click)="copy()">COPIA</button>
+                        <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="step = 1">ANNULLA</button>
+                    </div>
+                </ng-container>
+            </ng-container>
+            <div *ngIf="loading" class="spinner"></div>
+        </div>
+    </ng-container>
 </div>

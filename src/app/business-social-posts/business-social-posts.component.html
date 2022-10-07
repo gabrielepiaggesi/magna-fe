@@ -1,22 +1,26 @@
-<div class="h100 flex fColumn gap30 pad20 pRel" style="padding-bottom: 90px;">
-    <h2>Post da Gestire</h2>
+<div class="h100 flex fColumn gap10 pad10 oAuto box pRel">
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
     <ng-container *ngIf="!loading">
-
         <ng-container *ngIf="(socialPosts$ | async) as socialPosts">
             <p *ngIf="!socialPosts.length">Nessun Post su Instagram da gestire.</p>
             <p *ngIf="(currentSocialPost$ | async) as currentSocialPost">{{ currentSocialPost.idx+1 }}/{{socialPosts.length}}</p>
         </ng-container>
 
+        <ng-container *ngIf="(currentSocialPost$ | async) as currentSocialPost">
+            <!-- <a *ngIf="!!currentSocialPost" [href]="getUrl(currentSocialPost._url)" id="openLink" target="_system">APRI POST</a> -->
+            <a *ngIf="!!currentSocialPost" style="color: blue; text-decoration: underline;" (click)="open(currentSocialPost._url)">APRI POST</a>
+            <small>Anteprima:</small>
+        </ng-container>
 
-        <div *ngIf="(currentSocialPost$ | async) as currentSocialPost" class="flex fColumn gap20 w100 oAuto">
-            <div class="w100 oAuto" style="height: 500px;">
-                <iframe class="w100 oAuto" [src]="currentSocialPost.url" frameborder="0"></iframe>
+        <div *ngIf="(currentSocialPost$ | async) as currentSocialPost" class="w100 oAuto h100 pRel">
+            <div class="overlay" (click)="open(currentSocialPost._url)">
             </div>
-            <div class="flex w100 fRow jBet aCenter mT10">
-                <button class="btnOutline br5" style="width: 100px;" (click)="discard()">rifiuta</button>
-                <button class="btnFilledIndro br5" style="width: 100px;" (click)="approve()">APPROVA</button>
-            </div>
+            <iframe scrolling="yes" scrollable="yes" class="w100 oAuto" id="frameSocial" [src]="currentSocialPost.url" frameborder="0"></iframe>
         </div>
+        <!-- <iframe *ngIf="(currentSocialPost$ | async) as currentSocialPost" scrolling="yes" class="w100 oAuto" id="frameSocial" [src]="currentSocialPost.url" frameborder="0"></iframe> -->
     </ng-container>
-    <p *ngIf="!!loading"></p>
+</div>
+<div *ngIf="(currentSocialPost$ | async) as currentSocialPost" class="flex w100 fRow jBet pad10 boxSha aCenter mT10 footer">
+    <button class="btnOutline br5 f1" (click)="discard()">rifiuta</button>
+    <button class="btnFilledIndro br5 f1" (click)="approve()">APPROVA</button>
 </div>

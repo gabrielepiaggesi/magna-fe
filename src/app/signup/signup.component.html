@@ -1,11 +1,25 @@
-<div class="flex fColumn fCenter pad40 w100">
-    <form *ngIf="!loading" class="flex fColumn gap10 w100 mT40" [formGroup]="signupForm">
+<div class="flex fColumn fCenter pad20 w100">
+    <form *ngIf="!loading" class="flex fColumn fCenter gap15 w100 mT40" [formGroup]="signupForm">
         <h2>Registrati</h2>
-        <input formControlName="email" class="indroButton f1 br5 w100" type="email" placeholder="Email">
-        <!-- <input class="indroButton f1 br5 w100" type="password" placeholder="Password">
-        <input class="indroButton f1 br5 w100" type="password" placeholder="Conferma Password"> -->
-        <button type="button" [disabled]="signupForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="signup()">FATTO</button>
+        
+        <div class="flex fColumn gap5 f1 w100">
+            <label for="emailInp">Email:</label>
+            <input formControlName="email" class="indroButton f1 br10 w100" id="emailInp" type="email" placeholder="Email">
+        </div>
+
+        <div class="flex fColumn gap5 f1 w100">
+            <label for="dateInp">Data di nascita:</label>
+            <input formControlName="birthdate" class="indroButton f1 br10 w100 waN" id="dateInp" type="date" lang="it-IT" placeholder="Data di nascita">
+        </div>
+
+        <div class="flex fRow aCenter gap10 w100">
+            <input style="transform: scale(1.5);" formControlName="hasAccepted" type="checkbox">
+            <small>Accetto i <span style="text-align: left; text-decoration: underline;" (click)="openTC()">Termini e Condizioni D'uso</span> e la <span style="text-align: left; text-decoration: underline;" (click)="openPP()">Privacy Policy.</span></small>
+        </div>
+
+        <button type="button" [disabled]="signupForm.invalid" class="btnFilledIndro bgrG f1 br10 w100" (click)="signup()">FATTO</button>
         <p style="text-decoration: underline;" (click)="router.navigateByUrl('login')">Oppure Accedi</p>
+        <small class="mT40">Per assistenza contattare comebackwebapp@gmail.com</small>
     </form>
-    <p *ngIf="!!loading"></p>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div> 

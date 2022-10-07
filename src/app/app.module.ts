@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -24,6 +24,16 @@ import { BusinessReviewsComponent } from './business-reviews/business-reviews.co
 import { NewBusinessDiscountComponent } from './new-business-discount/new-business-discount.component';
 import { BusinessDiscountComponent } from './business-discount/business-discount.component';
 import { BusinessCheckComponent } from './business-check/business-check.component';
+import { QRCodeModule } from 'angularx-qrcode';
+import { SettingsComponent } from './settings/settings.component';
+import { ReservationsComponent } from './reservations/reservations.component';
+import { ReservationPreviewComponent } from './reservation-preview/reservation-preview.component';
+import { BusinessQrComponent } from './business-qr/business-qr.component';
+import { ReservationComponent } from './reservation/reservation.component';
+import { OverlayComponent } from './overlay/overlay.component';
+import { UserReservationsComponent } from './user-reservations/user-reservations.component';
+import { RedeemComponent } from './redeem/redeem.component';
+import { BusinessEmployeesComponent } from './business-employees/business-employees.component';
 
 @NgModule({
   declarations: [
@@ -47,13 +57,23 @@ import { BusinessCheckComponent } from './business-check/business-check.componen
     BusinessReviewsComponent,
     NewBusinessDiscountComponent,
     BusinessDiscountComponent,
-    BusinessCheckComponent
+    BusinessCheckComponent,
+    SettingsComponent,
+    ReservationsComponent,
+    ReservationPreviewComponent,
+    BusinessQrComponent,
+    ReservationComponent,
+    OverlayComponent,
+    UserReservationsComponent,
+    RedeemComponent,
+    BusinessEmployeesComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    QRCodeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

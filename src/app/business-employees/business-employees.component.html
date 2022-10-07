@@ -1,0 +1,40 @@
+<div class="h110 flex fColumn gap30 pad10 pRel" *ngIf="!newEmployee && !currentEmployee" style="padding-bottom: 90px;">
+    <!-- <h2>Le tue Attività</h2> -->
+    <ng-container *ngIf="!loading">
+        <div class="list br10 bgrW">
+            <div *ngFor="let employee of (employees$ | async)" class="element" (click)="openEmplyee(employee)">
+                <p>{{employee.user_email}}</p>
+            </div>
+            <div class="element" (click)="newEmployee = true">
+                <p>NUOVO</p>
+            </div>
+        </div>
+    </ng-container>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+</div>
+
+
+
+<div *ngIf="!!newEmployee && !loading" class="flex fColumn fCenter pad10 w100">
+    <form *ngIf="!loading" class="flex fColumn gap10 w100" [formGroup]="employeeForm">
+        <!-- <h2>Nuova Attività</h2> -->
+        <label for="userIdInput">FATTI DIRE L'ID UTENTE, che possono trovare sul profilo.</label>
+        <input id="userIdInput" formControlName="userId" class="indroButton f1 br5 w100 mT30" type="text" placeholder="ID UTENTE">
+        <button type="button" [disabled]="employeeForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="addEmployee()">AGGIUNGI</button>
+        <button type="button" class="btnOutline f1 br5 w100" (click)="newEmployee = false">ANNULLA</button>
+        <!-- <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p> -->
+    </form>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+</div>
+
+<div *ngIf="!!currentEmployee && !loading" class="flex fColumn fCenter pad10 w100">
+    <form *ngIf="!loading" class="flex fColumn gap10 w100" [formGroup]="employeeForm">
+        <h3>{{currentEmployee.user_email}}</h3>
+        <label for="userIdInput">Non modificare il campo di testo.</label>
+        <input id="userIdInput" formControlName="userId" class="indroButton f1 br5 w100 mT30" type="text">
+        <button type="button" [disabled]="employeeForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="removeEmployee()">RIMUOVI</button>
+        <button type="button" class="btnOutline f1 br5 w100" (click)="closeEmp()">ANNULLA</button>
+        <!-- <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p> -->
+    </form>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+</div>

@@ -1,30 +1,78 @@
-<div [attr.class]="checkType === 'fidelity-card' ? 'flex fColumn pad20 gap20 w100 bgrP' : 'flex fColumn pad20 gap20 w100 bgrY'">
+<div *ngIf="!!manualMode" class="flex fColumn pad20 gap20 w100 bgrWl">
     <ng-container *ngIf="!loading">
-        <h2>{{ checkType === 'fidelity-card' ? 'Carta Fedeltà' : 'Premio!' }}</h2>
+        <h2>Convalida a mano</h2>
         <form class="flex fColumn gap10 w100" [formGroup]="entityForm">
+
+            <div class="flex fColumn gap5">
+                <label for="entitySelect">Cosa stai validando?</label>
+                <select 
+                    formControlName="type"
+                    name="entitySelect" 
+                    id="entitySelect" 
+                    class="br10 brN w100 boxSha" 
+                    style="font-size: 17px; height: 42px;" 
+                >
+                    <option disabled selected [value]="null">-- Seleziona --</option>
+                    <option value="discount">Sconto</option>
+                    <option value="fidelityCard">Carta Fedeltà</option>
+                </select>
+            </div>
             
-            <label for="discountTypeSelect">{{ checkType === 'fidelity-card' ? 'ID Carta:' : 'ID Premio:' }}</label>
-            <input formControlName="id" class="indroButton f1 br5 w100 mB10" type="number" min="1" max="20" step="1" placeholder="5">
-            
+            <div class="flex fColumn gap5">
+                <label for="discountTypeSelect">Inserisci il Codice della Carta o dello Sconto (è scritto sopra il qr sul tel del cliente)</label>
+                <input formControlName="id" class="indroButton f1 br5 w100 mB10" type="number" min="1" max="20" step="1" placeholder="5">
+            </div>
+
             <button 
-                *ngIf="checkType === 'fidelity-card'" 
                 type="button" 
                 [disabled]="entityForm.invalid" 
                 class="btnFilledIndro f1 br5 w100" 
-                (click)="checkFidelityCard()"
+                (click)="manualValidate()"
             >
-                SEGNA CARTA
+                CONVALIDA
             </button>
+            <br>
             <button 
-                *ngIf="checkType === 'discount'" 
                 type="button" 
-                [disabled]="entityForm.invalid" 
-                class="btnFilledIndro f1 br5 w100" 
-                (click)="checkDiscount()"
+                class="btnOutline f1 br10 w100" 
+                (click)="cancelScan()"
             >
-                USA PREMIO
+                INDIETRO
             </button>
         </form>
     </ng-container>
-    <p *ngIf="!!loading"></p>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+</div>
+
+
+<div *ngIf="!!qrMode" class="flex fColumn h100 f1">
+    <div class="flex fRow w100 bgrWl" style="height: 5px;">
+    </div>
+    <div class="flex fRow f1">
+        <div class="flex fRow w100 bgrWl" style="width: 20px;">
+        </div>
+        <div *ngIf="!loading" class="flex fRow w100 br10 f1 qrWindow">
+        </div>
+        <div *ngIf="!!loading" class="flex fRow w100 br10 f1 fCenter loadWindow">
+            <p>Caricamento...</p>
+        </div>
+        <div class="flex fRow w100 bgrWl" style="width: 20px;">
+        </div>
+    </div>
+    <div class="flex fColumn fCenter pad20 gap5 w100 bgrWl">
+        <button 
+            type="button" 
+            class="btnFilledIndro f1 br10 w100" 
+            (click)="cancelScan()"
+        >
+            INDIETRO
+        </button>
+        <button 
+            type="button" 
+            class="btnOutline f1 br10 w100" 
+            (click)="writeCode()"
+        >
+            SCRIVI CODICE
+        </button>
+    </div>
 </div>

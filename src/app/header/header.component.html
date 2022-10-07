@@ -1,3 +1,22 @@
-<div class="flex fRow aCenter pad20 w100 header">
+<!-- <div class="flex fRow aCenter pad20 w100 header">
     <p style="color: #5F7FBE" (click)="back()">Indietro</p>
-</div> 
+</div>  -->
+
+<ng-container *ngIf="{ data: (appService.headerData | async) } as sys">
+    <div class="flex fRow fCenter jBet pad10 w100 header">
+        <i *ngIf="showBack" (click)="back()" class="fa-solid fa-chevron-left"></i>
+        <i *ngIf="!showBack" style="visibility: hidden;" class="fa-solid fa-chevron-left"></i>
+        <p 
+            *ngIf="sys.data?.title"
+            class="notMain"
+            id="appTitle"
+            [ngClass]="{ 
+                'main': sys.data?.type === 'main', 
+                'name': sys.data?.type === 'name'
+            }"
+        >
+            {{sys.data?.title}}
+        </p>
+        <i style="visibility: hidden;" class="fa-solid fa-qrcode"></i>
+    </div>
+</ng-container>

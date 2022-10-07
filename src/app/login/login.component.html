@@ -1,10 +1,13 @@
-<div class="flex fColumn fCenter pad40 w100">
-    <form *ngIf="!loading" class="flex fColumn gap10 w100 mT40" [formGroup]="loginForm">
+<div class="flex fColumn fCenter pad20 w100">
+    <form *ngIf="!loading" class="flex fColumn textCenter fCenter gap10 w100 mT40" [formGroup]="loginForm">
         <h2>Login</h2>
-        <input formControlName="email" class="indroButton f1 br5 w100" type="email" placeholder="Email">
-        <input formControlName="password" class="indroButton f1 br5 w100" type="password" placeholder="Password">
-        <button type="button" [disabled]="loginForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="login()">ACCEDI</button>
+        <input formControlName="email" class="indroButton f1 br10 w100" type="email" placeholder="Email">
+        <input formControlName="password" class="indroButton f1 br10 w100" type="password" placeholder="Password">
+        <button type="button" [disabled]="loginForm.invalid" class="btnFilledIndro bgrG f1 br10 w100" (click)="login()">ACCEDI</button>
         <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p>
+        <small class="mT40">
+            Non ricordi la password? Quando ti sei iscritto ti abbiamo mandato per email le credenziali, cerca bene nella tua posta elettronica email provenienti da noi.
+            Per assistenza contattare comebackwebapp@gmail.com</small>
     </form>
-    <p *ngIf="!!loading"></p>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div>

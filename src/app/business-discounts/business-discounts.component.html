@@ -1,20 +1,27 @@
 <ng-container *ngIf="!loading">
-    <div class="h100 flex fColumn gap30 pad20 pRel"
+    <div class="h100 flex fColumn gap30 pad10 pRel"
         style="padding-bottom: 90px;">
-        <h2>Sconti nella tua Attività</h2>
-        <div *ngIf="!(socialPostDiscount$ | async)" class="card pad20 cP" (click)="go('new-business-discount/' + businessId + '/IG_POST')">
-            <p>Crea Premio per Post su Instagram</p>
-        </div>
-        <div *ngIf="!(fidelityCardDiscount$ | async)" class="card pad20 cP" (click)="go('new-business-discount/' + businessId + '/FIDELITY_CARD')">
-            <p>Crea Premio Carta Fedeltà Completata</p>
-        </div>
-
-        <div *ngIf="(socialPostDiscount$ | async) as socialPostDiscount" class="card pad20 cP" (click)="go('business-discount/' + businessId + '/' + socialPostDiscount.id)">
-            <p>Premio per Post su Instagram</p>
-        </div>
-        <div *ngIf="(fidelityCardDiscount$ | async) as fidelityCardDiscount" class="card pad20 cP" (click)="go('business-discount/' + businessId + '/' + fidelityCardDiscount.id)">
-            <p>Premio per Carta Fedeltà Completata</p>
+        <div class="list br10 bgrW">
+            <div *ngIf="!(socialPostDiscount$ | async)" class="element" (click)="go('new-business-discount/' + businessId + '/IG_POST')">
+                <p>Crea Premio per Post su Instagram</p>
+            </div>
+            <div *ngIf="!(referralDiscount$ | async)" class="element" (click)="go('new-business-discount/' + businessId + '/REFERRAL')">
+                <p>Crea Premio per AMICO Invitato</p>
+            </div>
+            <div *ngIf="!(fidelityCardDiscount$ | async)" class="element" (click)="go('new-business-discount/' + businessId + '/FIDELITY_CARD')">
+                <p>Crea Premio Carta Fedeltà Completata</p>
+            </div>
+    
+            <div *ngIf="(socialPostDiscount$ | async) as socialPostDiscount" class="element" (click)="go('business-discount/' + businessId + '/' + socialPostDiscount.id)">
+                <p>Premio per Post su Instagram</p>
+            </div>
+            <div *ngIf="(referralDiscount$ | async) as referralDiscount" class="element" (click)="go('business-discount/' + businessId + '/' + referralDiscount.id)">
+                <p>Premio per AMICO Invitato</p>
+            </div>
+            <div *ngIf="(fidelityCardDiscount$ | async) as fidelityCardDiscount" class="element" (click)="go('business-discount/' + businessId + '/' + fidelityCardDiscount.id)">
+                <p>Premio per Carta Fedeltà Completata</p>
+            </div>
         </div>
     </div>
 </ng-container>
-<p *ngIf="!!loading"></p>
+<div *ngIf="!!loading" class="spinner mAuto"></div>

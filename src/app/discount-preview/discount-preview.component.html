@@ -1,4 +1,4 @@
-<div class="cP flex fRow gap15 pad15 br5 card bgrY">
+<!-- <div class="cP flex fRow gap15 pad15 br5 card bgrY">
     <div class="qrCode">
         <img src="https://boofcv.org/images/thumb/3/35/Example_rendered_qrcode.png/400px-Example_rendered_qrcode.png" alt="">
     </div>
@@ -8,5 +8,31 @@
             {{discount?.discount_amount}}{{ discount?.discount_type == 'PERC' ? '%' : '€' }}, 
             minimo di spesa di {{discount?.discount_minimum_expense}}€
         </p>
+    </div>
+</div> -->
+
+<div class="flex fRow aCenter pad10 discountBox br10 gap10">
+    <div class="flex fRow fCenter dashedBoRight">
+        <div class="flex fRow fCenter pad5 br5 bgrW">
+            <img width="50" src="https://boofcv.org/images/thumb/3/35/Example_rendered_qrcode.png/400px-Example_rendered_qrcode.png" alt="">
+        </div>
+    </div>
+    <div class="flex fColumn discountBio f1">
+        <p class="incName">{{discount?.business_name}}</p>
+        <p class="discountInfo" *ngIf="discount?.discount_minimum_expense">
+            minimo di spesa di {{discount?.discount_minimum_expense}}€
+        </p>
+        <p class="discountInfo" *ngIf="!discount?.discount_minimum_expense">
+            nessuna spesa minima!
+        </p>
+        <p class="discountValue" *ngIf="discount?.discount_amount">
+            <i class="fa-solid fa-gift crW"></i> {{discount?.discount_amount}}{{ discount?.discount_type == 'PERC' ? '%' : '€' }}
+        </p>
+        <p class="discountValue" *ngIf="!discount?.discount_amount">
+            {{discount?.slogan || 'PASTO GRATIS!'}}
+        </p>
+    </div>
+    <div class="imgBox">
+        <i class="fa-solid fa-store businessImg crG bgrY"></i>
     </div>
 </div>

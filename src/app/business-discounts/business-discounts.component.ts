@@ -14,6 +14,7 @@ export class BusinessDiscountsComponent implements OnInit {
   public businessId!: number;
   public socialPostDiscount$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
   public fidelityCardDiscount$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
+  public referralDiscount$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
 
   constructor(
     private router: Router,
@@ -41,8 +42,10 @@ export class BusinessDiscountsComponent implements OnInit {
       .then((discounts: any) => {
         const socialPostDiscounts = discounts.filter((d: any) => d.origin === 'IG_POST');
         const fidelityCardDiscounts = discounts.filter((d: any) => d.origin === 'FIDELITY_CARD');
+        const referralDiscounts = discounts.filter((d: any) => d.origin === 'REFERRAL');
         socialPostDiscounts.length && this.socialPostDiscount$.next(socialPostDiscounts[0]);
         fidelityCardDiscounts.length && this.fidelityCardDiscount$.next(fidelityCardDiscounts[0]);
+        referralDiscounts.length && this.referralDiscount$.next(referralDiscounts[0]);
       })
       .catch((e: any) => console.error(e))
       .finally(() => (this.loading = false));

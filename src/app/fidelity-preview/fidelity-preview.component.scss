@@ -1,30 +1,77 @@
+.fidBox {
+    background: #455065;
+    box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: white;
+    min-height: 190px;
+}
+.dashedBoRight {
+    border-right: 2px dashed white;
+    padding-right: 10px;
+}
+.businessImg {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    // color: #424242;
+    border: 3px solid white;
+}
+.discountBio {
+    .incName {
+        font-family: 'Nunito Sans', sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+    }
+    .discountInfo {
+        font-family: 'Nunito Sans', sans-serif;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 14px;
+    }
+    .discountValue {
+        font-family: 'Nunito Sans', sans-serif;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 21px;
+    }
+}
+.imgBox {
+    img {
+        width: 40px;
+        border-radius: 40px;
+        border: 3px solid white;
+    }
+}
+.qrCode {
+    width: 40px;
+    height: 40px;
 
-.incName {
-    font-size: 21px;
-    font-weight: 600;
+    img {
+        width: 100%;
+    }
 }
-.discountInfo {
-    font-size: 15px;
-    font-weight: 300;
-    padding-bottom: 10px;
-    border-bottom: 1px solid lightgrey;
-}
-.discountAlert {
-    font-size: 15px;
-    font-weight: 400;
-    padding-bottom: 10px;
-    color: red;
+.op3 {
+    opacity: 0.3;
 }
 .badge {
     width: 50px;
     height: 50px;
     border-radius: 50px;
-    background-color: transparent;
-    border: 1px solid black;
-
-    .cross {
-        font-size: 50px;
-        margin-bottom: 3px;
-        font-weight: 300;
-    }
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+}
+.badgeBgr {
+    background: rgba(255, 255, 255, 0.5);;
+    color: #455065;
+}
+.done {
+    background-color: white;
+    color: #455065;
 }

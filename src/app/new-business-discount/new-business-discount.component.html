@@ -1,6 +1,6 @@
 <div class="flex fColumn pad20 gap20 w100">
     <ng-container *ngIf="!loading">
-        <h2>Premio per {{origin}}</h2>
+        <h2>Per {{origin}}</h2>
         <form class="flex fColumn gap10 w100" [formGroup]="newDiscountForm">
             <label for="discountTypeSelect">Scegli tra Percentuale o Euro:</label>
             <select formControlName="type" name="discountType" id="discountTypeSelect" class="indroButton f1 br5 w100 mB10">
@@ -23,5 +23,5 @@
             <button type="button" [disabled]="newDiscountForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="addNewBusinessi()">CREA</button>
         </form>
     </ng-container>
-    <p *ngIf="!!loading"></p>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div>

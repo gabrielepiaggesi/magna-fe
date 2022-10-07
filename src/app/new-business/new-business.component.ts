@@ -13,7 +13,8 @@ import { Location } from '@angular/common';
 export class NewBusinessComponent implements OnInit {
   public loading = false;
   public newBusinessForm = this.fb.group({
-    name: [null, Validators.required]
+    name: [null, Validators.required],
+    referralCode: [null]
   });
 
   constructor(
@@ -34,5 +35,9 @@ export class NewBusinessComponent implements OnInit {
       })
       .catch((e: any) => console.error(e))
       .finally(() => this.loading = false);
+  }
+
+  public mail() {
+    window.open('mailto:comebackwebapp@gmail.com?subject=VOGLIO%20COMEBACK', '_system');
   }
 }
