@@ -13,6 +13,10 @@
         <p>Le tue informazioni:</p>
         <div *ngIf="(user$ | async) as user" class="list br10 bgrW">
             <div class="element">
+                <p class="mB10">CAP della tua zona:</p>
+                <form class="w100 flex fRow aCenter gap10" [formGroup]="capForm"> <input class="indroButton br5 w50" type="text" maxlength="10" formControlName="cap" placeholder="00175"><button class="btnFilledIndro br5" [disabled]="capForm.invalid" (click)="updateCap()">SALVA</button></form>
+            </div>
+            <div class="element">
                 <p>NUMERO UTENTE: {{user.id}}</p>
             </div>
             <div *ngIf="user.referral_code" class="element">
@@ -34,6 +38,17 @@
                 </div>
             </div>
         </div>
+        <ng-container *ngIf="(deviceAppVersion$ | async) as deviceAppVersion">
+            <p>App Info:</p>
+            <div class="list br10 bgrW">
+                <div class="element">
+                    <p>Versione: {{deviceAppVersion}}</p>
+                </div>
+                <div *ngIf="!!(canUpdateApp$ | async)" class="element">
+                    <button class="btnFilledIndro br5" (click)="openAppStore()">Aggiorna App</button>
+                </div>
+            </div>
+        </ng-container>
         <p>Altro:</p>
         <div class="list br10 bgrW">
             <div class="element">

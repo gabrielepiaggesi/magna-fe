@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { AppService } from '../app.service';
 import { Location } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-redeem',
@@ -15,6 +16,7 @@ export class RedeemComponent implements OnInit {
   public referralForm = this.fb.group({
     uuid: [null, Validators.required]
   });
+  public nots$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   constructor(
     private apiService: ApiService, 
@@ -24,10 +26,21 @@ export class RedeemComponent implements OnInit {
     private location: Location) { }
 
   ngOnInit(): void {
+    this.getNotifications();
   }
 
   openHack() {
     window.open('https://comebackwebapp.web.app/referral', '_system')
+  }
+
+  public getNotifications() {
+    this.loading = true;
+    this.apiService.getUserNotifications()
+      .then((nots: any) => {
+        this.nots$.next(nots);
+      })
+      .catch((e: any) => console.error(e))
+      .finally(() => this.loading = false);
   }
 
   public redeem() {

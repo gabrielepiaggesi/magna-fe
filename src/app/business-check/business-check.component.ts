@@ -17,7 +17,9 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
   public businessId!: number;
   public manualMode = false;
   public qrMode = true;
+  public canceled = false;
   public checkType!: 'fidelityCard'|'discount';
+  public pointsToAdd = 1;
   public fidelityCard$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
   public entityForm = this.fb.group({
     type: [null, Validators.required],
@@ -36,6 +38,7 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
         (params) => {
           this.businessId = +params['businessId'];
           this.checkType = params['checkType'];
+          this.pointsToAdd = params['pointsToAdd'] || 1;
         }
       );
     }
@@ -62,15 +65,24 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
       // (window as any)?.changeColor(); // CHANGE BACK COLOR!
       // this.resetColor();
       if(err) {
-        if(err.name === 'SCAN_CANCELED') {
-          this.resetColor();
-          console.error('The scan was canceled before a QR code was found.');
-        } else {
-          this.resetColor();
-          console.error(err);
-          alert('Errore!');
-        }
         this.resetColor();
+        console.error(err);
+        if(err.name === 'SCAN_CANCELED') {
+          console.error('The scan was canceled before a QR code was found.');
+        } else if (err.name === 'CAMERA_ACCESS_DENIED' || err.name === 'CAMERA_ACCESS_RESTRICTED') {
+          alert('Non hai dato il permesso a COMEBACK di usare la fotocamera. Cambia questo dalle impostazioni del telefono. Grazie!');
+          (window as any)['QRScanner'].destroy((status: any) => {
+            console.log('CAMERA_ACCESS_DENIED');
+            console.log(status);
+            try { (window as any)['QRScanner'].openSettings(); } catch(e) { console.error((e)); }
+            this.location.back();
+          });
+        } else if (err.name === 'BACK_CAMERA_UNAVAILABLE' || err.name === 'CAMERA_UNAVAILABLE') {
+          alert('Errore, fotocamera non disponibile ora, prova a chiudere e riaprire COMEBACK o a dare i permessi dalle impostazioni del telefono.');
+        } else {
+          console.error(err);
+          alert('Errore, prova a chiudere e riaprire COMEBACK o a dare gli accessi alla fotocamera dalle impostazioni del telefono.');
+        }
         (window as any)['QRScanner'].destroy((status: any) => {
           console.log('SCAN ERROR');
           console.log(status);
@@ -95,14 +107,18 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
   }
 
   public manualValidate() {
+    this.resetColor();
     const form = this.entityForm.getRawValue();
     form.type === 'discount' ? this.checkDiscount() : this.checkFidelityCard();
   }
 
   public infiniteScan() {
-    setTimeout(() => {
-      this.scanQR();
-    }, 500);
+    this.manualMode && this.location.back();
+    !this.manualMode && setTimeout(() => {
+      const href = window.location.href;
+      console.log('href', href);
+      !this.manualMode && href.includes('check') && !this.canceled && this.scanQR();
+    }, 1000);
   }
 
   public autoValidate(businessUrl: string) {
@@ -112,7 +128,11 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
       console.log(qrObj);
       if (!qrObj.entityType || !qrObj.entityId || !qrObj.businessId) return;
       if (!['discount', 'fidelityCard'].includes(qrObj.entityType)) return;
-      if (isNaN(qrObj.businessId) || qrObj.businessId != this.businessId) return;
+      if (isNaN(qrObj.businessId)) return;
+      if (qrObj.businessId != this.businessId) {
+        alert('Errore! NON è la Carta Fedeltà di questo locale!');
+        return;
+      }
       if (+qrObj.entityId <= 0) return;
       if (isNaN(qrObj.entityId)) return;
       
@@ -133,10 +153,11 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
       window.document.body.style.backgroundColor = '#F5F5F5';
       document.body.style.backgroundColor = '#F5F5F5';
       this.ref.detectChanges();
-    }, 1000);
+    }, 300);
   }
 
   public cancelScan(goBack = true) {
+    this.canceled = true;
     this.resetColor();
     document.body.style.backgroundColor = "#F5F5F5";
     (window as any)?.changeColor();
@@ -150,6 +171,7 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
   }
 
   public writeCode() {
+    this.resetColor();
     this.cancelScan(false);
     this.manualMode = true;
     this.loading = false;
@@ -158,11 +180,11 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
 
   public checkFidelityCard() {
     this.loading = true;
-    this.apiService.checkUserFidelityCardValidity(this.entityForm.getRawValue().id, this.businessId)
-      .then(() => { alert('CARTA SEGNATA! Ottimo');  })
+    this.apiService.checkUserFidelityCardValidity(this.entityForm.getRawValue().id, this.businessId, this.pointsToAdd)
+      .then(() => { alert('FATTO !');  })
       .catch((e: any) => {
         console.error(e);
-        alert('Carta NON VALIDA!');
+        alert('Errore! Forse è stata gia timbrata oggi.');
       })
       .finally(() => {
         this.loading = false;
@@ -173,10 +195,10 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
   public checkDiscount() {
     this.loading = true;
     this.apiService.checkUserDiscountValidity(this.entityForm.getRawValue().id, this.businessId)
-      .then(() => { alert('SCONTO VALIDATO! Ottimo'); this.location.back(); })
+      .then(() => { alert('FATTO !'); this.location.back(); })
       .catch((e: any) => {
         console.error(e);
-        alert('Premio NON VALIDO!');
+        alert('Errore! Forse è il premio o la carta sono stati gia timbrati oggi.');
       })
       .finally(() => {
         this.loading = false;

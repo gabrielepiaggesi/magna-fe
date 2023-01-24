@@ -34,6 +34,8 @@ import { OverlayComponent } from './overlay/overlay.component';
 import { UserReservationsComponent } from './user-reservations/user-reservations.component';
 import { RedeemComponent } from './redeem/redeem.component';
 import { BusinessEmployeesComponent } from './business-employees/business-employees.component';
+import { BusinessNotificationsComponent } from './business-notifications/business-notifications.component';
+import { BusinessPreviewComponent } from './business-preview/business-preview.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +68,9 @@ import { BusinessEmployeesComponent } from './business-employees/business-employ
     OverlayComponent,
     UserReservationsComponent,
     RedeemComponent,
-    BusinessEmployeesComponent
+    BusinessEmployeesComponent,
+    BusinessNotificationsComponent,
+    BusinessPreviewComponent
   ],
   imports: [
     BrowserModule,

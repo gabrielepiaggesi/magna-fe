@@ -28,17 +28,18 @@
 
 <div *ngIf="step !== 6" class="h110 flex fColumn gap30 pad10">
     <ng-container *ngIf="!loading">
-        <div *ngIf="step == 1" class="flex fColumn gap10 mT40">
+        <div *ngIf="step == 1" class="flex fColumn gap20 mT20">
             <!-- <p id="slogan" class="mB10">Inserisci il codice del locale per iniziare.</p> -->
             <form class="flex fColumn gap15" action="" [formGroup]="incForm">
-                <input formControlName="id" class="indroButton f1 br10" type="number" placeholder="Codice Locale">
+                <label for="localId">{{ (tr?.title || 'Scrivi il codice del locale, o INQUADRA il QR-CODE del locale.') }}</label>
+                <input formControlName="id" id="localId" class="indroButton f1 br10" type="number" pattern="[0-9]*" min="1" step="1" placeholder="Codice Locale">
                 <button [disabled]="incForm.invalid" (click)="getBusiness()" class="f1 br10 btnFilledIndro"
-                    type="button">AVANTI</button>
+                    type="button">{{ (tr?.conferma || 'CONFERMA') }}</button>
             </form>
             <p class="textCenter">Oppure</p>
-            <button (click)="scanQR()" class="f1 br10 btnFilledIndro bgrG" type="button">SCAN QR LOCALE</button>
+            <button (click)="scanQR()" class="f1 br10 btnFilledIndro bgrG" type="button"><i class="fa-solid fa-camera"></i> {{ (tr?.scan || 'SCAN QR LOCALE') }}</button>
             <br>
-            <button (click)="goHome()" class="f1 br10 btnOutline" type="button">ANNULLA</button>
+            <button (click)="goHome()" class="f1 br10 btnOutline" type="button">indietro</button>
         </div>
         <ng-container *ngIf="(business$ | async) as business">
             <div *ngIf="step == 2" class="flex fColumn gap30">
@@ -47,17 +48,18 @@
                     <p class="incName">{{business.name}}</p>
                 </div> -->
                 <div class="flex fColumn gap20 pad10 br10 boxSha bgrW">
-                    <p>La Carta Fedelta prevede un <strong>PREMIO</strong> una volta completata. Cliccando sulla Carta potrai anche <strong>PRENOTARE</strong> e guadagnare sconti!
+                    <p>La Carta Fedelta prevede un <strong>PREMIO</strong> una volta completata. Cliccando sulla Carta potrai anche <strong>PRENOTARE</strong>, scrivere una recensione, guardare il <strong>MENU</strong> e tante altre cose!.
                     </p>
-                    <button (click)="addFidelityCard()" class="f1 br10 btnFilledIndro">AGGIUNGI CARTA FEDELTA</button>
+                    <button (click)="addFidelityCard()" class="f1 br10 btn1 bgrG boxSha pad15 brN w100">AGGIUNGI CARTA FEDELTA</button>
                 </div>
                 <div class="flex fColumn gap20 pad10 br10 boxSha bgrW">
                     <p>Lascia una recensione o un consiglio al locale, <strong>totalmente in ANONIMO!</strong> Sarà
                         visibile
                         solo al titolare, non è pubblico.</p>
-                    <button (click)="step = 5" class="f1 br10 btnFilledIndro">SCRIVI COMMENTO</button>
+                    <button (click)="step = 5" class="f1 br10 btn1 bgrBl boxSha pad15 brN w100">SCRIVI RECENSIONE</button>
                 </div>
-                <div class="flex fColumn gap20 pad10 br10 boxSha bgrW">
+                
+                <!-- <div class="flex fColumn gap20 pad10 br10 boxSha bgrW">
                     <p>
                         Se fai un Post su Instagram taggando questo locale, con un <strong>account PUBBLICO</strong>,
                         e se il titolare lo approverà, avrai un <strong>PREMIO</strong> per la prossima
@@ -67,8 +69,10 @@
                         In questo locale l'85% dei post vengono approvati entro 1 settimana dall'invio.
                     </p>
                     <button (click)="next()" class="f1 br10 btnFilledIndro">SCONTO INSTAGRAM</button>
-                </div>
+                </div> -->
+
                 <button (click)="goHome()" class="f1 br10 btnOutline" type="button">ANNULLA</button>
+                
                 <!-- <div class="flex fColumn gap20 pad10 br10 boxSha bgrW">
                     <p>La funzionalità "SONO QUI" permette di vedere gli <strong>account instagram delle persone
                             presenti</strong> nel locale, se anche loro hanno cliccato "SONO QUI".
@@ -110,9 +114,18 @@
             </div>
 
             <div *ngIf="step == 5" class="flex fColumn gap40">
-                <p id="slogan" class="mB10 textCenter">Scrivi commento ANONIMO.</p>
+                <p id="slogan" class="mB10 textCenter">Scrivi Recensione ANONIMA.</p>
                 <div class="flex fColumn gap10 rules">
                     <form class="flex fColumn gap15" action="" [formGroup]="reviewForm">
+                        <label for="ratingSelect">Quante stelle?</label>
+                        <select id="ratingSelect" formControlName="rating" class="br5 brN w100 boxSha mB10" style="font-size: 17px; height: 42px;">
+                            <option [value]="null" selected disabled>-- Seleziona --</option>
+                            <option value="1">1 Stella</option>
+                            <option value="2">2 Stelle</option>
+                            <option value="3">3 Stelle</option>
+                            <option value="4">4 Stelle</option>
+                            <option value="5">5 Stelle</option>
+                        </select>
                         <label for="review">Ciò che scriverai è visibile solo al titolare, e non è una recensione
                             pubblica.
                             Inutile insultare.</label>

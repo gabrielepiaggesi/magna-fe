@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output, OnDestroy, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -12,8 +12,10 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class FidelityQrComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter();
+  @Output() clickCard = new EventEmitter();
   @Input() fidelityCard!: any;
   @Input() discountPresent: boolean = false;
+  @Input() isSuggested: boolean = false;
   public referral$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
 
   public intervalEnded = false;
@@ -33,10 +35,28 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     note: [null],
   });
 
+  public lang = 'it';
+  public tr!: any;
+
+  public ch = {
+    timbra: '邮票纸',
+    newCard: '添加会员卡',
+    discount: '显示折扣',
+    cassa: "在结账时出示二维码"
+  };
+
+  public it = {
+    timbra: 'TIMBRA CARTA',
+    newCard: 'AGGIUNGI CARTA FEDELTÀ',
+    discount: 'MOSTRA SCONTO',
+    cassa: "Mostra il QR alla cassa"
+  };
+
   constructor(
     private apiService: ApiService, 
     private fb: FormBuilder,
-    public loc: Location
+    public loc: Location,
+    private router: Router
   ) {
   }
 
@@ -45,7 +65,21 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     clearInterval(this.intervalId);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.lang = navigator.language || 'it';
+    // this.lang = 'zh';
+    if (this.lang.includes('zh') || this.lang.includes('ch')) {
+      this.tr = this.ch;
+      this.lang = 'ch';
+    } else {
+      this.tr = this.it;
+      this.lang = 'it';
+    }
+  }
+
+  goReview() {
+    this.router.navigateByUrl('incIntro/'+ this.fidelityCard.business_id);
+  }
 
   public isDateBeforeToday(date: string) {
     const yesterday = new Date(date.toString().replace(' ', 'T'));
@@ -54,16 +88,30 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     return isInThePast;
   }
 
-  call() {
-    window.open('tel:'+this.fidelityCard?.business_phone_number, '_system');
+  call(number: string) {
+    window.open('tel:'+number, '_system');
   }
 
   web() {
     window.open(this.fidelityCard?.business_website, '_system');
   }
 
+  open(link: string) {
+    window.open(link, '_system');
+  }
+
   map() {
     window.open('https://google.com/search?q=' + encodeURI(this.fidelityCard?.business_address), '_system');
+  }
+
+  clickSignCard() {
+    this.step = 2;
+    this.clickCard.emit();
+  }
+
+  clickSconto() {
+    this.clickCard.emit();
+    this.close.emit('discount');
   }
 
   public addReservation() {
@@ -140,7 +188,12 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     this.apiService
       .generateUserReferral(this.fidelityCard.business_id, this.fidelityCard.user_id)
       .then((res: any) => this.referral$.next(res))
-      .catch((e: any) => console.error(e))
+      .catch((e: any) => { 
+        if (e && e.not_exists) {
+          alert('Il Locale non ha impostato nessun premio se inviti amici qui...');
+        }
+        console.error(e);
+      })
       .finally(() => (this.loading = false));
   }
 
@@ -150,13 +203,44 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     this.apiService
       .getUserReferral(this.fidelityCard.business_id, this.fidelityCard.user_id)
       .then((res: any) => this.referral$.next(res))
-      .catch((e: any) => console.error(e))
+      .catch((e: any) => { 
+        if (e && e.not_exists) {
+          alert('Il Locale non ha impostato nessun premio se inviti amici qui...');
+        }
+        console.error(e);
+      })
       .finally(() => (this.loading = false));
   }
 
   public copy() {
     navigator.clipboard.writeText(this.referral$.getValue().uuid);
     this.close.emit();
+  }
+
+  public addFidelityCard() {
+    this.clickCard.emit();
+    this.loading = true;
+    this.apiService.addUserFidelityCard(this.fidelityCard.business_id)
+      .then(() => {
+        alert('Carta aggiunta!');
+        this.close.emit();
+      })
+      .catch((e: any) => {
+        alert('Errore');
+      })
+      .finally(() => {
+        this.loading = false;
+        try {
+          let bodyTag: any = { 
+            user_event: "add_fidelity_card", 
+            business_id: this.fidelityCard.business_id, 
+            business_name: this.fidelityCard.business_name, 
+            business_key: this.fidelityCard.business_name.replace(' ', '_').toLowerCase()
+          };
+          bodyTag['business_id_' + (this.fidelityCard.business_id+'')] = this.fidelityCard.business_id;
+          (window as any).plugins.OneSignal.sendTags(bodyTag);
+        } catch(e) { console.error('ONESIGNAL_ERROR', e); }
+      });
   }
 
   private processRes(res: any) {

@@ -13,16 +13,18 @@ export class AppComponent implements OnInit {
   public page = 'home';
   public loading = false;
   public updateApp = false;
+  public mustUpdateAppEnabled = false;
   public appMode: 'app'|'business' = 'app';
 
   constructor(private router: Router, public appService: AppService, public apiService: ApiService, public act: ActivatedRoute) {
+    (window as any).addEventListener('notification', (e: any) => { this.go('redeem'); }, false);
     const token = localStorage.getItem('MagnaToken');
     const user = localStorage.getItem('MagnaUser');
     if (!!token && !!user) {
       this.apiService.setToken(token);
       this.appService.loggedIn.next(!!token);
       this.appService.user = JSON.parse(user);
-      this.getUserInfo();
+      // this.getUserInfo();
     }
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
@@ -49,35 +51,59 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('2', (window as any)['destination']);
     if ((window as any).cordova) {
       window.open = (window as any)['cordova'].InAppBrowser?.open;
       this.loading = true;
       (window as any).cordova.getAppVersion.getVersionNumber().then((version: any) => {
         console.log('APP VERSION', version);
+        this.getUserInfo(+(version.replace('.', '').replace('.', '')));
 
         this.apiService
           .getLastAppVersion()
           .then((appVersion: any) => {
             this.appService.showHack.next(!!appVersion.show_hack);
             console.log(appVersion);
-            let updateVersion = 0;
+            let latestVersion = 0;
+            let obsoleteVersion = 0;
             let deviceVersion = +(version.replace('.', '').replace('.', ''));
-            if (appVersion.obsolete_version) {
-              updateVersion = +(appVersion.obsolete_version.replace('.', '').replace('.', ''));
+
+            if (appVersion.version_number) {
+              latestVersion = +(appVersion.version_number.replace('.', '').replace('.', ''));
             }
-            this.updateApp = appVersion && appVersion.check_version && updateVersion > deviceVersion;
+            if (appVersion.obsolete_version) {
+              obsoleteVersion = +(appVersion.obsolete_version.replace('.', '').replace('.', ''));
+            }
+
+            this.updateApp = appVersion && appVersion.check_version && latestVersion > deviceVersion && obsoleteVersion >= deviceVersion;
+            this.mustUpdateAppEnabled = appVersion && latestVersion > deviceVersion;
           })
           .catch((e: any) => console.error(e))
           .finally(() => (this.loading = false));
       })
-      .catch((e: any) => (this.loading = false));
+      .catch((e: any) => {
+        this.getUserInfo();
+        this.loading = false;
+      });
+    } else {
+      this.getUserInfo();
+    }
+    const dest = (window as any)['destination'];
+    if (dest && dest === 'promotions') {
+      this.go('redeem');
     }
   }
 
-  public getUserInfo() {
+  public getUserInfo(currentAppVersion: number|null = null) {
     // this.loading = true;
-    this.apiService.getLoggedUser()
+    const token = localStorage.getItem('MagnaToken');
+    const user = localStorage.getItem('MagnaUser');
+    if (!!token && !!user) {
+      const lang = (navigator.language || window?.navigator?.language).substring(0, 2);
+    this.apiService.getLoggedUser(lang, currentAppVersion)
       .then((user: any) => {
+        this.appService.userInfo = user;
+        this.updateApp = this.mustUpdateAppEnabled && user.must_update_app;
         try {
           (window as any).plugins.OneSignal.setExternalUserId(user.id + '');
           (window as any).plugins.OneSignal.setEmail(user.email);
@@ -85,6 +111,7 @@ export class AppComponent implements OnInit {
       })
       .catch((e: any) => console.error(e))
       .finally(() => this.loading = false);
+    }
   }
 
   go(path: string, withId = false) {
@@ -106,5 +133,17 @@ export class AppComponent implements OnInit {
   }
   isNotPage(pages: string[]) {
     return pages.every(p => !this.page.includes(p));
+  }
+
+  public goAppStore() {
+    const platform = (window as any)['cordova'].platformId;
+    console.log(platform);
+    if (platform && platform.toString().toLowerCase() === 'ios') {
+      window.open('https://apps.apple.com/it/app/comeback-sconti-e-carte/id6443738691', '_system')
+    } else if (platform && platform.toString().toLowerCase() === 'android') {
+      window.open('https://play.google.com/store/apps/details?id=com.comeback.card&gl=IT', '_system')
+    } else {
+      window.open('https://comebackwebapp.web.app/update', '_system')
+    }
   }
 }

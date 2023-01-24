@@ -5,31 +5,32 @@
 <div [attr.class]="
     isNotPage(['login', 'signup', 'incIntro', 'fidelity/', 'discount/', 'check','social']) && !updateApp ? 'h100 oAuto container padTop padBottom' : 'h100 oAuto container padTop'
 ">
-    <div *ngIf="!!updateApp" class="flex fRow fCenter pad40">
-        <p class="fBold">Aggiorna l'App!</p>
+    <div *ngIf="!!updateApp" class="flex fColumn fCenter pad40 textCenter gap20">
+        <h3 class="fBold">Aggiorna l'App!</h3>
+        <button class="f1 br10 btn1 bgrG boxSha pad15 brN w100" (click)="goAppStore()">AGGIORNA APP</button>
     </div>
     <router-outlet *ngIf="!updateApp"></router-outlet>
 </div>
-<div class="flex fRow aCenter pad20 jBet footer" *ngIf="isNotPage(['login', 'signup', 'incIntro', 'fidelity/', 'discount/', 'check', 'social']) && !updateApp">
+<div class="flex fRow aCenter pad20 jBet footer" [ngClass]="{ 'bgrW': appMode === 'app' || !appMode, 'bgrG': appMode === 'business' }" *ngIf="isNotPage(['login', 'signup', 'incIntro', 'fidelity/', 'discount/', 'check', 'social']) && !updateApp">
 
     <ng-container *ngIf="appMode === 'app'">
         <i class="fa-solid fa-house" (click)="go('home')"></i>
-        <i class="fa-solid fa-gift" (click)="go('redeem')"></i>
+        <i id="notification-page" class="fa-solid fa-bell" (click)="go('redeem')"></i>
         <!-- <i class="fa-solid fa-qrcode" (click)="go('incIntro/any')"></i> -->
-        <i class="fa-solid fa-plus ig" (click)="go('incIntro/any')"></i>
+        <i class="fa-solid fa-plus ig" (click)="go('incIntro')"></i>
         <!-- <i class="fa-solid fa-circle-plus"></i> -->
         <!-- <i class="fa-regular fa-square-plus ig"></i> -->
 
         <i class="fa-regular fa-rectangle-list" (click)="go('user-reservations')"></i>
-        <i id="gearIcon" class="fa-solid fa-gear" (click)="go('businesses')"></i>
+        <i id="gearIcon" class="fa-solid fa-user" (click)="go('businesses')"></i>
     </ng-container>
 
     <ng-container *ngIf="appMode === 'business'">
-        <i class="fa-solid fa-house" (click)="go('home')"></i>
-        <i class="fa-solid fa-qrcode" (click)="go('business-qr', true)"></i>
+        <i class="fa-solid fa-xmark" (click)="go('home')"></i>
+        <i class="fa-solid fa-camera" (click)="go('business-qr', true)"></i>
         <i class="fa-regular fa-rectangle-list" (click)="go('reservations', true)"></i>
-        <i class="fa-solid fa-store" (click)="go('business', true)"></i>
-        <i id="gearIcon" class="fa-solid fa-gear" (click)="go('businesses')"></i>
+        <i class="fa-solid fa-gear" (click)="go('business', true)"></i>
+        <i id="gearIcon" class="fa-solid fa-user" (click)="go('businesses')"></i>
     </ng-container>
 
     <!-- <i class="fa-solid fa-house" (click)="go('home')"></i>

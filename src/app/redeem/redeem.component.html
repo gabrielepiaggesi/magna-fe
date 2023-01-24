@@ -9,15 +9,26 @@
         <p style="text-decoration: underline;" (click)="openHack()">come iniziare</p>
     </div>
 
-
-    <form *ngIf="!loading" class="flex fColumn gap10 w100" [formGroup]="referralForm">
-        <!-- <label for="uuidInput">Codice</label> -->
-        <input id="uuidInput" formControlName="uuid" class="indroButton f1 br10 w100 mT30 textCenter" type="text" placeholder="codice promo di un amico">
+    <!-- <form *ngIf="!loading" class="flex fColumn gap10 w100" [formGroup]="referralForm">
+        <input id="uuidInput" formControlName="uuid" class="indroButton f1 br10 w100 mT30 textCenter" type="text" placeholder="codice promo">
         <button type="button" [disabled]="referralForm.invalid" class="btn1 brN pad15 bgrR f1 br10 w100" style="font-size: 17px;" (click)="redeem()">RISCATTA SCONTO</button>
-    </form>
+    </form> -->
+
+    <ng-container *ngIf="!loading">
+        <ng-container *ngIf="(nots$ | async) as nots">
+            <div *ngFor="let not of nots" class="flex fColumn f1 w100 boxSha br10 bgrG pad20 cP gap5">
+                <!-- https://angular.io/api/common/DatePipe -->
+                <p>{{not.business_name}}</p>
+                <p class="fBold">{{not.title}}</p>
+                <p *ngIf="not.body">{{not.body}}</p>
+                <p>{{not.created_at | date:'d/M/yy, H:mm'}}</p>
+            </div>
+            <p *ngIf="!nots.length">Nessun Messagio dai locali.</p>
+        </ng-container>
+    </ng-container>
     <br>
-    <div class="flex fColumn gap10">
+    <!-- <div class="flex fColumn gap10">
         <h4 class="fw7">Vuoi il tuo CODICE promo da inviare sui social o agli amici per guadagnare sconti?</h4>
         <h5 class="fw4">Clicca su una tua Carta Fedeltà e vai su "INVITA E GUADAGNA", per ogni nuovo amico che userà il tuo codice, tu ricevi uno sconto in quel ristorante!</h5>
-    </div>
+    </div> -->
 </div>

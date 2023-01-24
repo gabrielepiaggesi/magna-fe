@@ -1,13 +1,18 @@
 <ng-container *ngIf="!loading">
-    <div *ngIf="businessId" class="h110 flex fColumn gap20 pad10 pRel"
-        style="padding-bottom: 90px;">
+    <form *ngIf="businessId" class="h110 flex fColumn gap20 pad10 pRel"
+        style="padding-bottom: 90px;" [formGroup]="scanForm">
+        <!-- <p>Un premio/sconto, dopo averlo convalidato non potrà più essere usato.</p> -->
+
+        <label for="discountTypeSelect" class="fBold">Quanti punti segnare/timbrare sulla carta del cliente?</label>
+        <input formControlName="pointsToAdd" class="indroButton fBold br5 w100 mB10 textCenter" type="tel" min="1" step="1" placeholder="1">
+
         <button *ngIf="businessId" 
             type="button" 
-            class="btn1 mT160 f1 br10 w100 pad15 bgrG" 
+            class="btnFilledIndro br5 w100 bgrG" 
             (click)="go('business-check/'+businessId)"
         >
-            CONVALIDA QR
+        <i class="fa-solid fa-camera"></i>  SCAN QR CLIENTE
         </button>
-    </div>
+    </form>
 </ng-container>
 <div *ngIf="!!loading" class="spinner mAuto"></div>

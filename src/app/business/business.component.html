@@ -4,16 +4,16 @@
         <!-- <h2>{{business?.name}}</h2> -->
         <div class="list br10 bgrW">
             <div class="element" (click)="go('business-discounts/'+business.id)">
-                <p>Premi / Buoni Sconto</p>
+                <p>Premi / Sconti</p>
             </div>
             <div class="element" (click)="go('business-cards/'+business.id)">
                 <p>Carta Fedeltà</p>
             </div>
-            <div class="element" (click)="go('business-social-posts/'+business.id)">
+            <!-- <div class="element" (click)="go('business-social-posts/'+business.id)">
                 <p>Gestire Post Instagram</p>
-            </div>
+            </div> -->
             <div class="element" (click)="go('business-reviews/'+business.id)">
-                <p>Commenti dei Clienti</p>
+                <p>Recensioni dei Clienti</p>
             </div>
             <div class="element" (click)="go('business-employees/'+business.id)">
                 <p>Dipendenti</p>
@@ -22,7 +22,16 @@
                 <p>Modifica Attività</p>
             </div>
             <div class="element" (click)="sendNot = true">
-                <p>Manda Notifica a tutti i Clienti</p>
+                <p>Manda Messaggio a tutti i Clienti</p>
+            </div>
+            <div class="element" (click)="go('business-notifications/'+business.id)">
+                <p>Messaggi mandati ai clienti</p>
+            </div>
+            <div class="element" (click)="editMenu()">
+                <p>Modifica Menù</p>
+            </div>
+            <div class="element" (click)="goToInsight()">
+                <p>Statistiche Locale</p>
             </div>
         </div>
         <!-- <div class="list br10 bgrW">
@@ -41,15 +50,65 @@
 <div *ngIf="!!editMode && !loading" class="flex fColumn fCenter pad10 w100">
     <form *ngIf="!loading" class="flex fColumn gap20 w100" [formGroup]="editBusinessForm">
         <!-- <h2>Nuova Attività</h2> -->
-        <input formControlName="name" class="indroButton f1 br5 w100" type="text" placeholder="Nome Locale">
-        <input formControlName="phoneNumber" class="indroButton f1 br5 w100" type="tel" placeholder="Tel: +39333333">
+        <div class="flex fColumn gap5">
+            <label>Nome Locale</label>
+            <input formControlName="name" class="indroButton f1 br5 w100" type="text" placeholder="Nome Locale">
+        </div>
+        <div class="flex fColumn gap5">
+            <label>Indirizzo</label>
+            <input formControlName="address" class="indroButton f1 br5 w100" type="text" placeholder="Indirizzo">
+        </div>
+        <div class="flex fColumn gap5">
+            <label>Numero di Telefono</label>
+            <input formControlName="phoneNumber" class="indroButton f1 br5 w100" type="tel" placeholder="Primo Telefono +39...">
+        </div>
+        <div class="flex fColumn gap5">
+            <label>Secondo Numero di Telefono</label>
+            <input formControlName="secondPhoneNumber" class="indroButton f1 br5 w100" type="tel" placeholder="Secondo Telefono +39...">
+        </div>
+        <div class="flex fColumn gap5">
+            <label>CAP/Codice Postale Locale</label>
+            <input formControlName="cap" class="indroButton f1 br5 w100" type="tel" placeholder="CAP/Codice Postale 00175">
+        </div>
+        <div class="flex fColumn gap5">
+            <label>Descrizione Locale</label>
+            <input formControlName="description" class="indroButton f1 br5 w100" type="text" placeholder="Descrizione">
+        </div>
+        <div class="flex fColumn gap5">
+            <label>Come funziona la Carta Fedeltà</label>
+            <input formControlName="cardDescription" class="indroButton f1 br5 w100" type="text" placeholder="Come funziona la Carta Fedeltà">
+        </div>
+        <div class="flex fColumn gap5">
+            <label>Sito Web</label>
+            <input formControlName="website" class="indroButton f1 br5 w100" type="text" placeholder="Sito web / link di Google Maps">
+        </div>
+        <div class="flex fColumn gap5">
+            <label>Link Menu/Prezzi</label>
+            <input formControlName="menuLink" class="indroButton f1 br5 w100" type="text" placeholder="Link/url menu - tariffe - prezzi">
+        </div>
+        <div class="flex fColumn gap5">
+            <label>Link Instagram</label>
+            <input formControlName="instagramPage" class="indroButton f1 br5 w100" type="text" placeholder="Link/url Pagina Instagram">
+        </div>
         <div class="flex fRow aCenter gap10 w100">
             <input style="transform: scale(1.5);" formControlName="acceptReservations" type="checkbox">
             <span>Accetto Prenotazioni</span>
         </div>
+        <!-- <div class="flex fRow aCenter gap10 w100">
+            <input style="transform: scale(1.5);" formControlName="acceptReferral" type="checkbox">
+            <span>Sconto Amico Invitato Attivo</span>
+        </div> -->
         <div class="flex fRow aCenter gap10 w100">
             <input style="transform: scale(1.5);" formControlName="disableReservationToday" type="checkbox">
             <span>Siamo Pieni Oggi</span>
+        </div>
+        <div class="flex fRow aCenter gap10 w100">
+            <input style="transform: scale(1.5);" formControlName="discountOnFirstReview" type="checkbox">
+            <span>Sconto Automatico alla prima recensione</span>
+        </div>
+        <div class="flex fRow aCenter gap10 w100">
+            <input style="transform: scale(1.5);" formControlName="discountOnFirstReservation" type="checkbox">
+            <span>Sconto Automatico alla prima prenotazione</span>
         </div>
         <button type="button" [disabled]="editBusinessForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="editBusiness()">SALVA</button>
         <button type="button" class="btnOutline f1 br5 w100" (click)="editMode = false">ANNULLA</button>
@@ -61,9 +120,14 @@
 
 <div *ngIf="!!sendNot && !loading" class="flex fColumn fCenter pad10 w100">
     <form *ngIf="!loading" class="flex fColumn gap20 w100" [formGroup]="notForm">
+        <h3>Manda messaggio con notifica ai tuoi clienti!</h3>
         <div class="flex fColumn gap5">
-            <label for="messageNot">Messaggio Corto</label>
-            <input id="messageNot" formControlName="msg" class="indroButton f1 br5 w100" type="text" placeholder="OGGI PORCHETTA!">
+            <label for="titleNot">Titolo (Testo Notifica)</label>
+            <input id="titleNot" formControlName="title" class="indroButton f1 br5 w100" type="text" placeholder="OGGI PORCHETTA!">
+        </div>
+        <div class="flex fColumn gap5">
+            <label for="messageNot">Messaggio (facoltativo)</label>
+            <input id="messageNot" formControlName="msg" class="indroButton f1 br5 w100" type="text" placeholder="Solo oggi panino con la porchetta fresca.">
         </div>
         <button type="button" [disabled]="notForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="sendNotification()">INVIA</button>
         <button type="button" class="btnOutline f1 br5 w100" (click)="sendNot = false">ANNULLA</button>

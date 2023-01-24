@@ -14,31 +14,62 @@
 
 
 <div class="flex fColumn gap30 mT20 h100">
+    <div *ngIf="loading" class="spinner"></div>
     <ng-container *ngIf="step == 1">
-        <div class="flex fColumn w100 fCenter gap20 mT80">
-            <button *ngIf="discountPresent" class="f1 br10 btn1 bgrR boxSha pad15 brN w100"
-                (click)="close.emit('discount')">MOSTRA SCONTO</button>
-            <button *ngIf="discountPresent" class="f1 br10 btn1 bgrBl boxSha pad15 brN w100" (click)="step = 2">SEGNA
-                CARTA SENZA USO SCONTO</button>
-            <button *ngIf="!discountPresent" class="f1 br10 btn1 bgrBl boxSha pad15 brN w100" (click)="step = 2">SEGNA
-                CARTA</button>
-            <div class="spacer"></div>
+        <div class="flex fColumn w100 fCenter gap20" [ngClass]="{ 'mT80': !isSuggested, 'mT40': !!isSuggested }">
+            <!-- <h3>Codice Carta: {{fidelityCard.id}}</h3> -->
+
+
+            <h3 *ngIf="isSuggested && !!fidelityCard.discount_on_first_user_reservation && !!fidelityCard.fa_discount_amount" class="w100 textCenter f1 fw6">Sconto valido solo se prenoti con l'app.</h3>
+            <app-discount-preview 
+                class="w100"
+                *ngIf="isSuggested && !!fidelityCard.discount_on_first_user_reservation && !!fidelityCard.fa_discount_amount" 
+                [discount]="{
+                    business_name: fidelityCard.business_name,
+                    discount_minimum_expense: fidelityCard.fa_discount_minimum_expense,
+                    discount_amount: fidelityCard.fa_discount_amount,
+                    discount_type: fidelityCard.fa_discount_type,
+                    slogan: fidelityCard.fa_slogan
+                }"
+            >
+            </app-discount-preview>
+
+            <div *ngIf="isSuggested && !!fidelityCard.discount_on_first_user_reservation && !!fidelityCard.fa_discount_amount" class="spacer"></div>
+
+            <button *ngIf="!isSuggested && discountPresent" class="f1 br10 btn1 bgrR boxSha pad15 brN w100"
+                (click)="clickSconto()">{{ (tr?.discount || 'MOSTRA SCONTO') }}</button>
+            <!-- <button *ngIf="discountPresent" class="f1 br10 btn1 bgrBl boxSha pad15 brN w100" (click)="step = 2">SEGNA
+                CARTA SENZA USO SCONTO</button> -->
+            <small *ngIf="!isSuggested && !discountPresent">clicca su "timbra carta" e mostra il QR alla cassa.</small>
+            <button *ngIf="!isSuggested && !discountPresent" class="f1 br10 btn1 bgrBl boxSha pad15 brN w100" (click)="clickSignCard()">{{ (tr?.timbra || 'TIMBRA CARTA') }}</button>
+            <small *ngIf="isSuggested && !!fidelityCard?.business_expenses_amount && !fidelityCard?.hasCard && !!fidelityCard?.card_description" class="textCenter">{{fidelityCard?.card_description}}</small>
+            <button *ngIf="isSuggested && !!fidelityCard?.business_expenses_amount && !fidelityCard?.hasCard" class="f1 br10 btn1 bgrBl boxSha pad15 brN w100" (click)="addFidelityCard()">{{ (tr?.newCard || 'AGGIUNGI CARTA FEDELTÀ') }}</button>
+            <small *ngIf="isSuggested && !!fidelityCard?.business_expenses_amount && !!fidelityCard?.hasCard">hai già la carta fedeltà di questo locale.</small>
+            <div *ngIf="(!fidelityCard?.hasCard && isSuggested) || !isSuggested" class="spacer"></div>
             <button *ngIf="!!fidelityCard?.accept_reservations" class="f1 br10 btn1 bgrG boxSha pad15 brN w100" (click)="step = 3">PRENOTA</button>
-            <button class="f1 br10 btn1 bgrGr boxSha pad15 brN w100" (click)="getReferral()">GUADAGNA SCONTI QUI</button>
-            <button *ngIf="fidelityCard?.business_phone_number" class="f1 br10 btn1 bgrW boxSha pad15 brN w100" (click)="call()"><i class="fa-solid fa-phone"></i>&nbsp;{{ fidelityCard?.business_phone_number }}</button>
+            <!-- <button *ngIf="!!fidelityCard?.accept_referral" class="f1 br10 btn1 bgrGr boxSha pad15 brN w100" (click)="getReferral()">GUADAGNA SCONTI QUI</button> -->
+            <button *ngIf="!isSuggested" class="f1 br10 btn1 bgrG boxSha pad15 brN w100" (click)="goReview()">SCRIVI RECENSIONE</button>
+            
+            <button *ngIf="fidelityCard?.business_phone_number" class="f1 br10 btn1 bgrW boxSha pad15 brN w100" (click)="call(fidelityCard?.business_phone_number)"><i class="fa-solid fa-phone"></i>&nbsp;{{ fidelityCard?.business_phone_number }}</button>
+            <button *ngIf="fidelityCard?.business_second_phone_number" class="f1 br10 btn1 bgrW boxSha pad15 brN w100" (click)="call(fidelityCard?.business_second_phone_number)"><i class="fa-solid fa-phone"></i>&nbsp;{{ fidelityCard?.business_second_phone_number }}</button>
+            
+            
+            <button *ngIf="fidelityCard?.business_menu_link" class="f1 br10 btn1 bgrW boxSha pad15 brN w100" (click)="open(fidelityCard?.business_menu_link)"><i class="fa-solid fa-book-open"></i>&nbsp;Menu / Prezzi</button>
             <button *ngIf="fidelityCard?.business_website" class="f1 br10 btn1 bgrW boxSha pad15 brN w100" (click)="web()"><i class="fa-solid fa-globe"></i>&nbsp;Sito Web</button>
             <button *ngIf="fidelityCard?.business_address" class="f1 br10 btn1 bgrW boxSha pad15 brN w100" (click)="map()"><i class="fa-solid fa-location-dot"></i>&nbsp;{{ fidelityCard?.business_address }}</button>
+            <button *ngIf="fidelityCard?.business_instagram_page" class="f1 br10 btn1 bgrW boxSha pad15 brN w100" (click)="open(fidelityCard?.business_instagram_page)"><i class="fa-brands fa-instagram"></i>&nbsp;Pagina Instagram</button>
         </div>
     </ng-container>
 
     <ng-container *ngIf="step == 2">
         <div class="flex fColumn fCenter gap10 mT80">
-            <small class="w100 textCenter f1 fw6">Codice Carta: {{fidelityCard?.id}}</small>
+            <h3 class="w100 textCenter f1 fw6">Codice Carta: {{fidelityCard?.id}}</h3>
             <div class="flex fRow fCenter bgrG pad20 br10 boxSha">
                 <qrcode class="br10" [qrdata]="getQrRaw()" [width]="300" [errorCorrectionLevel]="'M'"></qrcode>
             </div>
-            <h3 class="fw600" class="textCenter">Mostra il QR alla cassa</h3>
+            <h3 class="fw600" class="textCenter">{{ (tr?.cassa || 'Mostra il QR alla cassa') }}</h3>
             <button class="f1 br10 btn1 bgrW boxSha pad15 brN mT20" (click)="close.emit()">FATTO</button>
+            <small class="pad20 mT20 textCenter" *ngIf="fidelityCard?.business_card_description">{{fidelityCard?.business_card_description}}</small>
         </div>
     </ng-container>
 
@@ -60,8 +91,12 @@
                 <!-- <small>A che ora oggi? (per forza oggi)</small> -->
             </div>
             <input formControlName="phoneNumber" class="indroButton f1 br10 w100" type="tel" placeholder="+393444444">
-            <input formControlName="note" maxlength="50" class="indroButton f1 br10 w100" type="text"
+            <input *ngIf="!fidelityCard?.business_type" formControlName="note" maxlength="50" class="indroButton f1 br10 w100" type="text"
                 placeholder="Note oppure specifica il servizio che vuoi...">
+            <input *ngIf="fidelityCard?.business_type == 'food'" formControlName="note" maxlength="50" class="indroButton f1 br10 w100" type="text"
+                placeholder="Note per il locale">
+            <input *ngIf="fidelityCard?.business_type == 'service'" formControlName="note" maxlength="50" class="indroButton f1 br10 w100" type="text"
+                placeholder="Cosa vuoi fare?">
             <button [disabled]="newRes.invalid" class="f1 br10 btn1 bgrGr boxSha pad15 brN" type="button"
                 (click)="addReservation()">INVIA</button>
             <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="step = 1">ANNULLA</button>
@@ -74,20 +109,26 @@
                 <ng-container *ngIf="!intervalEnded">
                     <h2 class="fw7">In attesa di una risposta dal ristorante...</h2>
                     <div class="spinner"></div>
-                    <button *ngIf="fidelityCard?.business_phone_number" class="f1 br10 btn1 bgrGr boxSha pad15 brN" (click)="call()"><i class="fa-solid fa-phone"></i>&nbsp;{{ fidelityCard?.business_phone_number }}</button>
+                    <button *ngIf="fidelityCard?.business_phone_number" class="f1 br10 btn1 bgrGr boxSha pad15 brN" (click)="call(fidelityCard?.business_phone_number)"><i class="fa-solid fa-phone"></i>&nbsp;{{ fidelityCard?.business_phone_number }}</button>
+                    <h3 class="fw4">
+                        Se vuoi puoi lasciare questa pagina e controllare ogni tanto lo stato della prenotazione dalla pagina delle tue prenotazioni (nel menu in basso la penultima icona).
+                    </h3>
+                    <h3 class="fw4">
+                        In ogni caso ti mandiamo una notifica appena la prenotazione verrà gestita dal locale!
+                    </h3>
                 </ng-container>
                 <ng-container *ngIf="!!intervalEnded">
                     <h2 class="fw7">È passato un po di tempo, chiama il locale per informazioni.</h2>
                     <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="startingCurrentReservation()">aggiorna</button>
-                    <button *ngIf="fidelityCard?.business_phone_number" class="f1 br10 btn1 bgrGr boxSha pad15 brN" (click)="call()"><i class="fa-solid fa-phone"></i>&nbsp;{{ fidelityCard?.business_phone_number }}</button>
+                    <button *ngIf="fidelityCard?.business_phone_number" class="f1 br10 btn1 bgrGr boxSha pad15 brN" (click)="call(fidelityCard?.business_phone_number)"><i class="fa-solid fa-phone"></i>&nbsp;{{ fidelityCard?.business_phone_number }}</button>
                 </ng-container>
             </ng-container>
             <ng-container *ngIf="(reservation$ | async) as res">
                 <h2 *ngIf="res.status === 'accepted'" class="fw7">Prenotazione Confermata!</h2>
                 <ng-container *ngIf="res.status === 'declined'">
                     <h2 *ngIf="!res.sub_status" class="fw7">Prenotazione Rifiutata.</h2>
-                    <h2 *ngIf="res.sub_status === 'business_canceled'" class="fw7">Prenotazione Cancellata dal Locale.
-                    </h2>
+                    <h2 *ngIf="res.sub_status === 'business_canceled'" class="fw7">Prenotazione Cancellata dal Locale.</h2>
+                    <h3 *ngIf="res.business_message"><strong>Messaggio dal locale:</strong> {{ res.business_message }}</h3>
                     <h2 *ngIf="res.sub_status === 'full'" class="fw7">Prenotazione Rifiutata. Il Locale è pieno!.</h2>
                     <h2 *ngIf="res.sub_status === 'new_date'" class="fw7">Per questo orario la prenotazione è stata
                         respinta. Il Locale vi invita a riprovare una prenotazione per le {{ res.business_time |

@@ -5,8 +5,12 @@
             <div *ngFor="let review of reviews">
                 <div class="flex fColumn boxSha br10 bgrW pad20 cP gap10">
                     <!-- https://angular.io/api/common/DatePipe -->
-                    <p class="fBold">{{review.created_at | date:'d/M/yy, H:mm'}}</p>
-                    <p>{{review.text}}</p>
+                    <p *ngIf="review.rating" class="fBold">
+                        <i *ngFor="let star of review.stars" class="fa-solid fa-star" style="color: #ffa41d;"></i>
+                        <i *ngFor="let star of review.emptyStars" style="color: #ffa41d;" class="fa-regular fa-star"></i>
+                    </p>
+                    <p class="fBold">{{review.text}}</p>
+                    <p>{{review.created_at | date:'d/M/yy, H:mm'}}</p>
                 </div>
             </div>
             <p *ngIf="!reviews.length">Nessun Commento ricevuto.</p>

@@ -3,22 +3,18 @@
 <head>
   <meta charset="utf-8">
   <title>Comeback</title>
-  <!-- <base href="/"> -->
   <base href="./">
   <meta name="theme-color" content="#F5F5F5">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
   
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com"> -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dangrek&family=Noto+Sans:wght@100;200;300;400;500;600;700&family=Nunito+Sans:wght@200;300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dangrek&family=Noto+Sans:wght@100;200;300;400;500;600;700&family=Nunito+Sans:wght@200;300;400;600;700;800&family=Figtree:wght@300;400;500;600;700;800&family=Koulen&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/25e1deba20.js" crossorigin="anonymous"></script>
 
 
-<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bayon&family=Bebas+Neue&family=Black+Han+Sans&family=Bungee&family=Faster+One&family=Fredoka+One&family=Fredoka:wght@300;400;500;600;700&family=Fugaz+One&family=Galada&family=Geo&family=Hammersmith+One&family=Koulen&family=Lily+Script+One&family=Lobster&family=Lobster+Two:wght@400;700&family=Mochiy+Pop+P+One&family=Passion+One:wght@400;700&family=Righteous&family=Secular+One&family=Silkscreen&family=Staatliches&family=Titan+One&display=swap" rel="stylesheet">
+<!-- <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bayon&family=Bebas+Neue&family=Black+Han+Sans&family=Bungee&family=Faster+One&family=Fredoka+One&family=Fredoka:wght@300;400;500;600;700&family=Fugaz+One&family=Galada&family=Geo&family=Hammersmith+One&family=Koulen&family=Lily+Script+One&family=Lobster&family=Lobster+Two:wght@400;700&family=Mochiy+Pop+P+One&family=Passion+One:wght@400;700&family=Righteous&family=Secular+One&family=Silkscreen&family=Staatliches&family=Titan+One&display=swap" rel="stylesheet"> -->
   
   <script>
     window.addEventListener = function () {
@@ -44,8 +40,25 @@
       console.log('transp');
       document.body.style.backgroundColor = "transparent";
       window.plugins.webviewcolor.change('#00FFFFFF', function(){console.log('color was changed!')});
-      // window.webviewcolor.change('#00FFFFFF', function(){console.log('color was changed!')});
     };
+
+    navigator.sayswho= (function(){
+        var ua= navigator.userAgent;
+        var tem; 
+        var M= ua.match(/(opera|chrome|safari|firefox|android|samsung|webview|androidwebview|chromeforandroid|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+        if(/trident/i.test(M[1])){
+            tem=  /\brv[ :]+(\d+)/g.exec(ua) || [];
+            return 'IE '+(tem[1] || '');
+        }
+        if(M[1]=== 'Chrome'){
+            tem= ua.match(/\b(OPR|Edge)\/(\d+)/);
+            if(tem!= null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
+        }
+        M= M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+        if((tem= ua.match(/version\/(\d+)/i))!= null) M.splice(1, 1, tem[1]);
+        console.log(navigator.userAgent);
+        return 'BROWSER - ' + M.join(' ');
+    })();
 </script>  
 <script type="text/javascript" src="cordova.js"></script>
 </head>

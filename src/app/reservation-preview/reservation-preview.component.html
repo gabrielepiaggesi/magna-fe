@@ -21,7 +21,11 @@
         <p *ngIf="reservation.business_name" class="incName">{{reservation?.business_name}} - {{reservation?.name}}</p>
         <p *ngIf="!reservation.business_name" class="incName">{{reservation?.name}}</p>
         <p class="discountInfo">
-            <span *ngIf="reservation?.status === 'pending'">IN ATTESA</span>
+            <span *ngIf="reservation?.status === 'pending'">IN ATTESA
+                <span *ngIf="reservation?.note">
+                    -&nbsp;{{ reservation?.note.substring(0, 20) }}&nbsp;
+                </span>
+            </span>
             <span *ngIf="reservation?.status === 'accepted'">
                 CONFERMATA
                 <span *ngIf="reservation?.table_number">

@@ -1,24 +1,34 @@
 <div class="flex fColumn fCenter pad20 w100">
-    <form *ngIf="!loading" class="flex fColumn fCenter gap15 w100 mT40" [formGroup]="signupForm">
-        <h2>Registrati</h2>
+    <form *ngIf="!loading" class="flex fColumn fCenter gap40 w100 mT40" [formGroup]="signupForm">
+        <h3>{{ (tr?.title || "Scegli un'email e una password.") }}</h3>
         
-        <div class="flex fColumn gap5 f1 w100">
-            <label for="emailInp">Email:</label>
-            <input formControlName="email" class="indroButton f1 br10 w100" id="emailInp" type="email" placeholder="Email">
+        <div class="flex fColumn gap15 f1 w100">
+            <!-- <label for="emailInp">Email:</label> -->
+            <input #email formControlName="email" class="indroButton f1 br10 w100" id="emailInp" type="email" placeholder="Email">
+            <input #password formControlName="password" class="indroButton f1 br10 w100" id="pwdInp" type="password" placeholder="Password">
+            <div class="flex fRow aCenter gap10 w100">
+                <input style="transform: scale(1.5);" formControlName="hasAccepted" type="checkbox">
+                <small>{{ (tr?.accept || 'Accetto i ') }}<span style="text-align: left; text-decoration: underline;" (click)="openTC()">{{ (tr?.terms || "Termini e Condizioni D'uso") }}</span> e la <span style="text-align: left; text-decoration: underline;" (click)="openPP()">{{ (tr?.privacy || 'Privacy Policy.') }}</span></small>
+            </div>
         </div>
 
-        <div class="flex fColumn gap5 f1 w100">
+        <!-- <div class="flex fColumn gap5 f1 w100">
+            <label for="pwdInp">Password:</label>
+            <input #password formControlName="password" class="indroButton f1 br10 w100" id="pwdInp" type="password" placeholder="Password">
+        </div> -->
+
+        <!-- <div class="flex fColumn gap5 f1 w100">
             <label for="dateInp">Data di nascita:</label>
-            <input formControlName="birthdate" class="indroButton f1 br10 w100 waN" id="dateInp" type="date" lang="it-IT" placeholder="Data di nascita">
-        </div>
+            <input formControlName="birthdate" class="indroButton f1 br10 w100 waN" id="dateInp" type="date" lang="it-IT" style="height: 48px;" placeholder="Data di nascita">
+        </div> -->
 
-        <div class="flex fRow aCenter gap10 w100">
+        <!-- <div class="flex fRow aCenter gap10 w100">
             <input style="transform: scale(1.5);" formControlName="hasAccepted" type="checkbox">
             <small>Accetto i <span style="text-align: left; text-decoration: underline;" (click)="openTC()">Termini e Condizioni D'uso</span> e la <span style="text-align: left; text-decoration: underline;" (click)="openPP()">Privacy Policy.</span></small>
-        </div>
+        </div> -->
 
-        <button type="button" [disabled]="signupForm.invalid" class="btnFilledIndro bgrG f1 br10 w100" (click)="signup()">FATTO</button>
-        <p style="text-decoration: underline;" (click)="router.navigateByUrl('login')">Oppure Accedi</p>
+        <button type="button" class="btnFilledIndro bgrG f1 br10 w100" (click)="signup()">{{ (tr?.cta || 'ENTRA') }}</button>
+        <p style="text-decoration: underline;" (click)="router.navigateByUrl('login')">Hai gia un account? Accedi</p>
         <small class="mT40">Per assistenza contattare comebackwebapp@gmail.com</small>
     </form>
     <div *ngIf="!!loading" class="spinner mAuto"></div>

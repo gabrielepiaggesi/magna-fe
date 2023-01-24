@@ -19,7 +19,7 @@
 
 <div *ngIf="discount" class="flex fColumn gap30 mT20 h100">
     <div class="flex fColumn fCenter gap10 mT80">
-        <small class="w100 textCenter f1 fw6">Codice Sconto: {{discount?.id}}</small>
+        <h3 class="w100 textCenter f1 fw6">Codice Sconto: {{discount?.id}}</h3>
         <div class="flex fRow fCenter bgrR pad20 br10 boxSha">
             <qrcode class="br10" [qrdata]="getQrRaw()" [width]="300" [errorCorrectionLevel]="'M'"></qrcode>
         </div>

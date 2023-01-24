@@ -1,0 +1,18 @@
+<div class="h110 flex fColumn gap30 pad10 pRel" style="padding-bottom: 90px;">
+    <!-- <h2>Commenti dai Clienti</h2> -->
+    <ng-container *ngIf="!loading">
+        <ng-container *ngIf="(nots$ | async) as nots">
+            <div *ngFor="let not of nots">
+                <div class="flex fColumn boxSha br10 bgrW pad20 cP gap10">
+                    <p class="fBold">{{not.title}}</p>
+                    <p *ngIf="not.body">{{not.body}}</p>
+                    <p>{{not.created_at | date:'d/M/yy, H:mm'}}</p>
+                    <br>
+                    <button class="br10 btn1 bgrG boxSha pad15 brN" style="width: 150px;" (click)="removeNot(not.id)"><i class="fa-solid fa-trash-can"></i>elimina</button>
+                </div>
+            </div>
+            <p *ngIf="!nots.length">Nessun Messaggio mandato.</p>
+        </ng-container>
+    </ng-container>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+</div>

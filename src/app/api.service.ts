@@ -913,14 +913,14 @@ export class ApiService {
     return jsonRes;
   }
 
-  public async getBusinessFidelityCard(businessId: number) {
+  public async getBusinessFidelityCards(businessId: number) {
     const response = await fetch(
-      `${this.BASE_URL}/businessFidelityCard/getBusinessFidelityCard/${businessId}`,
+      `${this.BASE_URL}/businessFidelityCard/getBusinessFidelityCards/${businessId}`,
       { headers: this.getHeaders() }
     );
     const jsonRes = await response.json();
     if (!response.ok || (response.status >= 400 && response.status <= 500)) {
-      throw new Error(jsonRes?.message || 'Could not getBusinessFidelityCard');
+      throw new Error(jsonRes?.message || 'Could not getBusinessFidelityCards');
     }
     return jsonRes;
   }
@@ -1093,13 +1093,13 @@ export class ApiService {
     return jsonRes;
   }
 
-  public async checkUserFidelityCardValidity(userFidelityCardId: number, businessId: number) {
+  public async checkUserFidelityCardValidity(userFidelityCardId: number, businessId: number, pointsToAdd: number = 1) {
     const opts = {
       method: 'POST',
       headers: this.getHeaders(),
     };
     const response = await fetch(
-      `${this.BASE_URL}/businessFidelityCard/checkUserFidelityCardValidity/${userFidelityCardId}/${businessId}`,
+      `${this.BASE_URL}/businessFidelityCard/checkUserFidelityCardValidity/${userFidelityCardId}/${businessId}/${pointsToAdd}`,
       opts
     );
     const jsonRes = await response.json();
@@ -1255,9 +1255,9 @@ export class ApiService {
     return jsonRes;
   }
 
-  public async getLoggedUser() {
+  public async getLoggedUser(lang: string|null = null, currentAppVersion: number|null = null) {
     const response = await fetch(
-      `${this.BASE_URL}/user/getLoggedUser`,
+      `${this.BASE_URL}/user/getLoggedUser/${lang ? lang : 0}/${currentAppVersion ? currentAppVersion : 0}`,
       { headers: this.getHeaders() }
     );
     const jsonRes = await response.json();
@@ -1299,4 +1299,78 @@ export class ApiService {
     }
     return jsonRes;
   }
+
+  public async getUserNotifications() {
+    const response = await fetch(
+      `${this.BASE_URL}/user/getUserNotifications`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getUserNotifications');
+    }
+    return jsonRes;
+  }
+
+  public async getBusinessNotifications(businessId: number) {
+    const response = await fetch(
+      `${this.BASE_URL}/business/getBusinessNotifications/${businessId}`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getBusinessNotifications');
+    }
+    return jsonRes;
+  }
+
+  public async deleteBusinessNotification(notId: any) {
+    const opts = {
+      method: 'POST',
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/business/deleteNotification/${notId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not deleteNotification');
+    }
+    return jsonRes;
+  }
+
+  public async getBusinessByCaps(caps: string[], businessesIds: number[]) {
+    const opts = {
+      method: 'POST',
+      body: JSON.stringify({caps, businessesIds}),
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/business/getBusinessesByCaps`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getBusinessByCaps');
+    }
+    return jsonRes;
+  }
+  
+  public async updateUserCap(cap: string) {
+    const opts = {
+      method: 'POST',
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/user/updateUserCap/${cap}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not updateUserCap');
+    }
+    return jsonRes;
+  }
+
 }

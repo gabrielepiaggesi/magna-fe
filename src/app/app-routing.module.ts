@@ -6,6 +6,7 @@ import { BusinessCheckComponent } from './business-check/business-check.componen
 import { BusinessDiscountComponent } from './business-discount/business-discount.component';
 import { BusinessDiscountsComponent } from './business-discounts/business-discounts.component';
 import { BusinessEmployeesComponent } from './business-employees/business-employees.component';
+import { BusinessNotificationsComponent } from './business-notifications/business-notifications.component';
 import { BusinessQrComponent } from './business-qr/business-qr.component';
 import { BusinessReviewsComponent } from './business-reviews/business-reviews.component';
 import { BusinessSocialPostsComponent } from './business-social-posts/business-social-posts.component';
@@ -47,7 +48,7 @@ const routes: Routes = [
     component: RedeemComponent,
     canActivate: [AuthGuard],
     data: {
-      title: 'Riscatta Sconto',
+      title: 'Messaggi dei Locali',
     }
   },
   {
@@ -114,11 +115,11 @@ const routes: Routes = [
     }
   },
   {
-    path: 'business-check/:businessId',
+    path: 'business-check/:businessId/:pointsToAdd',
     component: BusinessCheckComponent,
     canActivate: [AuthGuard],
     data: {
-      title: 'Convalida QR',
+      title: 'SCAN QR',
     }
   },
   {
@@ -127,6 +128,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       title: 'Commenti',
+    }
+  },
+  {
+    path: 'business-notifications/:businessId',
+    component: BusinessNotificationsComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Messaggi Mandati',
     }
   },
   {
@@ -161,15 +170,23 @@ const routes: Routes = [
     component: BusinessQrComponent,
     canActivate: [AuthGuard],
     data: {
-      title: 'Azioni con QR'
+      title: 'QR CLIENTE'
     }
   },
   {
-    path: 'incIntro/:intent',
+    path: 'incIntro/:businessId',
     component: IncIntroComponent,
     canActivate: [AuthGuard],
     data: {
-      title: 'Quale Locale?',
+      title: 'Recensione',
+    }
+  },
+  {
+    path: 'incIntro',
+    component: IncIntroComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Nuova Carta Fedeltà',
     }
   },
   {

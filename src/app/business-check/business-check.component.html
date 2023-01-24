@@ -1,10 +1,10 @@
 <div *ngIf="!!manualMode" class="flex fColumn pad20 gap20 w100 bgrWl">
     <ng-container *ngIf="!loading">
-        <h2>Convalida a mano</h2>
+        <h2>Segna/Timbra a mano</h2>
         <form class="flex fColumn gap10 w100" [formGroup]="entityForm">
 
             <div class="flex fColumn gap5">
-                <label for="entitySelect">Cosa stai validando?</label>
+                <label for="entitySelect">Cosa?</label>
                 <select 
                     formControlName="type"
                     name="entitySelect" 
@@ -19,17 +19,17 @@
             </div>
             
             <div class="flex fColumn gap5">
-                <label for="discountTypeSelect">Inserisci il Codice della Carta o dello Sconto (è scritto sopra il qr sul tel del cliente)</label>
-                <input formControlName="id" class="indroButton f1 br5 w100 mB10" type="number" min="1" max="20" step="1" placeholder="5">
+                <label for="discountTypeSelect">Codice della Carta o dello Sconto (è scritto sopra il qr sul tel del cliente)</label>
+                <input formControlName="id" class="indroButton f1 br5 w100 mB10" type="number" pattern="[0-9]*" min="1" step="1" placeholder="42">
             </div>
 
             <button 
                 type="button" 
                 [disabled]="entityForm.invalid" 
-                class="btnFilledIndro f1 br5 w100" 
+                class="w100 br10 btn1 bgrG boxSha pad15 brN w100"
                 (click)="manualValidate()"
             >
-                CONVALIDA
+                CONFERMA
             </button>
             <br>
             <button 
@@ -59,20 +59,20 @@
         <div class="flex fRow w100 bgrWl" style="width: 20px;">
         </div>
     </div>
-    <div class="flex fColumn fCenter pad20 gap5 w100 bgrWl">
+    <div *ngIf="!loading" class="flex fColumn fCenter pad15 gap10 w100 bgrWl">
         <button 
             type="button" 
             class="btnFilledIndro f1 br10 w100" 
             (click)="cancelScan()"
         >
-            INDIETRO
+            indietro
         </button>
         <button 
             type="button" 
             class="btnOutline f1 br10 w100" 
             (click)="writeCode()"
         >
-            SCRIVI CODICE
+            timbra a mano
         </button>
     </div>
 </div>

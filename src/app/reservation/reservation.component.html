@@ -11,7 +11,7 @@
                 <h2 *ngIf="reservation.sub_status === 'business_canceled'" class="fw7">Prenotazione Cancellata dal Locale.</h2>
                 <h2 *ngIf="reservation.sub_status === 'full'" class="fw7">Prenotazione Rifiutata. Il Locale è pieno!.</h2>
                 <h2 *ngIf="reservation.sub_status === 'new_date'" class="fw7">Per questo orario la prenotazione è stata respinta. Il Locale vi invita a riprovare una prenotazione per {{ getDate(reservation?.business_date) }}.</h2>
-                <p *ngIf="reservation.business_message">{{ reservation.business_message }}</p>
+                <p *ngIf="reservation.business_message"><strong>Messaggio dal locale:</strong> {{ reservation.business_message }}</p>
             </ng-container>
             <button *ngIf="reservation?.status !== 'declined'" class="f1 br10 btn1 bgrBl boxSha pad15 brN"
                 (click)="cancel()">ANNULLA Prenotazione</button>

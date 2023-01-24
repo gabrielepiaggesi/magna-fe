@@ -5,24 +5,24 @@
 
     <div class="flex fRow aCenter gap10">
         <div class="flex fRow fCenter imgBox">
-            <i class="fa-solid fa-store businessImg crG bgrY"></i>
+            <i class="fa-solid fa-shop businessImg crG bgrY"></i>
             <!-- <img src="https://d2egcvq7li5bpq.cloudfront.net/it/images/restaurants/209196.gif" alt=""> -->
         </div>
         <div class="flex fColumn discountBio f1">
             <p class="incName">{{_fidelity?.business_name}}</p>
             <p class="discountInfo">
-                Premio ogni {{_fidelity?.expenses_amount - 1}} consumazioni.
+                Premio ogni {{_fidelity?.business_expenses_amount - 1}} volte.
             </p>
         </div>
-        <div class="flex fRow fCenter pad5 br5 bgrW qrCode" [ngClass]="{ 'op3': discountPresent }">
+        <!-- <div class="flex fRow fCenter pad5 br5 bgrW qrCode" [ngClass]="{ 'op3': discountPresent }">
             <img src="https://boofcv.org/images/thumb/3/35/Example_rendered_qrcode.png/400px-Example_rendered_qrcode.png" alt="">
-        </div>
+        </div> -->
     </div>
 
     <div class="flex fRow aCenter fWrap gap10">
         <div 
             *ngFor="let slot of _fidelity?.expenses_array; let idx = index; let last = last;" 
-            class="badge badgeBgr flex fRow fCenter"
+            [attr.class]="(_fidelity?.expenses_array.length <= 10 ? 'badge20' : _fidelity?.expenses_array.length <= 20 ? 'badge20' : 'badge30') + ' badgeBgr flex fRow fCenter'"
             [ngClass]="{
                 'done': (!last || !discountPresent) && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown),
                 'bgrR': discountPresent && last
@@ -30,12 +30,12 @@
         >
             <ng-container *ngIf="_fidelity?.expenses_array.length <= (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)">
                 <span class="cross" *ngIf="!last && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown)">{{idx+1}}</span>
-                <i *ngIf="last" style="font-size: 23px;" class="fa-solid fa-gift"></i>
+                <i *ngIf="last" class="fa-solid fa-gift"></i>
             </ng-container>
             <ng-container *ngIf="_fidelity?.expenses_array.length > (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)">
                 <!-- <span class="cross" *ngIf="!last && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown)">{{idx+1}}</span> -->
                 <span class="cross" *ngIf="!last">{{idx+1}}</span>
-                <i *ngIf="last" style="font-size: 23px;" class="fa-solid fa-gift"></i>
+                <i *ngIf="last" class="fa-solid fa-gift"></i>
             </ng-container>
         </div>
     </div>
@@ -45,4 +45,9 @@
     <!-- <p *ngIf="discountPresent" class="discountAlert">
         Sconto disponibile!
     </p> -->
+    <div class="flex fRow aCenter jBet gap10" style="justify-content: flex-end;">
+        <span class="canAct">
+            apri &nbsp; <i class="fa-solid fa-arrow-right" style="font-size: 14px;"></i>
+        </span>
+    </div>
 </div>

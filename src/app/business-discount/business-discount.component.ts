@@ -97,14 +97,13 @@ export class BusinessDiscountComponent implements OnInit {
     const formValue = this.discountForm.getRawValue();
     const body = {
       ...this.discount$.getValue(),
+      type: formValue.type,
       amount: formValue.amount,
       minimum_expense: formValue.minimum_expense,
-      slogan: formValue.slogan ? formValue.slogan?.substring(0,20) : null
+      slogan: formValue.slogan && !formValue.amount ? formValue.slogan?.substring(0,50) : null
     };
     this.apiService.updateBusinessDiscount(body, this.discountId)
-      .then(() => {
-        this.location.back()
-      })
+      .then(() => this.location.back())
       .catch((e: any) => console.error(e))
       .finally(() => this.loading = false);
   }

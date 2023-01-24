@@ -1,9 +1,9 @@
 <div class="flex fColumn fCenter pad20 w100">
     <form *ngIf="!loading" class="flex fColumn textCenter fCenter gap10 w100 mT40" [formGroup]="loginForm">
         <h2>Login</h2>
-        <input formControlName="email" class="indroButton f1 br10 w100" type="email" placeholder="Email">
-        <input formControlName="password" class="indroButton f1 br10 w100" type="password" placeholder="Password">
-        <button type="button" [disabled]="loginForm.invalid" class="btnFilledIndro bgrG f1 br10 w100" (click)="login()">ACCEDI</button>
+        <input #email formControlName="email" class="indroButton f1 br10 w100" type="email" placeholder="Email">
+        <input #password formControlName="password" class="indroButton f1 br10 w100" type="password" placeholder="Password">
+        <button type="button" class="btnFilledIndro bgrG f1 br10 w100" (click)="login()">ACCEDI</button>
         <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p>
         <small class="mT40">
             Non ricordi la password? Quando ti sei iscritto ti abbiamo mandato per email le credenziali, cerca bene nella tua posta elettronica email provenienti da noi.

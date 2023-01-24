@@ -1,20 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../api.service';
-import { AppService } from '../app.service';
-import { Location } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-business-reviews',
-  templateUrl: './business-reviews.component.html',
-  styleUrls: ['./business-reviews.component.scss']
+  selector: 'app-business-notifications',
+  templateUrl: './business-notifications.component.html',
+  styleUrls: ['./business-notifications.component.scss']
 })
-export class BusinessReviewsComponent implements OnInit {
+export class BusinessNotificationsComponent implements OnInit {
   public loading = false;
   public businessId!: number;
-  public reviews$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  public nots$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   constructor(
     private apiService: ApiService, 
@@ -34,14 +31,19 @@ export class BusinessReviewsComponent implements OnInit {
   public getReviews() {
     this.loading = true;
     this.apiService
-      .getBusinessReviews(this.businessId)
+      .getBusinessNotifications(this.businessId)
+      .then((reviews: any) => this.nots$.next(reviews))
+      .catch((e: any) => console.error(e))
+      .finally(() => (this.loading = false));
+  }
+
+  public removeNot(notId: number) {
+    this.loading = true;
+    this.apiService
+      .deleteBusinessNotification(notId)
       .then((reviews: any) => {
-        reviews = reviews.map((r: any) => {
-          r.stars = r.rating ? new Array(r.rating) : [];
-          r.emptyStars = r.rating ? new Array(5 - r.rating) : [];
-          return r;
-        })
-        this.reviews$.next(reviews)
+        const nots = this.nots$.getValue().filter(n => n.id !== notId);
+        this.nots$.next(nots);
       })
       .catch((e: any) => console.error(e))
       .finally(() => (this.loading = false));

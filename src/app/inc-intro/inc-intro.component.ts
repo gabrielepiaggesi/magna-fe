@@ -25,8 +25,25 @@ export class IncIntroComponent implements OnInit, OnDestroy {
     url: [null, Validators.required]
   });
   public reviewForm = this.fb.group({
+    rating: [null, Validators.required],
     text: [null, Validators.required]
   });
+  public denied = false;
+
+  public lang = 'it';
+  public tr!: any;
+
+  public ch = {
+    title: '写入本地代码, 或扫描本地二维码。',
+    conferma: '确认',
+    scan: '本地二维码扫描'
+  };
+
+  public it = {
+    title: 'Scrivi il codice del locale, o INQUADRA il QR-CODE del locale.',
+    conferma: 'CONFERMA',
+    scan: 'SCAN QR LOCALE'
+  };
 
   constructor(
     private apiService: ApiService,
@@ -40,6 +57,13 @@ export class IncIntroComponent implements OnInit, OnDestroy {
     this.activateRouter.params.subscribe(
       (params) => {
         this.intent = params['intent'];
+        if (params['businessId']) {
+          this.appService.headerData.next({title: 'Recensione'});
+          this.businessId = +params['businessId'];
+          this.incForm.get('id')?.setValue(+this.businessId);
+          this.step = 5;
+          this.getBusiness(5);
+        }
       }
     );
   }
@@ -57,9 +81,60 @@ export class IncIntroComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.lang = navigator.language || 'it';
+    // this.lang = 'zh';
+    if (this.lang.includes('zh') || this.lang.includes('ch')) {
+      this.tr = this.ch;
+      this.lang = 'ch';
+    } else {
+      this.tr = this.it;
+      this.lang = 'it';
+    }
+    try {
+      (window as any)['QRScanner'].getStatus((status: any) => {
+        const authorized = status?.authorized;
+        const denied = status?.denied;
+        this.denied = denied;
+        if (!authorized && !denied) {
+          (window as any)['QRScanner'].prepare((err: any, status: any) => {
+            if (err) {
+             // here we can handle errors and clean up any loose ends.
+             console.error(err);
+            }
+            if (status.authorized) {
+              // W00t, you have camera access and the scanner is initialized.
+              // QRscanner.show() should feel very fast.
+            } else if (status.denied) {
+              this.denied = true;
+             // The video preview will remain black, and scanning is disabled. We can
+             // try to ask the user to change their mind, but we'll have to send them
+             // to their device settings with `QRScanner.openSettings()`.
+            } else {
+              // we didn't get permission, but we didn't get permanently denied. (On
+              // Android, a denial isn't permanent unless the user checks the "Don't
+              // ask again" box.) We can ask again at the next relevant opportunity.
+            }
+            (window as any)['QRScanner'].destroy((status: any) => {
+              this.scanning = false;
+              document.body.style.backgroundColor = "#F5F5F5";
+              (window as any)?.changeColor();
+              this.resetColor();
+            });
+          });
+        }
+      });
+    } catch(e) {
+      console.error(e);
+    }
+  }
 
   public scanQR() {
+    if (this.denied) {
+      alert('Non hai dato il permesso a COMEBACK di usare la fotocamera. Cambia questo dalle impostazioni del telefono. Grazie!');
+      try { (window as any)['QRScanner'].openSettings(); } catch(e) { console.error((e)); }
+      return;
+    }
     this.scanning = true;
     this.step = 6;
     (window as any)?.transp();
@@ -68,13 +143,25 @@ export class IncIntroComponent implements OnInit, OnDestroy {
       console.log('SCANNING', this.step);
       (window as any)?.changeColor();
       if(err) {
+        this.resetColor();
+        console.error(err);
         if(err.name === 'SCAN_CANCELED') {
-          this.resetColor();
           console.error('The scan was canceled before a QR code was found.');
+        } else if (err.name === 'CAMERA_ACCESS_DENIED' || err.name === 'CAMERA_ACCESS_RESTRICTED') {
+          alert('Non hai dato il permesso a COMEBACK di usare la fotocamera. Cambia questo dalle impostazioni del telefono. Grazie!');
+          (window as any)['QRScanner'].destroy((status: any) => {
+            console.log('CAMERA_ACCESS_DENIED');
+            this.scanning = false;
+            console.log(status);
+            this.resetColor();
+            this.step = 1;
+            try { (window as any)['QRScanner'].openSettings(); } catch(e) { console.error((e)); }
+          });
+        } else if (err.name === 'BACK_CAMERA_UNAVAILABLE' || err.name === 'CAMERA_UNAVAILABLE') {
+          alert('Errore, fotocamera non disponibile ora, prova a chiudere e riaprire COMEBACK o a dare i permessi dalle impostazioni del telefono.');
         } else {
-          this.resetColor();
           console.error(err);
-          alert('Errore!');
+          alert('Errore, prova a chiudere e riaprire COMEBACK o a dare gli accessi alla fotocamera dalle impostazioni del telefono.');
         }
         (window as any)['QRScanner'].destroy((status: any) => {
           console.log('SCAN ERROR');
@@ -128,16 +215,16 @@ export class IncIntroComponent implements OnInit, OnDestroy {
       window.document.body.style.backgroundColor = '#F5F5F5';
       document.body.style.backgroundColor = '#F5F5F5';
       this.ref.detectChanges();
-    }, 500);
+    }, 300);
   }
 
-  public getBusiness() {
+  public getBusiness(step: any = null) {
     this.resetColor();
     window.document.body.style.backgroundColor = "#F5F5F5";
     (window as any)?.changeColor();
     this.loading = true;
     this.apiService
-      .getUserBusiness(this.incForm.getRawValue().id)
+      .getUserBusiness(this.incForm.getRawValue().id || this.businessId)
       .then((business: any) => {
         if (!business) {
           alert('Locale inesistente');
@@ -145,14 +232,16 @@ export class IncIntroComponent implements OnInit, OnDestroy {
         }
         this.businessId = business.id;
         this.business$.next(business);
-        this.appService.headerData.next({ title: business.name });
-        this.step = 2;
+        // this.appService.headerData.next({ title: business.name });
+        // if (!step) this.step = 2;
+        // if (step) this.step = step;
+        this.addFidelityCard();
       })
       .catch((e: any) => {
         alert('Errore');
         this.step = 1;
-      })
-      .finally(() => (this.loading = false));
+        this.loading = false;
+      });
   }
 
   public addFidelityCard() {
@@ -195,7 +284,10 @@ export class IncIntroComponent implements OnInit, OnDestroy {
   public sendReview() {
     this.loading = true;
     this.apiService.addBusinessReview(this.reviewForm.getRawValue(), this.businessId)
-      .then(() => this.goHome())
+      .then(() => {
+        alert('Fatto!');
+        this.goHome();
+      })
       .catch((e: any) => {
         alert('Errore');
         this.step = 1;

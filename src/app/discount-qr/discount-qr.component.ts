@@ -17,7 +17,7 @@ export class DiscountQrComponent implements OnInit {
   }
 
   public getQrRaw() {
-    return `https://comebackwebapp.web.app/?businessId=${this.discount.business_id}&entityId=${this.discount.id}&entityType=fidelityCard`;
+    return `https://comebackwebapp.web.app/?businessId=${this.discount.business_id}&entityId=${this.discount.id}&entityType=discount`;
   }
 
 }

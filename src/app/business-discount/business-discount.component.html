@@ -1,13 +1,13 @@
 <div class="flex fColumn pad20 gap20 w100">
     <ng-container *ngIf="!loading">
-        <h2 *ngIf="origin === 'IG_POST'">Premio Post Approvato</h2>
-        <h2 *ngIf="origin === 'FIDELITY_CARD'">Premio Carta Fedeltà Completata</h2>
-        <h2 *ngIf="origin === 'REFERRAL'">Premio Amico Invitato</h2>
+        <h3 *ngIf="origin === 'IG_POST'">Premio Post Approvato</h3>
+        <h3 *ngIf="origin === 'FIDELITY_CARD'">Premio Carta Fedeltà Completata</h3>
+        <h3 *ngIf="origin === 'REFERRAL'">Premio Amico Invitato</h3>
 
         <select name="discountType" id="discountTypeSelect" class="br10 brN w100 boxSha" style="font-size: 17px; height: 42px;" (change)="onTypeChange($event)">
             <option selected disabled [value]="null">-- Seleziona --</option>
             <option [selected]="discountType === 'discount'" value="discount">Buono Sconto</option>
-            <option [selected]="discountType === 'free'" value="free">Consumazione GRATIS</option>
+            <option [selected]="discountType === 'free'" value="free">Consumazione/Servizio GRATIS</option>
         </select>
 
         <form *ngIf="discountType === 'discount'" class="flex fColumn gap10 w100" [formGroup]="discountForm">
@@ -37,7 +37,7 @@
 
         <form *ngIf="discountType === 'free'" class="flex fColumn gap10 w100" [formGroup]="discountForm">
             <label for="discountTypeSelect">SLOGAN corto sul premio:</label>
-            <input formControlName="slogan" class="indroButton f1 br5 w100 mB10" type="text" maxlength="20"  placeholder="PRANZO GRATIS!">
+            <input formControlName="slogan" class="indroButton f1 br5 w100 mB10" type="text" maxlength="50"  placeholder="PRANZO GRATIS!">
             
             <button type="button" [disabled]="discountForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="updateDiscount()">SALVA</button>
         </form>

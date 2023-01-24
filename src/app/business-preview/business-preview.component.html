@@ -1,0 +1,40 @@
+<div class="cP flex fColumn gap20 pad10 br10 bgrGG fidBox pRel">
+    <div *ngIf="_fidelity?.discount_on_first_user_reservation" class="tRBadge tRBadgeBor bgrR">
+        <p>Hai Sconto</p>
+    </div>
+
+    <div class="flex fRow aCenter gap10">
+        <div class="flex fRow fCenter imgBox">
+            <i class="fa-solid fa-shop businessImg crG bgrY"></i>
+        </div>
+        <div class="flex fColumn discountBio f1">
+            <p class="incName">{{_fidelity?.business_name}}</p>
+            <p class="discountInfo">
+                {{_fidelity?.business_address}}
+            </p>
+        </div>
+        <!-- <div class="flex fRow fCenter pad5 br5 bgrW qrCode" [ngClass]="{ 'op3': discountPresent }">
+            <span class="cap">{{_fidelity?.cap}}</span>
+        </div> -->
+        <span class="cap bgrW op8" [ngClass]="{ 'op3': _fidelity?.discount_on_first_user_reservation }">{{_fidelity?.cap}}</span>
+    </div>
+
+    <div class="flex fRow aCenter gap10">
+        <p class="discountInfo">
+            {{_fidelity?.business_description}}
+        </p>
+    </div>
+    <!-- <div class="flex fRow aCenter gap10">
+        <p *ngIf="_fidelity?.discount_on_first_user_reservation" class="discountInfo">
+            Sconto disponibile se prenoti con l'app!
+        </p>
+    </div> -->
+    <div class="flex fRow aCenter jBet gap10">
+        <span *ngIf="_fidelity?.accept_reservations" class="canAct bgrG">
+            Prenotazione
+        </span>
+        <span *ngIf="_fidelity?.business_expenses_amount" class="canAct bgrR">
+            Carta Fedeltà
+        </span>
+    </div>
+</div>

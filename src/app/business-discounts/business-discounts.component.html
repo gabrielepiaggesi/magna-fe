@@ -2,26 +2,53 @@
     <div class="h100 flex fColumn gap30 pad10 pRel"
         style="padding-bottom: 90px;">
         <div class="list br10 bgrW">
-            <div *ngIf="!(socialPostDiscount$ | async)" class="element" (click)="go('new-business-discount/' + businessId + '/IG_POST')">
+            <!-- <div *ngIf="!(socialPostDiscount$ | async)" class="element" (click)="go('new-business-discount/' + businessId + '/IG_POST')">
                 <p>Crea Premio per Post su Instagram</p>
-            </div>
-            <div *ngIf="!(referralDiscount$ | async)" class="element" (click)="go('new-business-discount/' + businessId + '/REFERRAL')">
+            </div> -->
+            <!-- <div *ngIf="!(referralDiscount$ | async)" class="element" (click)="go('new-business-discount/' + businessId + '/REFERRAL')">
                 <p>Crea Premio per AMICO Invitato</p>
-            </div>
-            <div *ngIf="!(fidelityCardDiscount$ | async)" class="element" (click)="go('new-business-discount/' + businessId + '/FIDELITY_CARD')">
+            </div> -->
+            
+            <!-- <div *ngIf="!(fidelityCardDiscount$ | async)" class="element" (click)="go('new-business-discount/' + businessId + '/FIDELITY_CARD')">
                 <p>Crea Premio Carta Fedeltà Completata</p>
+            </div> -->
+            <div *ngIf="!(firstActionDiscount$ | async)" class="element" (click)="go('new-business-discount/' + businessId + '/FIRST_ACTION')">
+                <p>Crea Premio Per Prima Recensione/Prenotazione</p>
             </div>
     
-            <div *ngIf="(socialPostDiscount$ | async) as socialPostDiscount" class="element" (click)="go('business-discount/' + businessId + '/' + socialPostDiscount.id)">
+            <!-- <div *ngIf="(socialPostDiscount$ | async) as socialPostDiscount" class="element" (click)="go('business-discount/' + businessId + '/' + socialPostDiscount.id)">
                 <p>Premio per Post su Instagram</p>
-            </div>
-            <div *ngIf="(referralDiscount$ | async) as referralDiscount" class="element" (click)="go('business-discount/' + businessId + '/' + referralDiscount.id)">
+            </div> -->
+            <!-- <div *ngIf="(referralDiscount$ | async) as referralDiscount" class="element" (click)="go('business-discount/' + businessId + '/' + referralDiscount.id)">
                 <p>Premio per AMICO Invitato</p>
-            </div>
-            <div *ngIf="(fidelityCardDiscount$ | async) as fidelityCardDiscount" class="element" (click)="go('business-discount/' + businessId + '/' + fidelityCardDiscount.id)">
+            </div> -->
+            <div class="element" (click)="showCardDiscounts = true">
                 <p>Premio per Carta Fedeltà Completata</p>
+            </div>
+            <div *ngIf="(firstActionDiscount$ | async) as firstActionDiscount" class="element" (click)="go('business-discount/' + businessId + '/' + firstActionDiscount.id)">
+                <p>Premio per Prima Recensione/Prenotazione</p>
             </div>
         </div>
     </div>
 </ng-container>
 <div *ngIf="!!loading" class="spinner mAuto"></div>
+
+
+
+
+
+<app-overlay *ngIf="!!showCardDiscounts" class="bgrWl" (close)="showCardDiscounts = false">
+    <ng-container *ngIf="!loading">
+        <h4>Ogni premio puoi associarlo a un livello della carta fedeltà, dalle impostazioni della carta fedeltà.</h4>
+        <div class="flex fColumn gap20 mT40" *ngIf="(businessCardDiscounts$ | async) as businessCardDiscounts">
+            <div class="flex fColumn gap10 pad10 br10 boxSha bgrG" *ngFor="let disc of businessCardDiscounts; let idx = index;">
+                <h2 *ngIf="disc.slogan && !disc.amount">{{ disc.slogan }}</h2>
+                <h2 *ngIf="disc.amount">Sconto {{ disc?.type == 'PERC' ? 'del' : 'di' }} {{disc?.amount}}{{ disc?.type == 'PERC' ? '%' : '€' }}</h2>
+                <h3 *ngIf="disc.minimum_expense">Spesa minima di {{ disc.minimum_expense }}€</h3>
+                <button type="button" class="btnFilledIndro f1 br10 w100" (click)="go('business-discount/' + businessId + '/' + disc.id)">modifica</button>
+            </div>
+            <button type="button" class="btnFilledIndro f1 br10 w100" (click)="go('new-business-discount/' + businessId + '/FIDELITY_CARD')">aggiungi premio</button>
+        </div>
+    </ng-container>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+</app-overlay>

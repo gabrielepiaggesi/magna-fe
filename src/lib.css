@@ -442,12 +442,54 @@ select {
     background-color: #f5f5f5;
     color: #424242;
 }
+.badge {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+}
+.badge i { font-size: 23px; }
+.badge20 {
+    width: 45px;
+    height: 45px;
+    border-radius: 45px;
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 22px;
+}
+.badge20 i { font-size: 19px; }
+.badge30 {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+}
+.badge30 i { font-size: 15px; }
+.badgeBgr {
+    background: rgba(255, 255, 255, 0.5);;
+    color: #455065;
+}
+.done {
+    background-color: white;
+    color: #455065;
+}
 .bgrR {
     background-color: #B33131;
     color: white;
 }
 .bgrG {
     background: #455065;
+    color: white;
+}
+.bgrGG {
+    background: #383f4d;
     color: white;
 }
 
@@ -583,4 +625,8 @@ select {
 
 .tRBadgeBor {
     border: 1px solid white;
+}
+
+.op8 {
+    opacity: 0.8;
 }

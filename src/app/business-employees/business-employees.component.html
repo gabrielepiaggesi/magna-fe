@@ -18,8 +18,8 @@
 <div *ngIf="!!newEmployee && !loading" class="flex fColumn fCenter pad10 w100">
     <form *ngIf="!loading" class="flex fColumn gap10 w100" [formGroup]="employeeForm">
         <!-- <h2>Nuova Attività</h2> -->
-        <label for="userIdInput">FATTI DIRE L'ID UTENTE, che possono trovare sul profilo.</label>
-        <input id="userIdInput" formControlName="userId" class="indroButton f1 br5 w100 mT30" type="text" placeholder="ID UTENTE">
+        <label for="userIdInput">Scrivi NUMERO UTENTE, che possono trovare sul profilo.<i class="fa-solid fa-user"></i></label>
+        <input id="userIdInput" formControlName="userId" class="indroButton f1 br5 w100 mT30" type="text" placeholder="NUMERO UTENTE">
         <button type="button" [disabled]="employeeForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="addEmployee()">AGGIUNGI</button>
         <button type="button" class="btnOutline f1 br5 w100" (click)="newEmployee = false">ANNULLA</button>
         <!-- <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p> -->
