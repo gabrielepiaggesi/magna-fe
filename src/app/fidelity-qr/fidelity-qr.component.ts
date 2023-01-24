@@ -81,6 +81,10 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('incIntro/'+ this.fidelityCard.business_id);
   }
 
+  goMenu() {
+    this.router.navigateByUrl('menu/'+ this.fidelityCard.business_id);
+  }
+
   public isDateBeforeToday(date: string) {
     const yesterday = new Date(date.toString().replace(' ', 'T'));
     const today = new Date(Date.now());

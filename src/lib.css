@@ -456,7 +456,7 @@ select {
     width: 45px;
     height: 45px;
     border-radius: 45px;
-    font-family: 'Nunito Sans';
+    /* font-family: 'Nunito Sans'; */
     font-style: normal;
     font-weight: 700;
     font-size: 22px;
@@ -499,6 +499,10 @@ select {
 
 .crW {
     color: white;;
+}
+
+.ffG, button {
+    font-family: 'Figtree', sans-serif;
 }
 
 .spacer {

@@ -42,6 +42,9 @@
                 CARTA SENZA USO SCONTO</button> -->
             <small *ngIf="!isSuggested && !discountPresent">clicca su "timbra carta" e mostra il QR alla cassa.</small>
             <button *ngIf="!isSuggested && !discountPresent" class="f1 br10 btn1 bgrBl boxSha pad15 brN w100" (click)="clickSignCard()">{{ (tr?.timbra || 'TIMBRA CARTA') }}</button>
+
+            <button class="f1 br10 btn1 bgrBl boxSha pad15 brN w100" (click)="goMenu()">LEGGI IL MENU E ORDINA</button>
+
             <small *ngIf="isSuggested && !!fidelityCard?.business_expenses_amount && !fidelityCard?.hasCard && !!fidelityCard?.card_description" class="textCenter">{{fidelityCard?.card_description}}</small>
             <button *ngIf="isSuggested && !!fidelityCard?.business_expenses_amount && !fidelityCard?.hasCard" class="f1 br10 btn1 bgrBl boxSha pad15 brN w100" (click)="addFidelityCard()">{{ (tr?.newCard || 'AGGIUNGI CARTA FEDELTÀ') }}</button>
             <small *ngIf="isSuggested && !!fidelityCard?.business_expenses_amount && !!fidelityCard?.hasCard">hai già la carta fedeltà di questo locale.</small>

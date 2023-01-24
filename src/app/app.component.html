@@ -11,7 +11,7 @@
     </div>
     <router-outlet *ngIf="!updateApp"></router-outlet>
 </div>
-<div class="flex fRow aCenter pad20 jBet footer" [ngClass]="{ 'bgrW': appMode === 'app' || !appMode, 'bgrG': appMode === 'business' }" *ngIf="isNotPage(['login', 'signup', 'incIntro', 'fidelity/', 'discount/', 'check', 'social']) && !updateApp">
+<div class="flex fRow aCenter pad20 jBet footer" [ngClass]="{ 'bgrW': appMode === 'app' || !appMode, 'bgrG': appMode === 'business' }" *ngIf="isNotPage(['login', 'signup', 'incIntro', 'fidelity/', 'discount/', 'check', 'social', 'menu']) && !updateApp">
 
     <ng-container *ngIf="appMode === 'app'">
         <i class="fa-solid fa-house" (click)="go('home')"></i>

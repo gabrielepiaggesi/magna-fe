@@ -36,6 +36,7 @@ import { RedeemComponent } from './redeem/redeem.component';
 import { BusinessEmployeesComponent } from './business-employees/business-employees.component';
 import { BusinessNotificationsComponent } from './business-notifications/business-notifications.component';
 import { BusinessPreviewComponent } from './business-preview/business-preview.component';
+import { MenuComponent } from './menu/menu.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { BusinessPreviewComponent } from './business-preview/business-preview.co
     RedeemComponent,
     BusinessEmployeesComponent,
     BusinessNotificationsComponent,
-    BusinessPreviewComponent
+    BusinessPreviewComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
