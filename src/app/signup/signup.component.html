@@ -4,12 +4,13 @@
         
         <div class="flex fColumn gap15 f1 w100">
             <!-- <label for="emailInp">Email:</label> -->
-            <input #email formControlName="email" class="indroButton f1 br10 w100" id="emailInp" type="email" placeholder="Email">
-            <input #password formControlName="password" class="indroButton f1 br10 w100" id="pwdInp" type="password" placeholder="Password">
-            <div class="flex fRow aCenter gap10 w100">
+            <input #email formControlName="email" class="br10 w100 br1ALL bgrW pad15 fw5 ffG mB10" id="emailInp" type="email" placeholder="Email">
+            <input #password formControlName="password" class="br10 w100 br1ALL bgrW pad15 fw5 ffG mB10" id="pwdInp" type="password" placeholder="Password">
+            <div class="flex fRow aCenter gap10 w100 mB10">
                 <input style="transform: scale(1.5);" formControlName="hasAccepted" type="checkbox">
                 <small>{{ (tr?.accept || 'Accetto i ') }}<span style="text-align: left; text-decoration: underline;" (click)="openTC()">{{ (tr?.terms || "Termini e Condizioni D'uso") }}</span> e la <span style="text-align: left; text-decoration: underline;" (click)="openPP()">{{ (tr?.privacy || 'Privacy Policy.') }}</span></small>
             </div>
+            <button type="button" class="w100 br10 bgrABG pad10 padX30 brN ffG" (click)="signup()"><h2 class="fw6">{{ (tr?.cta || 'ENTRA') }}</h2></button>
         </div>
 
         <!-- <div class="flex fColumn gap5 f1 w100">
@@ -26,8 +27,7 @@
             <input style="transform: scale(1.5);" formControlName="hasAccepted" type="checkbox">
             <small>Accetto i <span style="text-align: left; text-decoration: underline;" (click)="openTC()">Termini e Condizioni D'uso</span> e la <span style="text-align: left; text-decoration: underline;" (click)="openPP()">Privacy Policy.</span></small>
         </div> -->
-
-        <button type="button" class="btnFilledIndro bgrG f1 br10 w100" (click)="signup()">{{ (tr?.cta || 'ENTRA') }}</button>
+        
         <p style="text-decoration: underline;" (click)="router.navigateByUrl('login')">Hai gia un account? Accedi</p>
         <small class="mT40">Per assistenza contattare comebackwebapp@gmail.com</small>
     </form>

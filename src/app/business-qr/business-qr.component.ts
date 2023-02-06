@@ -49,14 +49,14 @@ export class BusinessQrComponent implements OnInit {
               // ask again" box.) We can ask again at the next relevant opportunity.
             }
             (window as any)['QRScanner'].destroy((status: any) => {
-              document.body.style.backgroundColor = "#F5F5F5";
+              document.body.style.backgroundColor = "#FFFFFF";
               (window as any)?.changeColor();
               this.resetColor();
             });
           });
         }
         (window as any)['QRScanner'].destroy((status: any) => {
-          document.body.style.backgroundColor = "#F5F5F5";
+          document.body.style.backgroundColor = "#FFFFFF";
           (window as any)?.changeColor();
           this.resetColor();
         });
@@ -68,8 +68,8 @@ export class BusinessQrComponent implements OnInit {
 
   resetColor() {
     setTimeout(() => {
-      window.document.body.style.backgroundColor = '#F5F5F5';
-      document.body.style.backgroundColor = '#F5F5F5';
+      window.document.body.style.backgroundColor = '#FFFFFF';
+      document.body.style.backgroundColor = '#FFFFFF';
       this.ref.detectChanges();
     }, 300);
   }

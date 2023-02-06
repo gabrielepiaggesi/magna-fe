@@ -1,31 +1,31 @@
-<div *ngIf="!loading" class="flex fColumn gap30 mT20">
-    <div class="flex fColumn gap20">
-        <app-reservation-preview [reservation]="reservation" [showDescription]="true"></app-reservation-preview>
+<div *ngIf="!loading" class="flex fColumn gap30 mT80 pad10">
+    <div class="flex fColumn gap20 br10 br1ALL">
+        <app-reservation-preview [reservation]="reservation" [showDescription]="true" [disableArrow]="true"></app-reservation-preview>
     </div>
     <ng-container *ngIf="mode === 'user' else businessRes">
-        <div class="spacer"></div>
+        <!-- <div class="spacer"></div> -->
         <div *ngIf="reservation.status !== 'pending'" class="flex fColumn gap20">
-            <h2 *ngIf="reservation.status === 'accepted'" class="fw7">Prenotazione Confermata!</h2>
+            <h3 *ngIf="reservation.status === 'accepted'" class="fw6">Prenotazione Confermata!</h3>
             <ng-container *ngIf="reservation?.status === 'declined'">
-                <h2 *ngIf="!reservation.sub_status" class="fw7">Prenotazione Rifiutata.</h2>
-                <h2 *ngIf="reservation.sub_status === 'business_canceled'" class="fw7">Prenotazione Cancellata dal Locale.</h2>
-                <h2 *ngIf="reservation.sub_status === 'full'" class="fw7">Prenotazione Rifiutata. Il Locale è pieno!.</h2>
-                <h2 *ngIf="reservation.sub_status === 'new_date'" class="fw7">Per questo orario la prenotazione è stata respinta. Il Locale vi invita a riprovare una prenotazione per {{ getDate(reservation?.business_date) }}.</h2>
-                <p *ngIf="reservation.business_message"><strong>Messaggio dal locale:</strong> {{ reservation.business_message }}</p>
+                <h3 *ngIf="!reservation.sub_status" class="fw6">Prenotazione Rifiutata.</h3>
+                <h3 *ngIf="reservation.sub_status === 'business_canceled'" class="fw6">Prenotazione Cancellata dal Locale.</h3>
+                <h3 *ngIf="reservation.sub_status === 'full'" class="fw6">Prenotazione Rifiutata. Il Locale è pieno!.</h3>
+                <h3 *ngIf="reservation.sub_status === 'new_date'" class="fw6">Per questo orario la prenotazione è stata respinta. Il Locale vi invita a riprovare una prenotazione per {{ getDate(reservation?.business_date) }}.</h3>
+                <p *ngIf="reservation.business_message"><span class="fw6">Messaggio dal locale:</span> {{ reservation.business_message }}</p>
             </ng-container>
-            <button *ngIf="reservation?.status !== 'declined'" class="f1 br10 btn1 bgrBl boxSha pad15 brN"
-                (click)="cancel()">ANNULLA Prenotazione</button>
+            <button *ngIf="reservation?.status !== 'declined'" class="w100 f1 br10 bgrW pad10 padX30 br2ALL ffG"
+                (click)="cancel()"><h3 class="fw4 crBl">Annulla prenotazione</h3></button>
         </div>
 
-        <div *ngIf="reservation.status === 'pending'" class="flex fColumn gap30">
+        <div *ngIf="reservation.status === 'pending'" class="flex fColumn gap20">
             <ng-container *ngIf="isDateBeforeToday()">
-                <h2 class="fw7">Prenotazione scaduta.</h2>
+                <h3 class="fw6">Prenotazione scaduta.</h3>
             </ng-container>
             <ng-container *ngIf="!isDateBeforeToday()">
-                <h2 class="fw7">In attesa di una risposta dal ristorante...</h2>
+                <h3 class="fw6">In attesa di una risposta dal ristorante...</h3>
                 <div class="spinner"></div>
-                <button class="f1 br10 btn1 bgrBl boxSha pad15 brN"
-                    (click)="cancel()">ANNULLA Prenotazione</button>
+                <button class="w100 f1 br10 bgrW pad10 padX30 br2ALL ffG mT20"
+                    (click)="cancel()"><h3 class="fw4 crBl">Annulla prenotazione</h3></button>
             </ng-container>
         </div>
 
@@ -33,75 +33,60 @@
     </ng-container>
     <ng-template #businessRes>
         <ng-container *ngIf="step == 1">
-            <div class="spacer"></div>
             <div class="flex fColumn gap20">
-                <button *ngIf="reservation?.status === 'pending'" class="f1 br10 btn1 bgrBl boxSha pad15 brN"
-                    (click)="step = 3">ACCETTA</button>
-                <small *ngIf="reservation?.status === 'accepted'" class="w100 textCenter f1"> se cancelli, chiama o
-                    messaggia il cliente</small>
-                <button *ngIf="reservation?.status === 'accepted'" class="f1 br10 btn1 bgrW boxSha pad15 brN"
-                    (click)="finish()">CLIENTE Arrivato</button>
-                <button *ngIf="reservation?.status === 'accepted' || reservation?.status === 'completed'" class="f1 br10 btn1 bgrW boxSha pad15 brN"
-                    (click)="step = 4">CAMBIA Tavolo</button>
-                <button *ngIf="reservation?.status === 'pending'" class="f1 br10 btn1 bgrW boxSha pad15 brN"
-                    (click)="step = 2">CAMBIO ORARIO</button>
-                <button class="f1 br10 btn1 bgrGr boxSha pad15 brN" (click)="call()"><i
-                        class="fa-solid fa-phone"></i>&nbsp;{{ reservation?.phone_number }}</button>
-                <button class="f1 br10 btn1 bgrGr boxSha pad15 brN" (click)="wa()"><i
-                        class="fa-brands fa-whatsapp"></i>&nbsp;{{ reservation?.phone_number }}</button>
+                <button *ngIf="reservation?.status === 'pending'" class="f1 w100 br10 bgrAB pad10 brN" (click)="step = 3"><h2 class="fw6">Accetta</h2></button>
+                <small *ngIf="reservation?.status === 'accepted'" class="w100 textCenter f1"> se cancelli, chiama o messaggia il cliente</small>
+                <button *ngIf="reservation?.status === 'accepted'" class="f1 w100 br10 bgrW pad10 br2ALL" (click)="finish()"><h2 class="fw5">Cliente arrivato</h2></button>
+                <button *ngIf="reservation?.status === 'accepted' || reservation?.status === 'completed'" class="f1 w100 br10 bgrW pad10 br2ALL" (click)="step = 4"><h2 class="fw5">Cambia tavolo</h2></button>
+                <button *ngIf="reservation?.status === 'pending'" class="f1 w100 br10 bgrW pad10 br2ALL" (click)="step = 2"><h2 class="fw5">Cambio orario</h2></button>
+                <button class="f1 w100 br10 bgrW pad10 br2ALL" (click)="call()">
+                    <h2 class="fw5"><i class="fa-solid fa-phone"></i>&nbsp;{{ reservation?.phone_number }}</h2>
+                </button>
+                <button class="f1 w100 br10 bgrW pad10 br2ALL" (click)="wa()">
+                    <h2 class="fw5"><i class="fa-brands fa-whatsapp"></i>&nbsp;{{ reservation?.phone_number }}</h2>
+                </button>
                 <div class="flex fRow aCenter gap20">
-                    <button *ngIf="reservation?.status === 'pending'" class="f1 br10 btn1 bgrW boxSha pad15 brN"
-                        (click)="full()">SIAMO PIENI</button>
-                    <button *ngIf="reservation?.status === 'pending'" class="f1 br10 btn1 bgrW boxSha pad15 brN"
-                        (click)="step = 5">RIFIUTA</button>
-                    <button *ngIf="reservation?.status === 'accepted'" class="f1 br10 btn1 bgrR boxSha pad15 brN"
-                    (click)="remove()">CANCELLA Prenotazione</button>
+                    <button *ngIf="reservation?.status === 'pending'" class="f1 w100 br10 bgrW pad10 br2ALL" (click)="full()"><h2 class="fw5">Siamo pieni</h2></button>
+                    <button *ngIf="reservation?.status === 'pending'" class="f1 w100 br10 bgrW pad10 br2ALL" (click)="step = 5"><h2 class="fw5">Rifiuta</h2></button>
+                    <button *ngIf="reservation?.status === 'accepted'" class="f1 w100 br10 bgrW pad10 br2ALL" (click)="remove()"><h2 class="fw5">CANCELLA Prenotazione</h2></button>
                 </div>
             </div>
         </ng-container>
         <ng-container *ngIf="step == 2">
-            <div class="spacer"></div>
             <form class="flex fColumn gap20" [formGroup]="newDateForm">
-                <label for="appt">Proponi nuovo orario</label>
+                <h3 class="fw5" for="appt">Proponi nuovo orario</h3>
                 <div class="flex fRow aCenter gap5">
-                    <input formControlName="businessDate" class="indroButton f1 br5 w100" type="time" id="appt"
+                    <input formControlName="businessDate" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG waN ffG" type="time" id="appt"
                         name="appt" lang="it-IT" min="06:00" max="23:59" placeholder="20:00" required>
                     <small>A che ora? (stesso giorno)</small>
                 </div>
-                <button [disabled]="newDateForm.invalid" class="f1 br10 btn1 bgrBl boxSha pad15 brN" type="button"
-                    (click)="newDate()">INVIA ORARIO</button>
-                <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="step = 1">ANNULLA</button>
+                <button [disabled]="newDateForm.invalid" class="w100 f1 br10 bgrBl pad10 padX30 brN ffG" type="button" (click)="newDate()"><h2 class="fw6">Invia nuovo orario</h2></button>
+                <button class="w100 f1 br10 bgrW pad10 padX30 br2ALL ffG" (click)="step = 1"><h2 class="fw4 crBl">annulla</h2></button>
             </form>
         </ng-container>
         <ng-container *ngIf="step == 3">
-            <div class="spacer"></div>
             <form class="flex fColumn gap20" [formGroup]="acceptForm">
-                <label for="appt">Numero del Tavolo (facoltativo)</label>
-                <input formControlName="tableNumber" class="indroButton textCenter f1 br5 w100" type="number"
+                <h3 class="fw5" for="appt">Numero del Tavolo (facoltativo)</h3>
+                <input formControlName="tableNumber" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number"
                     pattern="[0-9]*" id="appt" name="appt" min="1" step="1" [value]="21">
-                <button [disabled]="acceptForm.invalid" class="f1 br10 btn1 bgrBl boxSha pad15 brN" type="button"
-                    (click)="accept()">FATTO</button>
-                <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="step = 1">ANNULLA</button>
+                <button [disabled]="acceptForm.invalid" class="w100 f1 br10 bgrBl pad10 padX30 brN ffG" type="button" (click)="accept()"><h2 class="fw6">Conferma accetta</h2></button>
+                <button class="w100 f1 br10 bgrW pad10 padX30 br2ALL ffG" (click)="step = 1"><h2 class="fw4 crBl">annulla</h2></button>
             </form>
         </ng-container>
         <ng-container *ngIf="step == 4">
-            <div class="spacer"></div>
             <form class="flex fColumn gap20" [formGroup]="acceptForm">
-                <label for="appt">Numero del Tavolo</label>
-                <input formControlName="tableNumber" class="indroButton textCenter f1 br5 w100" type="number"
-                    pattern="[0-9]*" id="appt" name="appt" min="1" step="1" [value]="21">
-                <button [disabled]="acceptForm.invalid" class="f1 br10 btn1 bgrBl boxSha pad15 brN" type="button"
-                    (click)="changeTable()">FATTO</button>
-                <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="step = 1">ANNULLA</button>
+                <h3 class="fw5" for="appt">Numero del Tavolo</h3>
+                <input formControlName="tableNumber" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number" pattern="[0-9]*" id="appt" name="appt" min="1" step="1" [value]="21">
+                <button [disabled]="acceptForm.invalid" class="w100 f1 br10 bgrBl pad10 padX30 brN ffG" type="button" (click)="changeTable()"><h2 class="fw6">Fatto</h2></button>
+                <button class="w100 f1 br10 bgrW pad10 padX30 br2ALL ffG" (click)="step = 1"><h2 class="fw4 crBl">annulla</h2></button>
             </form>
         </ng-container>
         <ng-container *ngIf="step == 5">
-            <div class="spacer"></div>
             <form class="flex fColumn gap20" [formGroup]="declineForm">
-                <label for="appt">Messaggio di rifiuto (facoltativo)</label>
-                <input formControlName="businessMessage" class="indroButton textCenter f1 br5 w100" type="text" id="appt" name="appt" placeholder="Messaggio al cliente...">
-                <button class="f1 br10 btn1 bgrBl boxSha pad15 brN" type="button" (click)="decline()">CONFERMA</button>
-                <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="step = 1">ANNULLA</button>
+                <h3 class="fw5" for="appt">Messaggio di rifiuto (facoltativo)</h3>
+                <input formControlName="businessMessage" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" id="appt" name="appt" placeholder="Messaggio al cliente...">
+                <button class="w100 f1 br10 bgrBl pad10 padX30 brN ffG" type="button" (click)="decline()"><h2 class="fw6">Conferma rifiuto</h2></button>
+                <button class="w100 f1 br10 bgrW pad10 padX30 br2ALL ffG" (click)="step = 1"><h2 class="fw4 crBl">annulla</h2></button>
             </form>
         </ng-container>
     </ng-template>

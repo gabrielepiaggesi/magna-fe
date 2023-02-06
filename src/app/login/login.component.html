@@ -1,10 +1,10 @@
 <div class="flex fColumn fCenter pad20 w100">
     <form *ngIf="!loading" class="flex fColumn textCenter fCenter gap10 w100 mT40" [formGroup]="loginForm">
-        <h2>Login</h2>
-        <input #email formControlName="email" class="indroButton f1 br10 w100" type="email" placeholder="Email">
-        <input #password formControlName="password" class="indroButton f1 br10 w100" type="password" placeholder="Password">
-        <button type="button" class="btnFilledIndro bgrG f1 br10 w100" (click)="login()">ACCEDI</button>
-        <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p>
+        <h2 class="fw6">Login</h2>
+        <input #email formControlName="email" class="br10 w100 br1ALL bgrW pad15 fw5 ffG mB10" type="email" placeholder="Email">
+        <input #password formControlName="password" class="br10 w100 br1ALL bgrW pad15 fw5 ffG mB10" type="password" placeholder="Password">
+        <button type="button" class="w100 br10 bgrABG pad10 padX30 brN ffG mB5" (click)="login()"><h2 class="fw6">Accedi</h2></button>
+        <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Non hai un account? Registrati</p>
         <small class="mT40">
             Non ricordi la password? Quando ti sei iscritto ti abbiamo mandato per email le credenziali, cerca bene nella tua posta elettronica email provenienti da noi.
             Per assistenza contattare comebackwebapp@gmail.com</small>

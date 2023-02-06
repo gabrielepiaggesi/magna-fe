@@ -1,29 +1,18 @@
 <div *ngIf="step == 6" class="flex fColumn h100 f1">
-    <div class="flex fRow w100 bgrWl" style="height: 5px;">
-    </div>
-    <div class="flex fRow f1">
-        <div class="flex fRow w100 bgrWl" style="width: 20px;">
+
+    <div class="h100 flex fColumn fCenter pRel" style="background-color: transparent;">
+        <div class="flex fColumn fCenter gap10 mB40" style="background-color: transparent;">
+            <div class="br10" style="border: solid 5px white; background-color: transparent; width: 250px; height: 250px;">
+            </div>
+            <h4 class="fw5 textCenter" style="width: 250px; color: white;">Inquadra il QR per prendere la carta cliente o leggere il menù.</h4>
         </div>
-        <div *ngIf="!loading" class="flex fRow w100 br10 f1 qrWindow">
-        </div>
-        <div *ngIf="!!loading" class="flex fRow w100 br10 f1 fCenter loadWindow">
-            <p>Caricamento...</p>
-        </div>
-        <div class="flex fRow w100 bgrWl" style="width: 20px;">
-        </div>
-    </div>
-    <div class="flex fColumn fCenter pad20 w100 bgrWl">
-        <button 
-            type="button" 
-            class="btnFilledIndro f1 br10 w100" 
-            (click)="cancelScan()"
-        >
-            ANNULLA
+        <button class="w30 mAuto pAbs br10 pad10 padX20 bgrW brN" style="bottom: 80px; width: 250px; border-radius: 250px; left: calc(50% - 125px); z-index: 5; box-shadow: 0px 3px 10px 0px rgb(255 255 255 / 30%)" (click)="cancelScan()">
+            <h2 class="fw5">Annulla</h2>
         </button>
-        <button style="visibility: hidden; height: 0px; width: 0px;" (click)="getBusiness()" class="f1 br10 btnFilledIndro" id="doneButton" type="button"></button>
     </div>
 </div>
-
+<button class="pAbs pTop0 pLeft0 br10 bgrW brN" style="visibility: hidden; height: 0px; width: 0px;" (click)="getBusiness()" id="doneButton" type="button"></button>
+<button class="pAbs pTop0 pLeft0 br10 bgrW brN" style="visibility: hidden; height: 0px; width: 0px;" (click)="scanQR()" id="scanButton" type="button"></button>
 
 
 <div *ngIf="step !== 6" class="h110 flex fColumn gap30 pad10">
@@ -137,5 +126,7 @@
             </div>
         </ng-container>
     </ng-container>
-    <div *ngIf="!!loading" class="spinner"></div>
+    <div *ngIf="!!loading" class="spinner mAuto mT40"></div>
 </div>
+
+<div *ngIf="!!loading" class="spinner mAuto mT40"></div>

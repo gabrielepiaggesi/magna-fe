@@ -92,12 +92,14 @@ export class IncIntroComponent implements OnInit, OnDestroy {
       this.lang = 'it';
     }
     try {
+      this.loading = true;
       (window as any)['QRScanner'].getStatus((status: any) => {
         const authorized = status?.authorized;
         const denied = status?.denied;
         this.denied = denied;
         if (!authorized && !denied) {
           (window as any)['QRScanner'].prepare((err: any, status: any) => {
+            this.loading = false;
             if (err) {
              // here we can handle errors and clean up any loose ends.
              console.error(err);
@@ -105,31 +107,45 @@ export class IncIntroComponent implements OnInit, OnDestroy {
             if (status.authorized) {
               // W00t, you have camera access and the scanner is initialized.
               // QRscanner.show() should feel very fast.
+              this.loading = false;
+              this.step = 6;
+              const btn = document.getElementById('scanButton') as HTMLButtonElement;
+              btn?.click();
             } else if (status.denied) {
               this.denied = true;
+              this.loading = false;
              // The video preview will remain black, and scanning is disabled. We can
              // try to ask the user to change their mind, but we'll have to send them
              // to their device settings with `QRScanner.openSettings()`.
             } else {
+              this.loading = false;
               // we didn't get permission, but we didn't get permanently denied. (On
               // Android, a denial isn't permanent unless the user checks the "Don't
               // ask again" box.) We can ask again at the next relevant opportunity.
             }
             (window as any)['QRScanner'].destroy((status: any) => {
               this.scanning = false;
+              this.loading = false;
               document.body.style.backgroundColor = "#F5F5F5";
               (window as any)?.changeColor();
               this.resetColor();
             });
           });
+        } else {
+          this.loading = false;
+          this.step = 6;
+          const btn = document.getElementById('scanButton') as HTMLButtonElement;
+          btn?.click();
         }
       });
     } catch(e) {
+      this.loading = false;
       console.error(e);
     }
   }
 
   public scanQR() {
+    this.loading = false;
     if (this.denied) {
       alert('Non hai dato il permesso a COMEBACK di usare la fotocamera. Cambia questo dalle impostazioni del telefono. Grazie!');
       try { (window as any)['QRScanner'].openSettings(); } catch(e) { console.error((e)); }
@@ -175,7 +191,7 @@ export class IncIntroComponent implements OnInit, OnDestroy {
         (window as any)['QRScanner'].destroy((status: any) => {
           console.log('SCAN DATA', businessUrl);
           console.log(status);
-          this.step = 2;
+          // this.step = 2;
           this.scanning = false;
 
           var search = new URL(businessUrl).search.substring(1);
@@ -195,6 +211,7 @@ export class IncIntroComponent implements OnInit, OnDestroy {
   }
 
   public cancelScan() {
+    this.loading = true;
     document.body.style.backgroundColor = "#F5F5F5";
     (window as any)?.changeColor();
     this.resetColor();
@@ -203,24 +220,25 @@ export class IncIntroComponent implements OnInit, OnDestroy {
       console.log('HIDING 1');
       console.log(status);
       this.scanning = false;
-      document.body.style.backgroundColor = "#F5F5F5";
+      document.body.style.backgroundColor = "#FFFFFF";
       (window as any)?.changeColor();
       this.step = 1;
     });
     this.step = 1;
+    this.goHome();
   }
 
   resetColor() {
     setTimeout(() => {
-      window.document.body.style.backgroundColor = '#F5F5F5';
-      document.body.style.backgroundColor = '#F5F5F5';
+      window.document.body.style.backgroundColor = '#FFFFFF';
+      document.body.style.backgroundColor = '#FFFFFF';
       this.ref.detectChanges();
     }, 300);
   }
 
   public getBusiness(step: any = null) {
     this.resetColor();
-    window.document.body.style.backgroundColor = "#F5F5F5";
+    window.document.body.style.backgroundColor = "#FFFFFF";
     (window as any)?.changeColor();
     this.loading = true;
     this.apiService
@@ -249,6 +267,9 @@ export class IncIntroComponent implements OnInit, OnDestroy {
     const business = this.business$.getValue();
     this.apiService.addUserFidelityCard(this.businessId)
       .then(() => {
+        (window as any)['goToBusinessId'] = this.businessId;
+        const goToBusinessEvent = new Event('goToBusiness');
+        (window as any).dispatchEvent(goToBusinessEvent);
         this.goHome();
       })
       .catch((e: any) => {

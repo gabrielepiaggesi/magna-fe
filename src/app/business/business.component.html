@@ -52,43 +52,43 @@
         <!-- <h2>Nuova Attività</h2> -->
         <div class="flex fColumn gap5">
             <label>Nome Locale</label>
-            <input formControlName="name" class="indroButton f1 br5 w100" type="text" placeholder="Nome Locale">
+            <input formControlName="name" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Nome Locale">
         </div>
         <div class="flex fColumn gap5">
             <label>Indirizzo</label>
-            <input formControlName="address" class="indroButton f1 br5 w100" type="text" placeholder="Indirizzo">
+            <input formControlName="address" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Indirizzo">
         </div>
         <div class="flex fColumn gap5">
             <label>Numero di Telefono</label>
-            <input formControlName="phoneNumber" class="indroButton f1 br5 w100" type="tel" placeholder="Primo Telefono +39...">
+            <input formControlName="phoneNumber" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="tel" placeholder="Primo Telefono +39...">
         </div>
         <div class="flex fColumn gap5">
             <label>Secondo Numero di Telefono</label>
-            <input formControlName="secondPhoneNumber" class="indroButton f1 br5 w100" type="tel" placeholder="Secondo Telefono +39...">
+            <input formControlName="secondPhoneNumber" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="tel" placeholder="Secondo Telefono +39...">
         </div>
         <div class="flex fColumn gap5">
             <label>CAP/Codice Postale Locale</label>
-            <input formControlName="cap" class="indroButton f1 br5 w100" type="tel" placeholder="CAP/Codice Postale 00175">
+            <input formControlName="cap" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="tel" placeholder="CAP/Codice Postale 00175">
         </div>
         <div class="flex fColumn gap5">
             <label>Descrizione Locale</label>
-            <input formControlName="description" class="indroButton f1 br5 w100" type="text" placeholder="Descrizione">
+            <input formControlName="description" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Descrizione">
         </div>
         <div class="flex fColumn gap5">
             <label>Come funziona la Carta Fedeltà</label>
-            <input formControlName="cardDescription" class="indroButton f1 br5 w100" type="text" placeholder="Come funziona la Carta Fedeltà">
+            <input formControlName="cardDescription" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Come funziona la Carta Fedeltà">
         </div>
         <div class="flex fColumn gap5">
             <label>Sito Web</label>
-            <input formControlName="website" class="indroButton f1 br5 w100" type="text" placeholder="Sito web / link di Google Maps">
+            <input formControlName="website" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Sito web / link di Google Maps">
         </div>
         <div class="flex fColumn gap5">
             <label>Link Menu/Prezzi</label>
-            <input formControlName="menuLink" class="indroButton f1 br5 w100" type="text" placeholder="Link/url menu - tariffe - prezzi">
+            <input formControlName="menuLink" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Link/url menu - tariffe - prezzi">
         </div>
         <div class="flex fColumn gap5">
             <label>Link Instagram</label>
-            <input formControlName="instagramPage" class="indroButton f1 br5 w100" type="text" placeholder="Link/url Pagina Instagram">
+            <input formControlName="instagramPage" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Link/url Pagina Instagram">
         </div>
         <div class="flex fRow aCenter gap10 w100">
             <input style="transform: scale(1.5);" formControlName="acceptReservations" type="checkbox">
@@ -110,8 +110,8 @@
             <input style="transform: scale(1.5);" formControlName="discountOnFirstReservation" type="checkbox">
             <span>Sconto Automatico alla prima prenotazione</span>
         </div>
-        <button type="button" [disabled]="editBusinessForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="editBusiness()">SALVA</button>
-        <button type="button" class="btnOutline f1 br5 w100" (click)="editMode = false">ANNULLA</button>
+        <button type="button" [disabled]="editBusinessForm.invalid" class="w100 br10 bgrAB pad10 brN mB10" (click)="editBusiness()"><h2 class="fw6">Salva</h2></button>
+        <button type="button" class="w100 br10 bgrW pad10 padX30 br2ALL ffG" (click)="editMode = false"><h2 class="fw4 crBl">annulla</h2></button>
         <!-- <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p> -->
     </form>
     <div *ngIf="!!loading" class="spinner mAuto"></div>
@@ -123,14 +123,14 @@
         <h3>Manda messaggio con notifica ai tuoi clienti!</h3>
         <div class="flex fColumn gap5">
             <label for="titleNot">Titolo (Testo Notifica)</label>
-            <input id="titleNot" formControlName="title" class="indroButton f1 br5 w100" type="text" placeholder="OGGI PORCHETTA!">
+            <input id="titleNot" formControlName="title" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="OGGI PORCHETTA!">
         </div>
         <div class="flex fColumn gap5">
             <label for="messageNot">Messaggio (facoltativo)</label>
-            <input id="messageNot" formControlName="msg" class="indroButton f1 br5 w100" type="text" placeholder="Solo oggi panino con la porchetta fresca.">
+            <input id="messageNot" formControlName="msg" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Solo oggi panino con la porchetta fresca.">
         </div>
-        <button type="button" [disabled]="notForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="sendNotification()">INVIA</button>
-        <button type="button" class="btnOutline f1 br5 w100" (click)="sendNot = false">ANNULLA</button>
+        <button type="button" [disabled]="notForm.invalid" class="w100 br10 bgrAB pad10 brN mB10" (click)="sendNotification()"><h2 class="fw6">Invia</h2></button>
+        <button type="button" class="w100 br10 bgrW pad10 padX30 br2ALL ffG" (click)="sendNot = false"><h2 class="fw4 crBl">annulla</h2></button>
         <!-- <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p> -->
     </form>
     <div *ngIf="!!loading" class="spinner mAuto"></div>

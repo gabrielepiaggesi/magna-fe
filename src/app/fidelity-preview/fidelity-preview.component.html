@@ -1,53 +1,111 @@
-<div class="cP flex fColumn gap20 pad10 br10 bgrP fidBox pRel">
-    <div *ngIf="discountPresent" class="tRBadge tRBadgeBor bgrR">
-        <p>Hai Sconto</p>
+<!-- <div class="cP flex fColumn br10 bgrW brALL oHidden pRel">
+    <img class="w100" style="object-fit: cover;" height="170"
+        src="https://img.freepik.com/free-photo/abstract-blur-food-truck_1339-3329.jpg?w=1380&t=st=1669487530~exp=1669488130~hmac=2193ebdc36a344007af2493f07c4c5f27b651b20620dd570eb60ece2e370759f"
+        alt="">
+    <div class="card_content">
     </div>
-
-    <div class="flex fRow aCenter gap10">
-        <div class="flex fRow fCenter imgBox">
-            <i class="fa-solid fa-shop businessImg crG bgrY"></i>
-            <!-- <img src="https://d2egcvq7li5bpq.cloudfront.net/it/images/restaurants/209196.gif" alt=""> -->
+    <div class="cP flex fColumn gap20 pad10 fidBox pRel">
+        <div *ngIf="discountPresent" class="tRBadge tRBadgeBor bgrR">
+            <p>Hai Sconto</p>
         </div>
-        <div class="flex fColumn discountBio f1">
-            <p class="incName">{{_fidelity?.business_name}}</p>
-            <p class="discountInfo">
-                Premio ogni {{_fidelity?.business_expenses_amount - 1}} volte.
-            </p>
-        </div>
-        <!-- <div class="flex fRow fCenter pad5 br5 bgrW qrCode" [ngClass]="{ 'op3': discountPresent }">
-            <img src="https://boofcv.org/images/thumb/3/35/Example_rendered_qrcode.png/400px-Example_rendered_qrcode.png" alt="">
-        </div> -->
-    </div>
 
-    <div class="flex fRow aCenter fWrap gap10">
-        <div 
-            *ngFor="let slot of _fidelity?.expenses_array; let idx = index; let last = last;" 
-            [attr.class]="(_fidelity?.expenses_array.length <= 10 ? 'badge20' : _fidelity?.expenses_array.length <= 20 ? 'badge20' : 'badge30') + ' badgeBgr flex fRow fCenter'"
-            [ngClass]="{
+        <div class="flex fRow aCenter gap10">
+            <div class="flex fRow fCenter imgBox">
+                <i class="fa-solid fa-shop businessImg crG bgrY"></i>
+            </div>
+            <div class="flex fColumn discountBio f1">
+                <p class="incName">{{_fidelity?.business_name}}</p>
+                <p class="discountInfo">
+                    Premio ogni {{_fidelity?.business_expenses_amount - 1}} volte.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex fRow aCenter fWrap gap10">
+            <div *ngFor="let slot of _fidelity?.expenses_array; let idx = index; let last = last;"
+                [attr.class]="(_fidelity?.expenses_array.length <= 10 ? 'badge20' : _fidelity?.expenses_array.length <= 20 ? 'badge20' : 'badge30') + ' badgeBgr flex fRow fCenter'"
+                [ngClass]="{
                 'done': (!last || !discountPresent) && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown),
                 'bgrR': discountPresent && last
-            }"
-        >
-            <ng-container *ngIf="_fidelity?.expenses_array.length <= (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)">
-                <span class="cross" *ngIf="!last && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown)">{{idx+1}}</span>
-                <i *ngIf="last" class="fa-solid fa-gift"></i>
-            </ng-container>
-            <ng-container *ngIf="_fidelity?.expenses_array.length > (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)">
-                <!-- <span class="cross" *ngIf="!last && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown)">{{idx+1}}</span> -->
-                <span class="cross" *ngIf="!last">{{idx+1}}</span>
-                <i *ngIf="last" class="fa-solid fa-gift"></i>
-            </ng-container>
+            }">
+                <ng-container
+                    *ngIf="_fidelity?.expenses_array.length <= (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)">
+                    <span class="cross"
+                        *ngIf="!last && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown)">{{idx+1}}</span>
+                    <i *ngIf="last" class="fa-solid fa-gift"></i>
+                </ng-container>
+                <ng-container
+                    *ngIf="_fidelity?.expenses_array.length > (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)">
+                    <span class="cross" *ngIf="!last">{{idx+1}}</span>
+                    <i *ngIf="last" class="fa-solid fa-gift"></i>
+                </ng-container>
+            </div>
+        </div>
+        <p *ngIf="_fidelity?.expenses_array.length <= (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)"
+            class="discountAlert">
+            Hai diritto a uno sconto! Mostra alla cassa il QR
+        </p>
+        <div class="flex fRow aCenter jBet gap10" style="justify-content: flex-end;">
+            <span class="canAct">
+                apri &nbsp; <i class="fa-solid fa-arrow-right" style="font-size: 14px;"></i>
+            </span>
         </div>
     </div>
-    <p *ngIf="_fidelity?.expenses_array.length <= (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)" class="discountAlert">
-        Hai diritto a uno sconto! Mostra alla cassa il QR
-    </p>
-    <!-- <p *ngIf="discountPresent" class="discountAlert">
-        Sconto disponibile!
-    </p> -->
-    <div class="flex fRow aCenter jBet gap10" style="justify-content: flex-end;">
-        <span class="canAct">
-            apri &nbsp; <i class="fa-solid fa-arrow-right" style="font-size: 14px;"></i>
-        </span>
+</div> -->
+
+
+
+
+
+<div class="cP flex fColumn bgrW br10 oHidden pRel">
+    <!-- <div *ngIf="discountPresent" class="tRBadge tRBadgeBor bgrR">
+        <p>Hai Sconto</p>
+    </div> -->
+    <img class="w100 br10" style="object-fit: cover;" height="200"
+        [src]="_fidelity?.business_image_url || 'https://img.freepik.com/free-photo/abstract-blur-food-truck_1339-3329.jpg?w=1380&t=st=1669487530~exp=1669488130~hmac=2193ebdc36a344007af2493f07c4c5f27b651b20620dd570eb60ece2e370759f'"
+        alt="">
+    <div class="card_content br10">
+        <div class="flex fRow aCenter gap10 bgrT pad15">
+            <!-- <div class="flex fRow fCenter imgBox">
+                <i class="fa-solid fa-shop businessImg crG bgrY"></i>
+            </div> -->
+            <div class="flex fColumn discountBio f1">
+                <h2>{{_fidelity?.business_name}}</h2>
+                <p class="discountInfo" style="
+                display: inline-block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis; 
+                -o-text-overflow: ellipsis;
+                max-width: 50%;">
+                    Carta Cliente, apri <i style="font-size: 12px; margin-left: 3px; margin-top: 1px;" class="fa-solid fa-arrow-right"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- <span *ngIf="!!discountPresent" class="canAct bgrABG mT10">
+        Qui hai lo SCONTO!
+    </span> -->
+    <div class="cP flex fColumn gap10 padY10 pRel" style="padding-left: 5px;">
+        <h4 *ngIf="!discountPresent" class="fw5">
+            Ti mancano 
+            {{ (_fidelity?.business_expenses_amount - (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)) - 1 }} 
+            punti per lo sconto
+        </h4>
+        <h4 *ngIf="!!discountPresent" class="fw5">
+            Qui hai lo SCONTO!
+        </h4>
+        <div class="flex fRow aCenter fWrap" style="gap: 7px;">
+            <div *ngFor="let slot of _fidelity?.expenses_array; let idx = index; let last = last;"
+                class="miniBadge bgrW flex fRow fCenter"
+                [ngClass]="{
+                'bgrAB': ((!last || !discountPresent) && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown)) || !!discountPresent,
+                'brW0': ((!last || !discountPresent) && idx < _fidelity?.user_expenses_amount - (_fidelity?.discount_countdown))
+            }">
+                <!-- <span></span>
+                <i *ngIf="last" style="font-size: 17px; margin-bottom: 1px;" class="fa-solid fa-gift op8"></i> -->
+            </div>
+            <span *ngIf="_fidelity?.expenses_array_too_long">...</span>
+            <i style="font-size: 17px; margin-bottom: 1px;" class="fa-solid fa-gift op8"></i>
     </div>
 </div>

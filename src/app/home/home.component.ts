@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
   public discounts$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   public fidelityCards$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   public businessesSuggested$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  public fromQR = 0;
 
   public lang = 'it';
   public tr!: any;
@@ -31,19 +32,28 @@ export class HomeComponent implements OnInit {
   };
 
   public it = {
-    discountSlogan: 'Completa almeno una carta fedeltà per ricevere i tuoi premi!',
-    newCard: '+NUOVA CARTA FEDELTÀ',
+    discountSlogan: 'Completa almeno una carta cliente per ricevere i tuoi premi!',
+    newCard: '+NUOVA CARTA CLIENTE / LEGGI MENÙ',
     cap: 'Imposta il CAP della tua zona per trovare locali e sconti vicino a te!'
   };
 
-  constructor(private router: Router, private apiService: ApiService, public appService: AppService) { }
+  constructor(private router: Router, private apiService: ApiService, public appService: AppService) {
+    (window as any).addEventListener('refreshList', (e: any) => { 
+      (window as any)['refreshList'] = true; 
+      // this.closeOverlay();
+      if (!this.entityOpened) {
+        this.ngOnInit();
+      }
+    }, false);
+  }
 
   ngOnInit(): void {
+    this.fromQR = 0;
     this.lang = navigator.language || 'it';
     // this.lang = 'zh';
     if (this.lang.includes('zh') || this.lang.includes('ch')) {
-      this.tr = this.ch;
-      this.lang = 'ch';
+      this.tr = this.it;
+      this.lang = 'it';
     } else {
       this.tr = this.it;
       this.lang = 'it';
@@ -58,14 +68,26 @@ export class HomeComponent implements OnInit {
   }
 
   public open(type: 'discount'|'fidelity-card', entity: any, isSuggested = false) {
+    console.log('opening', type, entity.business_id);
     this.entityTypeOpened = type;
+    if (type == 'fidelity-card') {
+      const discs = this.discounts$.getValue();
+      const discFound = discs.find(d => d.business_id == entity.business_id);
+      entity.user_discount_id = discFound ? discFound.id : null;
+      entity.user_discount = discFound;
+    }
     this.entityOpened = entity;
     this.isSuggested = isSuggested;
     if (type === 'discount') this.clickCard = true;
   }
 
   public closeOverlay(event = null, refresh = false) {
-    (refresh || this.clickCard) && this.ngOnInit();
+    console.log('closing');
+    (window as any).addEventListener('refreshList', (e: any) => { (window as any)['refreshList'] = true; }, false);
+
+    const mustRefresh = (refresh || this.clickCard || (window as any)['refreshList']);
+    !mustRefresh && this.appService.goToBusinessId$.next(undefined);
+    mustRefresh && this.ngOnInit();
     if (event === 'discount') {
       this.entityTypeOpened = 'discount';
       const discountsWithBusinessId = this.discounts$.getValue().filter((d: any) => d.business_id === this.entityOpened.business_id);
@@ -86,21 +108,51 @@ export class HomeComponent implements OnInit {
         this.discountsBusinessIds = discountsBusinessIds;
         this.discounts$.next(discounts);
       })
-      .catch((e: any) => console.error(e))
-      .finally(() => this.loading = false);
+      .catch((e: any) => { this.loading = false; console.error(e); });
+  }
+
+  public getBusiness(businessId: number) {
+    this.loading = true;
+    this.apiService
+      .getBusinessesByIds([businessId])
+      .then((businesses: any) => {
+        const business = businesses[0];
+        if (!business) {
+          alert('Locale inesistente');
+          return;
+        }
+        this.loading = false;
+        console.log('getBusiness', businessId, JSON.stringify(business));
+        this.open('fidelity-card', business, true);
+      })
+      .catch((e: any) => {
+        alert('Errore');
+        this.loading = false;
+      });
   }
 
   public getFidelityCards() {
     this.loading = true;
     this.apiService.getUserFidelityCards()
       .then((fidelityCards: any) => {
+        (window as any)['refreshList'] = false;
+        fidelityCards = fidelityCards.map((fC: any) => {
+          fC['expenses_array'] = new Array(fC.business_expenses_amount - 1);
+          if (fC['expenses_array'].length > 10) {
+            fC['expenses_array'] = new Array(10);
+            fC['expenses_array_too_long'] = true;
+          }
+          fC['missing_points'] = (fC.business_expenses_amount - (fC.user_expenses_amount - fC.discount_countdown)) - 1;
+          return fC;
+        });
+        fidelityCards = fidelityCards.sort((a: any, b: any) => a['missing_points'] - b['missing_points']);
         this.fidelityCards$.next(fidelityCards);
         const caps = fidelityCards.filter((fC: any) => fC.business_cap).map((fC: any) => fC.business_cap);
         const businessesIds = fidelityCards.map((fC: any) => fC.business_id);
+
         this.getBusinessSuggestedByCaps(caps, businessesIds);
       })
-      .catch((e: any) => console.error(e))
-      .finally(() => this.loading = false);
+      .catch((e: any) => { this.loading = false; console.error(e); });
   }
 
   public getBusinessSuggestedByCaps(caps: string[], businessesIds: number[]) {
@@ -142,16 +194,46 @@ export class HomeComponent implements OnInit {
     });
 
     console.log(newCaps);
-    this.apiService.getBusinessByCaps(newCaps, [])
+    this.apiService.getBusinessByCaps(newCaps, businessesIds)
       .then((businessSuggested: any) => {
-        businessSuggested = businessSuggested.map((b: any) => {
-          b.hasCard = businessesIds.includes(b.business_id) ? 1 : 0;
-          return b;
-        });
-        businessSuggested = businessSuggested.sort((a: any, b: any) => { return a.hasCard - b.hasCard});
+        // businessSuggested = businessSuggested.filter((b: any) => !businessesIds.includes(b.business_id));
+        // businessSuggested = businessSuggested.map((b: any) => {
+        //   b.hasCard = businessesIds.includes(b.business_id) ? 1 : 0;
+        //   return b;
+        // });
+        // businessSuggested = businessSuggested.sort((a: any, b: any) => { return a.hasCard - b.hasCard});
         this.businessesSuggested$.next(businessSuggested);
+        this.appService.goToBusinessId$.subscribe((businessId: number|undefined) => {
+          this.fromQR = businessId || 0;
+          this.fromQR && this.checkFromQR();
+        });
       })
-      .catch((e: any) => console.error(e));
+      .catch((e: any) => this.checkFromQR() && console.error(e))
+      .finally(() => this.loading = false);
+  }
+
+  public checkFromQR() {
+    if (this.fromQR) {
+      const fCFound = this.fidelityCards$.getValue().find((fC: any) => fC.business_id == this.fromQR);
+      console.log('searching card 2...', this.fromQR, JSON.stringify(fCFound));
+      if (fCFound) {
+        this.open('fidelity-card', fCFound, false);
+        return true;
+      }
+    }
+
+    if (this.fromQR && !this.entityOpened) {
+      const fCFound = this.businessesSuggested$.getValue().find((fC: any) => fC.business_id == this.fromQR);
+      if (fCFound) {
+        this.open('fidelity-card', fCFound, true);
+        return true;
+      }
+      if (!fCFound) {
+        this.getBusiness(this.fromQR);
+        return true;
+      }
+    }
+    return true;
   }
 
 }

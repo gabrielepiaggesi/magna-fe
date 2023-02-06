@@ -1,7 +1,7 @@
-<div class="flex fColumn pad10 gap20 w100" *ngIf="(fidelityCards$ | async) as cards">
+<div class="flex fColumn pad10 gap20 w100 mT10" *ngIf="(fidelityCards$ | async) as cards">
     <ng-container *ngIf="!loading">
-        <div class="flex fColumn gap20">
-            <div class="flex fColumn gap10 pad10 br10 boxSha bgrG" *ngFor="let card of cards; let idx = index;">
+        <div class="flex fColumn gap30">
+            <div class="flex fColumn gap10 pad10 br10 bgrW br1ALL" *ngFor="let card of cards; let idx = index;">
                 <h2>{{ idx + 1 }}° Livello</h2>
                 <ul>
                     <li>Dopo {{ card.expenses_amount - 1 }} volte/punti vince premio.</li>
@@ -9,24 +9,24 @@
                     <li *ngIf="card.lifes">Livello con {{ card.lifes }} "{{ card.lifes == 1 ? 'vita' : 'vite' }}".</li>
                     <li *ngIf="!card.lifes">Livello valido per sempre.</li>
                 </ul>
-                <button type="button" class="btnFilledIndro f1 br10 w100" (click)="editCard(card)">modifica</button>
+                <button type="button" class="w100 br10 bgrW pad10 padX30 br2ALL ffG" (click)="editCard(card)"><h2 class="fw4 crBl">Modifica</h2></button>
             </div>
-            <button type="button" class="btnFilledIndro f1 br10 w100" (click)="toggleCardLevel()">aggiungi livello</button>
+            <button type="button" class="w100 br10 bgrAB pad10 brN mB10" (click)="toggleCardLevel()"><h2 class="fw6">Aggiungi livello</h2></button>
         </div>
     </ng-container>
     <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div>
 
 
-<app-overlay *ngIf="!!(fidelityCard$ | async) || !!newCardLevel" class="bgrWl" (close)="closeCard()">
+<app-overlay *ngIf="!!(fidelityCard$ | async) || !!newCardLevel" class="bgrW" [absoluteMode]="true"  (close)="closeCard()">
     <ng-container *ngIf="!loading">
-        <form class="flex fColumn gap10 w100 mT40" *ngIf="!newCardLevel && !!(fidelityCard$ | async)" [formGroup]="cardForm">
+        <form class="flex fColumn gap10 w100 mT40 pad10 mT60" *ngIf="!newCardLevel && !!(fidelityCard$ | async)" [formGroup]="cardForm">
             <label for="discountTypeSelect">Dopo quante volte per ricevere lo sconto/premio?</label>
-            <input formControlName="expenses_amount" class="indroButton f1 br5 w100 mB10" type="number" pattern="[0-9]*" min="1" max="50" step="1" placeholder="5">
+            <input formControlName="expenses_amount" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number" pattern="[0-9]*" min="1" max="50" step="1" placeholder="5">
             
             <ng-container *ngIf="(businessCardDiscounts$ | async) as businessCardDiscounts">
                 <label for="discountTypeSelect">Scegli il premio tra quelli che hai.</label>
-                <select formControlName="discount_id" class="br5 brN w100 boxSha mB10" style="font-size: 17px; height: 42px;">
+                <select formControlName="discount_id" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;">
                     <option *ngFor="let disc of businessCardDiscounts" [value]="disc.id">
                         <h2 *ngIf="disc.slogan && !disc.amount">{{ disc.slogan }}</h2>
                         <h2 *ngIf="disc.amount">Sconto {{ disc?.type == 'PERC' ? 'del' : 'di' }} {{disc?.amount}}{{ disc?.type == 'PERC' ? '%' : '€' }}</h2>
@@ -36,7 +36,7 @@
             
             <ng-container *ngIf="!isLastCard">
                 <label for="discountTypeSelect">Scegli le vite della carta, ovvero quante volte deve essere completata per passare al livello successivo.</label>
-                <select formControlName="lifes" class="br5 brN w100 boxSha mB10" style="font-size: 17px; height: 42px;">
+                <select formControlName="lifes" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;">
                     <option value="0">Senza limiti</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -51,23 +51,23 @@
                 </select>
             </ng-container>
 
-            <button type="button" [disabled]="cardForm.invalid" class="btnFilledIndro f1 br5 w100 mT10" (click)="updateFidelityCard()">SALVA</button>
+            <button type="button" [disabled]="cardForm.invalid" class="w100 br10 bgrAB pad10 brN mB10" (click)="updateFidelityCard()"><h2 class="fw6">Salva</h2></button>
             <label class="mT10">Ricordati di impostare il premio nella sezione "Buoni Sconto".</label>
         </form>
 
-        <form class="flex fColumn gap10 w100 mT40" *ngIf="!!newCardLevel" [formGroup]="newCardLevelForm">
+        <form class="flex fColumn gap10 w100 pad10 mT60" *ngIf="!!newCardLevel" [formGroup]="newCardLevelForm">
             <label for="discountTypeSelect">Dopo quante volte per ricevere lo sconto/premio?</label>
-            <input formControlName="expenses_amount" class="indroButton f1 br5 w100 mB10" type="number" pattern="[0-9]*" min="1" max="50" step="1" placeholder="5">
+            <input formControlName="expenses_amount" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number" pattern="[0-9]*" min="1" max="50" step="1" placeholder="5">
             <ng-container *ngIf="(businessCardDiscounts$ | async) as businessCardDiscounts">
                 <label for="discountTypeSelect">Scegli il premio tra quelli che hai.</label>
-                <select formControlName="discount_id" class="br5 brN w100 boxSha mB10" style="font-size: 17px; height: 42px;">
+                <select formControlName="discount_id" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;">
                     <option *ngFor="let disc of businessCardDiscounts" [value]="disc.id">
                         <h2 *ngIf="disc.slogan && !disc.amount">{{ disc.slogan }}</h2>
                         <h2 *ngIf="disc.amount">Sconto {{ disc?.type == 'PERC' ? 'del' : 'di' }} {{disc?.amount}}{{ disc?.type == 'PERC' ? '%' : '€' }}</h2>
                     </option>
                 </select>
             </ng-container>
-            <button type="button" [disabled]="newCardLevelForm.invalid" class="btnFilledIndro f1 br5 w100 mT10" (click)="createFidelityCard()">CREA CARTA</button>
+            <button type="button" [disabled]="newCardLevelForm.invalid" class="w100 br10 bgrAB pad10 brN mB10" (click)="createFidelityCard()"><h2 class="fw6">Crea carta</h2></button>
             <label class="mT10">Ricordati di impostare il premio nella sezione "Buoni Sconto".</label>
         </form>
     </ng-container>

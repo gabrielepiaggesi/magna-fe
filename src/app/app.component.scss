@@ -1,24 +1,45 @@
 .footer {
     position: fixed;
     bottom: 0;
-    left: 10px;
-    right: 10px;
-    box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
+    left: 0px;
+    right: 0px;
+    // box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.25);
+    border-radius: 0px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     // background-color: white;
     margin-bottom: constant(safe-area-inset-bottom);
     margin-bottom: env(safe-area-inset-bottom);
     z-index: 3;
+    // color: #717171;
 }
 app-header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    background-color: #F5F5F5;
+    // background-color: #F5F5F5;
     z-index: 3;
+}
+.bgrW > div {
+    color: #717171;
+}
+.bgrG > div {
+    color: white;
+}
+.bgrW .activeMenu {
+    color: #F8565C !important;
+    i {
+        opacity: 1 !important;
+    }
+    small { font-weight: 600 !important; }
+}
+.bgrAB .activeMenu {
+    color: white !important;
+    i {
+        opacity: 1 !important;
+    }
+    small { font-weight: 600 !important; }
 }
 .padTop {
     padding-top: 60px;
@@ -27,10 +48,10 @@ app-header {
     padding-bottom: 65px;
 }
 i {
-    font-size: 21px;
+    font-size: 18px;
     opacity: 0.8;
 }
 .ig {
-    font-size: 23px;
+    font-size: 18px;
     font-weight: 600;
 }

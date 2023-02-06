@@ -1,4 +1,4 @@
-<div *ngIf="!!manualMode" class="flex fColumn pad20 gap20 w100 bgrWl">
+<div *ngIf="!!manualMode" class="flex fColumn pad20 gap20 w100 bgrW">
     <ng-container *ngIf="!loading">
         <h2>Segna/Timbra a mano</h2>
         <form class="flex fColumn gap10 w100" [formGroup]="entityForm">
@@ -9,8 +9,7 @@
                     formControlName="type"
                     name="entitySelect" 
                     id="entitySelect" 
-                    class="br10 brN w100 boxSha" 
-                    style="font-size: 17px; height: 42px;" 
+                    class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;"
                 >
                     <option disabled selected [value]="null">-- Seleziona --</option>
                     <option value="discount">Sconto</option>
@@ -20,24 +19,23 @@
             
             <div class="flex fColumn gap5">
                 <label for="discountTypeSelect">Codice della Carta o dello Sconto (è scritto sopra il qr sul tel del cliente)</label>
-                <input formControlName="id" class="indroButton f1 br5 w100 mB10" type="number" pattern="[0-9]*" min="1" step="1" placeholder="42">
+                <input formControlName="id" class="br10 w100 br1ALL bgrW pad15 fw5 ffG mB10" type="number" pattern="[0-9]*" min="1" step="1" placeholder="42">
             </div>
 
             <button 
                 type="button" 
                 [disabled]="entityForm.invalid" 
-                class="w100 br10 btn1 bgrG boxSha pad15 brN w100"
+                class="w100 br10 bgrBl pad10 padX30 brN ffG"
                 (click)="manualValidate()"
             >
-                CONFERMA
+                <h2 class="fw6">Conferma</h2>
             </button>
-            <br>
             <button 
                 type="button" 
-                class="btnOutline f1 br10 w100" 
+                class="w100 br10 bgrW pad10 padX30 br2ALL ffG"
                 (click)="cancelScan()"
             >
-                INDIETRO
+                <h2 class="fw4 crBl">Indietro</h2>
             </button>
         </form>
     </ng-container>
@@ -45,7 +43,7 @@
 </div>
 
 
-<div *ngIf="!!qrMode" class="flex fColumn h100 f1">
+<!-- <div *ngIf="!!qrMode" class="flex fColumn h100 f1">
     <div class="flex fRow w100 bgrWl" style="height: 5px;">
     </div>
     <div class="flex fRow f1">
@@ -75,4 +73,29 @@
             timbra a mano
         </button>
     </div>
+</div> -->
+
+
+
+
+
+<div *ngIf="!!qrMode" class="flex fColumn h100 f1">
+    <div class="h100 flex fColumn fCenter pRel" style="background-color: transparent;">
+        <div class="flex fColumn fCenter gap10 mB40" style="background-color: transparent;">
+            <div class="br10" style="border: solid 5px white; background-color: transparent; width: 250px; height: 250px;">
+            </div>
+            <h4 class="fw5 textCenter" style="width: 250px; color: white;">Inquadra il QR del cliente.</h4>
+        </div>
+        <div class="w30 mAuto pAbs flex fColumn fCenter gap20 mB40" style="width: 250px; bottom: 20px; left: calc(50% - 125px); z-index: 5; background-color: transparent;">
+            <button class="w100 br10 pad10 padX20 bgrW brN" style="border-radius: 250px; box-shadow: 0px 3px 10px 0px rgb(255 255 255 / 30%);" (click)="writeCode()">
+                <h2 class="fw5">Timbra a mano</h2>
+            </button>
+            <button class="w100 br10 pad10 padX20 bgrW brN" style="border-radius: 250px; box-shadow: 0px 3px 10px 0px rgb(255 255 255 / 30%);" (click)="cancelScan()">
+                <h2 class="fw5">Indietro</h2>
+            </button>
+        </div>
+    </div>
 </div>
+<!-- <button class="pAbs pTop0 pLeft0 br10 bgrW brN" style="visibility: hidden; height: 0px; width: 0px;" (click)="getBusiness()" id="doneButton" type="button"></button>
+<button class="pAbs pTop0 pLeft0 br10 bgrW brN" style="visibility: hidden; height: 0px; width: 0px;" (click)="scanQR()" id="scanButton" type="button"></button>
+ -->

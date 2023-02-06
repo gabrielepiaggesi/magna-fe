@@ -3,7 +3,9 @@ import { Component, EventEmitter, OnInit, Output, OnDestroy, Input } from '@angu
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../api.service';
+import { AppService } from '../app.service';
 import { BehaviorSubject } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-fidelity-qr',
@@ -24,6 +26,7 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
   public reservationId!: number;
   public intervalId: any;
   public stop = false;
+  public fidelityCardEvent = false;
   public today = (new Date(Date.now()).toISOString().substring(0, 10));
   public reservation$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
   public newRes = this.fb.group({
@@ -33,6 +36,10 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     userTime: ['20:00', Validators.required],
     phoneNumber: [null, Validators.required],
     note: [null],
+  });
+  public reviewForm = this.fb.group({
+    rating: [null, Validators.required],
+    text: [null, Validators.required]
   });
 
   public lang = 'it';
@@ -56,8 +63,13 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     private apiService: ApiService, 
     private fb: FormBuilder,
     public loc: Location,
-    private router: Router
+    private router: Router,
+    protected _sanitizer: DomSanitizer,
+    public appService: AppService
   ) {
+    (window as any).addEventListener('fidelityCardEvent', (e: any) => {
+      this.fidelityCardEvent = true;
+    }, false);
   }
 
   ngOnDestroy(): void {
@@ -100,6 +112,11 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     window.open(this.fidelityCard?.business_website, '_system');
   }
 
+  menu(link: string) {
+    if (link.includes('comeback')) link = link + `?token=${this.apiService.TOKEN}`;
+    window.open(link, '_system');
+  }
+
   open(link: string) {
     window.open(link, '_system');
   }
@@ -116,6 +133,10 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
   clickSconto() {
     this.clickCard.emit();
     this.close.emit('discount');
+  }
+
+  public getQrDiscRaw() {
+    return `https://comebackwebapp.web.app/?businessId=${this.fidelityCard.business_id}&entityId=${this.fidelityCard.user_discount_id}&entityType=discount`;
   }
 
   public addReservation() {
@@ -146,7 +167,9 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
           alert('Ops! Purtroppo oggi il Locale è pieno...ci dispiace tanto :(');
           return;
         }
-        this.getCurrentReservation(res.id);
+        alert('Grazie! Controlla la prenotazione dalla pagina prenotazioni.')
+        // this.getCurrentReservation(res.id);
+        this.router.navigateByUrl('user-reservations', { replaceUrl: true});
       })
       .catch((e: any) => alert('Errore'))
       .finally(() => (this.loading = false));
@@ -185,6 +208,15 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
       .then((res) => this.processRes(res))
       .catch((e: any) => console.error(e))
       .finally(() => (this.loading = false));
+  }
+
+  public getGoogleMapsIfraeLink(address: string) {
+    return this._sanitizer.bypassSecurityTrustResourceUrl(`https://maps.google.com/maps?q=${ encodeURI(address) }&t=&z=14&sensor=false&maptype=roadmap&ie=UTF8&iwloc=&output=embed`);
+  }
+
+  public openMaps(address: string) {
+    const url = `https://maps.google.com/maps?q=${ encodeURI(address) }&t=&z=14&ie=UTF8&iwloc=`;
+    window.open(url, '_system');
   }
 
   public generate() { // chiama get reservation ogni 10 secondi
@@ -227,6 +259,7 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     this.apiService.addUserFidelityCard(this.fidelityCard.business_id)
       .then(() => {
         alert('Carta aggiunta!');
+        this.appService.goToBusinessId$.next(this.fidelityCard.business_id);
         this.close.emit();
       })
       .catch((e: any) => {
@@ -245,6 +278,20 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
           (window as any).plugins.OneSignal.sendTags(bodyTag);
         } catch(e) { console.error('ONESIGNAL_ERROR', e); }
       });
+  }
+
+  public sendReview() {
+    this.loading = true;
+    this.apiService.addBusinessReview(this.reviewForm.getRawValue(), this.fidelityCard.business_id)
+      .then(() => {
+        alert('Fatto!');
+        this.step = 1;
+      })
+      .catch((e: any) => {
+        alert('Errore');
+        this.step = 1;
+      })
+      .finally(() => this.loading = false);
   }
 
   private processRes(res: any) {

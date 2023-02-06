@@ -1,10 +1,89 @@
+// .fidBox {
+//     box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.25);
+//     border-radius: 10px;
+//     color: white;
+//     min-height: 145px;
+//     padding-bottom: 20px;
+// }
+// .dashedBoRight {
+//     border-right: 2px dashed white;
+//     padding-right: 10px;
+// }
+// .businessImg {
+//     width: 40px;
+//     height: 40px;
+//     border-radius: 40px;
+//     display: flex;
+//     flex-direction: row;
+//     align-items: center;
+//     justify-content: center;
+//     // color: #424242;
+//     border: 3px solid white;
+// }
+// .discountBio {
+//     .incName {
+//         font-family: 'Nunito Sans', sans-serif;
+//         font-style: normal;
+//         font-weight: 600;
+//         font-size: 16px;
+//     }
+//     .discountInfo {
+//         font-family: 'Nunito Sans', sans-serif;
+//         font-style: normal;
+//         font-weight: 300;
+//         font-size: 14px;
+//     }
+//     .discountValue {
+//         font-family: 'Nunito Sans', sans-serif;
+//         font-style: normal;
+//         font-weight: 700;
+//         font-size: 21px;
+//     }
+// }
+// .imgBox {
+//     img {
+//         width: 40px;
+//         border-radius: 40px;
+//         border: 3px solid white;
+//     }
+// }
+// .qrCode {
+//     width: 40px;
+//     height: 40px;
+
+//     img {
+//         width: 100%;
+//     }
+// }
+// .op3 {
+//     opacity: 0.3;
+// }
+// .canAct {
+//     flex: 1;
+//     text-align: center;
+//     border-radius: 10px;
+//     padding: 5px 0;
+//     max-width: 50%;
+//     font-weight: 600;
+// }
+
+// .cap {
+//     text-align: center;
+//     border-radius: 10px;
+//     padding: 5px;
+//     font-weight: 600;
+// }
+
+
 .fidBox {
     // background: #455065;
-    box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    color: white;
-    min-height: 145px;
+    // box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.25);
+    // box-shadow:0 1px 2px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 5%);
+    min-height: 190px;
     padding-bottom: 20px;
+}
+.imgCard {
+    object-fit: cover;
 }
 .dashedBoRight {
     border-right: 2px dashed white;
@@ -21,21 +100,82 @@
     // color: #424242;
     border: 3px solid white;
 }
+.arrow {
+    position: absolute;
+    bottom: -14px;
+    right: -21px;
+}
+.card_content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 225px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    // background-image: linear-gradient(
+    //     to top,
+    //     hsl(0, 0%, 16%) 0%,
+    //     hsla(0, 0%, 16%, 0.986) 6.3%,
+    //     hsla(0, 0%, 16%, 0.948) 12.8%,
+    //     hsla(0, 0%, 16%, 0.892) 19.4%,
+    //     hsla(0, 0%, 16%, 0.82) 26.2%,
+    //     hsla(0, 0%, 16%, 0.736) 33%,
+    //     hsla(0, 0%, 16%, 0.644) 40%,
+    //     hsla(0, 0%, 16%, 0.546) 46.9%,
+    //     hsla(0, 0%, 16%, 0.447) 53.8%,
+    //     hsla(0, 0%, 16%, 0.349) 60.8%,
+    //     hsla(0, 0%, 16%, 0.257) 67.6%,
+    //     hsla(0, 0%, 16%, 0.174) 74.4%,
+    //     hsla(0, 0%, 16%, 0.103) 81.1%,
+    //     hsla(0, 0%, 16%, 0.048) 87.6%,
+    //     hsla(0, 0%, 16%, 0.013) 93.9%,
+    //     hsla(0, 0%, 16%, 0) 100%
+    //   );
+      background-image: linear-gradient(
+      to top,
+      hsl(0, 0%, 16%) 0%,
+      hsla(0, 0%, 16%, 0.987) 0.9%,
+      hsla(0, 0%, 16%, 0.951) 3.5%,
+      hsla(0, 0%, 16%, 0.896) 7.5%,
+      hsla(0, 0%, 16%, 0.825) 12.8%,
+      hsla(0, 0%, 16%, 0.741) 19.3%,
+      hsla(0, 0%, 16%, 0.648) 26.6%,
+      hsla(0, 0%, 16%, 0.55) 34.6%,
+      hsla(0, 0%, 16%, 0.45) 43%,
+      hsla(0, 0%, 16%, 0.352) 51.8%,
+      hsla(0, 0%, 16%, 0.259) 60.7%,
+      hsla(0, 0%, 16%, 0.175) 69.6%,
+      hsla(0, 0%, 16%, 0.104) 78.1%,
+      hsla(0, 0%, 16%, 0.049) 86.1%,
+      hsla(0, 0%, 16%, 0.013) 93.5%,
+      hsla(0, 0%, 16%, 0) 100%
+    );
+  }
+.miniBadge {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    border: solid 1px #dddddd;
+}
+.brW0 {
+    border-width: 0;
+}
 .discountBio {
     .incName {
-        font-family: 'Nunito Sans', sans-serif;
+        // font-family: 'Nunito Sans', sans-serif;
         font-style: normal;
         font-weight: 600;
         font-size: 16px;
     }
     .discountInfo {
-        font-family: 'Nunito Sans', sans-serif;
-        font-style: normal;
-        font-weight: 300;
+        // font-family: 'Nunito Sans', sans-serif;
         font-size: 14px;
     }
     .discountValue {
-        font-family: 'Nunito Sans', sans-serif;
+        // font-family: 'Nunito Sans', sans-serif;
         font-style: normal;
         font-weight: 700;
         font-size: 21px;
@@ -59,20 +199,17 @@
 .op3 {
     opacity: 0.3;
 }
+
 .canAct {
-    flex: 1;
+    // flex: 1;
     text-align: center;
     // background: #465065;
     border-radius: 10px;
-    padding: 5px 0;
+    padding: 5px 10px;
     max-width: 50%;
     font-weight: 600;
-}
-
-.cap {
-    text-align: center;
-    // background: #465065;
-    border-radius: 10px;
-    padding: 5px;
-    font-weight: 600;
+    font-size: 14px;
+    // background-color: #7a7a7a;
+    color: white;
+    text-shadow: none;
 }

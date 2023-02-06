@@ -1356,6 +1356,23 @@ export class ApiService {
     }
     return jsonRes;
   }
+
+  public async getBusinessesByIds(businessesIds: number[]) {
+    const opts = {
+      method: 'POST',
+      body: JSON.stringify({businessesIds}),
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/business/getBusinessesByIds`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getBusinessesByIds');
+    }
+    return jsonRes;
+  }
   
   public async updateUserCap(cap: string) {
     const opts = {

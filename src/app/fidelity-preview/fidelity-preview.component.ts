@@ -10,7 +10,11 @@ export class FidelityPreviewComponent implements OnInit {
   @Input() discountPresent: boolean = false;
   @Input() set fidelity(fid: any) {
     this._fidelity = fid;
-    this._fidelity['expenses_array'] = new Array(this._fidelity.business_expenses_amount);
+    this._fidelity['expenses_array'] = new Array(this._fidelity.business_expenses_amount - 1);
+    if (this._fidelity['expenses_array'].length > 10) {
+      this._fidelity['expenses_array'] = new Array(10);
+      this._fidelity['expenses_array_too_long'] = true;
+    }
   }
 
   constructor() { }

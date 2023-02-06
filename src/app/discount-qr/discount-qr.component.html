@@ -17,17 +17,32 @@
 
 
 
-<div *ngIf="discount" class="flex fColumn gap30 mT20 h100">
-    <div class="flex fColumn fCenter gap10 mT80">
-        <h3 class="w100 textCenter f1 fw6">Codice Sconto: {{discount?.id}}</h3>
-        <div class="flex fRow fCenter bgrR pad20 br10 boxSha">
-            <qrcode class="br10" [qrdata]="getQrRaw()" [width]="300" [errorCorrectionLevel]="'M'"></qrcode>
+<div *ngIf="discount" class="flex fColumn gap30 mT20 h100 pad10">
+    <div class="flex fColumn fCenter gap40 mT80">
+        <div *ngIf="!fidelityCardEvent" class="flex fColumn fCenter gap10">
+            <h3 class="w100 textCenter f1 fw6">Codice Sconto: {{discount?.id}}</h3>
+            <div class="flex fColumn fCenter bgrW pad10 br10 br1ALL">
+                <qrcode class="br10" [qrdata]="getQrRaw()" colorDark="#212121" [width]="300" [errorCorrectionLevel]="'M'"></qrcode>
+            </div>
         </div>
-        <h3 class="fw6 textCenter">Mostra questo Sconto alla cassa</h3>
-        <h4 class="fw4 textCenter" *ngIf="discount?.discount_amount">{{discount?.discount_amount}}{{ discount?.discount_type == 'PERC' ? '%' : '€' }}, minimo di spesa di {{discount?.discount_minimum_expense}}€</h4>
-        <p class="discountValue" *ngIf="!discount?.discount_amount">
-            {{discount?.slogan || 'PASTO GRATIS!'}}
-        </p>
-        <button class="f1 br10 btn1 bgrW boxSha pad15 brN mT20" (click)="close.emit()">FATTO</button>
+        <div *ngIf="!fidelityCardEvent" class="flex fColumn fCenter gap5">
+            <h4 class="fw5 textCenter">Mostra questo QR in cassa per pagare, o al personale del locale.</h4>
+            <h3 class="fw5" *ngIf="!discount?.discount_amount">
+                {{discount?.slogan || 'PASTO GRATIS!'}}
+            </h3>
+            <h4 class="fw4 textCenter" *ngIf="discount?.discount_amount">
+                {{discount?.discount_amount}}{{ discount?.discount_type == 'PERC' ? '%' : '€' }} di sconto, minimo di spesa di {{discount?.discount_minimum_expense}}€
+            </h4>
+            <p class="discountValue" *ngIf="!discount?.discount_amount">
+                {{discount?.slogan || 'PASTO GRATIS!'}}
+            </p>
+            <button class="w80 mAuto mT20 br10 bgrW pad10 padX30 br2ALL ffG" (click)="close.emit()"><h2 class="fw4 crBl">Fatto</h2></button>
+        </div>
+
+        <div *ngIf="!!fidelityCardEvent" class="flex fColumn fCenter gap5">
+            <h2 class="fw5">Sconto applicato con successo!</h2>
+            <h4 class="fw4"><span class="fw6 txtU">I tuoi punti sono stati resettati</span>, ci vediamo la prossima! :)</h4>
+            <button class="w80 mAuto mT20 br10 bgrW pad10 padX30 br2ALL ffG" (click)="close.emit()"><h2 class="fw4 crBl">Fatto</h2></button>
+        </div>
     </div>
 </div>

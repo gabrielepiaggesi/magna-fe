@@ -49,7 +49,7 @@ const routes: Routes = [
     component: RedeemComponent,
     canActivate: [AuthGuard],
     data: {
-      title: 'Messaggi dei Locali',
+      title: 'Messaggi',
     }
   },
   {
@@ -195,7 +195,7 @@ const routes: Routes = [
     component: IncIntroComponent,
     canActivate: [AuthGuard],
     data: {
-      title: 'Nuova Carta Fedeltà',
+      title: 'SCAN QR-CODE',
     }
   },
   {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RoutesRecognized } from '@angular/router';
 import { ApiService } from './api.service';
 import { AppService } from './app.service';
+import { LocationStrategy } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +16,23 @@ export class AppComponent implements OnInit {
   public updateApp = false;
   public mustUpdateAppEnabled = false;
   public appMode: 'app'|'business' = 'app';
+  public activeIcon = 0;
 
-  constructor(private router: Router, public appService: AppService, public apiService: ApiService, public act: ActivatedRoute) {
+  constructor(private router: Router, public appService: AppService, public apiService: ApiService, public act: ActivatedRoute, private location: LocationStrategy) {
     (window as any).addEventListener('notification', (e: any) => { this.go('redeem'); }, false);
+    (window as any).addEventListener('refreshList', (e: any) => { (window as any)['refreshList'] = true; }, false);
+    history.pushState({}, '');
+    this.location.onPopState(() => {
+      const xIcon = document.getElementById('x-icon');
+      console.log('GOING BACK 1', xIcon);
+      if (xIcon) {
+        const event = new Event('closeOverlay');
+        (window as any).dispatchEvent(event);
+        // xIcon.click();
+        console.log('GOING BACK 2');
+        history.pushState(null, 'null', window.location.href);
+      }
+    });
     const token = localStorage.getItem('MagnaToken');
     const user = localStorage.getItem('MagnaUser');
     if (!!token && !!user) {
@@ -36,12 +51,12 @@ export class AppComponent implements OnInit {
         if (url === 'home') {
           this.appMode = 'app';
         }
+        this.setActiveIcon(this.page);
       }
       if (val instanceof RoutesRecognized) {
         let route = val.state.root.firstChild;
         const data = route?.data;
         if (data && data['title']) {
-          console.log(data);
           this.appService.headerData.next(data);
         } else {
           this.appService.headerData.next(undefined);
@@ -50,13 +65,38 @@ export class AppComponent implements OnInit {
     });
   }
 
+  private setActiveIcon(url: string) {
+    const newUrl = url.split('/')[0];
+    console.log('url: ', url, newUrl);
+    switch(newUrl) {
+      case 'home': this.activeIcon = 0; break;
+      case 'businesses': this.activeIcon = 4; break;
+      case 'new-business': this.activeIcon = 3; break;
+      case 'business': this.activeIcon = 3; break;
+      case 'menu': this.activeIcon = 0; break;
+      case 'business-discounts': this.activeIcon = 3; break;
+      case 'business-employees': this.activeIcon = 3; break;
+      case 'business-cards': this.activeIcon = 3; break;
+      case 'business-discount': this.activeIcon = 3; break;
+      case 'new-business-discount': this.activeIcon = 3; break;
+      case 'business-check': this.activeIcon = 1; break;
+      case 'redeem': this.activeIcon = 1; break;
+      case 'business-reviews': this.activeIcon = 3; break;
+      case 'business-notifications': this.activeIcon = 1; break;
+      case 'reservations': this.activeIcon = 2; break;
+      case 'user-reservations': this.activeIcon = 3; break;
+      case 'business-qr': this.activeIcon = 1; break;
+      case 'incIntro': this.activeIcon = 2; break;
+      default: this.activeIcon = 0; break;
+    }
+    console.log('activeIcon: ', this.activeIcon);
+  }
+
   ngOnInit(): void {
-    console.log('2', (window as any)['destination']);
     if ((window as any).cordova) {
       window.open = (window as any)['cordova'].InAppBrowser?.open;
       this.loading = true;
       (window as any).cordova.getAppVersion.getVersionNumber().then((version: any) => {
-        console.log('APP VERSION', version);
         this.getUserInfo(+(version.replace('.', '').replace('.', '')));
 
         this.apiService
@@ -115,8 +155,6 @@ export class AppComponent implements OnInit {
   }
 
   go(path: string, withId = false) {
-    console.log(path);
-    
     if (path === 'home') {
       this.appMode = 'app';
       this.router.navigate(['/home'], { replaceUrl: true });
@@ -134,10 +172,12 @@ export class AppComponent implements OnInit {
   isNotPage(pages: string[]) {
     return pages.every(p => !this.page.includes(p));
   }
+  notMatch(pages: string[]) {
+    return pages.every(p => this.page != p);
+  }
 
   public goAppStore() {
     const platform = (window as any)['cordova'].platformId;
-    console.log(platform);
     if (platform && platform.toString().toLowerCase() === 'ios') {
       window.open('https://apps.apple.com/it/app/comeback-sconti-e-carte/id6443738691', '_system')
     } else if (platform && platform.toString().toLowerCase() === 'android') {

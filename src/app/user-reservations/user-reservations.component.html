@@ -1,13 +1,19 @@
-<div class="h110 flex fColumn gap20 pad10 pRel" style="padding-bottom: 90px !important;">
-    <button class="btn brN br10 pad10 boxSha" (click)="getReservations()"><i class="fa-solid fa-arrows-rotate"></i> AGGIORNA</button>
+<div class="h110 flex fColumn padX10 pRel" style="padding-bottom: 90px !important;">
     <ng-container *ngIf="!loading">
-        <div *ngFor="let reservation of (reservations$ | async)">
-            <app-reservation-preview [isUser]="true" [showBadge]="false" [reservation]="reservation" (click)="openRes(reservation)"></app-reservation-preview>
-        </div>
+        <ng-container *ngIf="(reservations$ | async) as reservations">
+            <div *ngFor="let reservation of reservations" class="br1BOT">
+                <app-reservation-preview [isUser]="true" [showBadge]="false" [reservation]="reservation" (click)="openRes(reservation)"></app-reservation-preview>
+            </div>
+            <p *ngIf="!reservations.length" class="textCenter mT20">Nessuna prenotazione disponibile.</p>
+        </ng-container>
     </ng-container>
     <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div>
 
-<app-overlay *ngIf="(currentRes$ | async) as cuRes" class="bgrWl" (close)="currentRes$.next(undefined)">
+<button class="w30 mAuto pAbs br10 pad10 padX20 bgrBl brN" style="bottom: 80px; width: 140px; border-radius: 140px; left: calc(50% - 70px);" (click)="getReservations()">
+    <h3 class="fw5">Aggiorna <i class="fa-solid fa-arrows-rotate"></i></h3>
+</button>
+
+<app-overlay *ngIf="(currentRes$ | async) as cuRes" class="bgrW" [absoluteMode]="true" (close)="currentRes$.next(undefined)">
     <app-reservation mode="user" [reservation]="cuRes" (close)="getReservations()"></app-reservation>
 </app-overlay>

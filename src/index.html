@@ -30,10 +30,10 @@
       (window.EventTarget || Document).prototype.removeEventListener.apply(this, arguments);
     };
     window.changeColor = function () {
-      document.body.style.backgroundColor = "#F5F5F5";
+      document.body.style.backgroundColor = "#FFFFFF";
       var metaThemeColor = document.querySelector("meta[name=theme-color]");
-      metaThemeColor?.setAttribute("content", "#F5F5F5");
-      window.plugins.webviewcolor.change('#F5F5F5', function(){console.log('color was changed!')});
+      metaThemeColor?.setAttribute("content", "#FFFFFF");
+      window.plugins.webviewcolor.change('#FFFFFF', function(){console.log('color was changed!')});
       console.log('changeColor');
     };
     window.transp = function () {

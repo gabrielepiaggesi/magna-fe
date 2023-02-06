@@ -10,8 +10,12 @@ import { ActivatedRoute } from '@angular/router';
 export class DiscountQrComponent implements OnInit {
   @Output() close = new EventEmitter();
   @Input() discount!: any;
+  public fidelityCardEvent = false;
 
   constructor(public loc: Location) {
+    (window as any).addEventListener('fidelityCardEvent', (e: any) => {
+      this.fidelityCardEvent = true;
+    }, false);
   }
   ngOnInit(): void {
   }

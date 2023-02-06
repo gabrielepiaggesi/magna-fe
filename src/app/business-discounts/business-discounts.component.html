@@ -37,17 +37,17 @@
 
 
 
-<app-overlay *ngIf="!!showCardDiscounts" class="bgrWl" (close)="showCardDiscounts = false">
+<app-overlay *ngIf="!!showCardDiscounts" class="bgrW" [absoluteMode]="true" (close)="showCardDiscounts = false">
     <ng-container *ngIf="!loading">
-        <h4>Ogni premio puoi associarlo a un livello della carta fedeltà, dalle impostazioni della carta fedeltà.</h4>
-        <div class="flex fColumn gap20 mT40" *ngIf="(businessCardDiscounts$ | async) as businessCardDiscounts">
-            <div class="flex fColumn gap10 pad10 br10 boxSha bgrG" *ngFor="let disc of businessCardDiscounts; let idx = index;">
-                <h2 *ngIf="disc.slogan && !disc.amount">{{ disc.slogan }}</h2>
-                <h2 *ngIf="disc.amount">Sconto {{ disc?.type == 'PERC' ? 'del' : 'di' }} {{disc?.amount}}{{ disc?.type == 'PERC' ? '%' : '€' }}</h2>
-                <h3 *ngIf="disc.minimum_expense">Spesa minima di {{ disc.minimum_expense }}€</h3>
-                <button type="button" class="btnFilledIndro f1 br10 w100" (click)="go('business-discount/' + businessId + '/' + disc.id)">modifica</button>
+        <h4 class="fw4 padX10 mT80">Ogni premio puoi associarlo a un livello della carta fedeltà, dalle impostazioni della carta fedeltà.</h4>
+        <div class="flex fColumn gap30 pad10 mT20" *ngIf="(businessCardDiscounts$ | async) as businessCardDiscounts">
+            <div class="flex fColumn gap15 pad15 br10 bgrW br1ALL" *ngFor="let disc of businessCardDiscounts; let idx = index;">
+                <h2 class="fw6" *ngIf="disc.slogan && !disc.amount">{{ disc.slogan }}</h2>
+                <h2 class="fw6" *ngIf="disc.amount">Sconto {{ disc?.type == 'PERC' ? 'del' : 'di' }} {{disc?.amount}}{{ disc?.type == 'PERC' ? '%' : '€' }}</h2>
+                <h3 class="fw4" *ngIf="disc.minimum_expense">Spesa minima di {{ disc.minimum_expense }}€</h3>
+                <button type="button" class="w100 br10 bgrW pad10 padX30 br2ALL ffG" (click)="go('business-discount/' + businessId + '/' + disc.id)"><h2 class="fw4 crBl">Modifica</h2></button>
             </div>
-            <button type="button" class="btnFilledIndro f1 br10 w100" (click)="go('new-business-discount/' + businessId + '/FIDELITY_CARD')">aggiungi premio</button>
+            <button type="button" class="w100 br10 bgrAB pad10 brN mB10" (click)="go('new-business-discount/' + businessId + '/FIDELITY_CARD')"><h2 class="fw6">Aggiungi premio</h2></button>
         </div>
     </ng-container>
     <div *ngIf="!!loading" class="spinner mAuto"></div>

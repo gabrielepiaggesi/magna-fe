@@ -1,6 +1,6 @@
 
-<app-header *ngIf="!updateApp"
-    [showBack]="!!page && isNotPage(['login', 'signup', 'home', 'incIntro', 'check', 'reservations'])"
+<app-header *ngIf="!updateApp" class="brBOT bgrW"
+    [showBack]="!!page && isNotPage(['login', 'signup', 'home', 'incIntro', 'check', 'reservations', 'redeem']) && notMatch(['businesses'])"
 ></app-header>
 <div [attr.class]="
     isNotPage(['login', 'signup', 'incIntro', 'fidelity/', 'discount/', 'check','social']) && !updateApp ? 'h100 oAuto container padTop padBottom' : 'h100 oAuto container padTop'
@@ -11,33 +11,93 @@
     </div>
     <router-outlet *ngIf="!updateApp"></router-outlet>
 </div>
-<div class="flex fRow aCenter pad20 jBet footer" [ngClass]="{ 'bgrW': appMode === 'app' || !appMode, 'bgrG': appMode === 'business' }" *ngIf="isNotPage(['login', 'signup', 'incIntro', 'fidelity/', 'discount/', 'check', 'social', 'menu']) && !updateApp">
+<div class="flex fRow aCenter padY10 footer br1TOP" [ngClass]="{ 'bgrW': appMode === 'app' || !appMode, 'bgrAB': appMode === 'business' }" *ngIf="isNotPage(['login', 'signup', 'incIntro', 'fidelity/', 'discount/', 'check', 'social', 'menu']) && !updateApp">
 
     <ng-container *ngIf="appMode === 'app'">
-        <i class="fa-solid fa-house" (click)="go('home')"></i>
-        <i id="notification-page" class="fa-solid fa-bell" (click)="go('redeem')"></i>
-        <!-- <i class="fa-solid fa-qrcode" (click)="go('incIntro/any')"></i> -->
-        <i class="fa-solid fa-plus ig" (click)="go('incIntro')"></i>
-        <!-- <i class="fa-solid fa-circle-plus"></i> -->
-        <!-- <i class="fa-regular fa-square-plus ig"></i> -->
-
-        <i class="fa-regular fa-rectangle-list" (click)="go('user-reservations')"></i>
-        <i id="gearIcon" class="fa-solid fa-user" (click)="go('businesses')"></i>
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 0 }" (click)="go('home')">
+            <i
+                [ngClass]="{ 
+                    'fa-regular': activeIcon != 0,
+                    'fa-solid': activeIcon == 0 
+                }" 
+                class="fa-hard-drive"
+            ></i>
+            <small class="fw3">Home</small>
+        </div>
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 1 }" (click)="go('redeem')">
+            <i 
+                id="notification-page" 
+                [ngClass]="{ 
+                    'fa-regular': activeIcon != 1,
+                    'fa-solid': activeIcon == 1 
+                }"
+                class="fa-message"
+            ></i>
+            <small class="fw3">Messaggi</small>
+        </div>
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 2 }" (click)="go('incIntro')">
+            <i class="fa-solid fa-plus ig"></i>
+            <small class="fw3">Scan QR</small>
+        </div>
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 3 }" (click)="go('user-reservations')">
+            <i
+                [ngClass]="{ 
+                    'fa-regular': activeIcon != 3,
+                    'fa-solid': activeIcon == 3 
+                }"
+                class="fa-rectangle-list"
+            ></i>
+            <small class="fw3">Prenot.</small>
+        </div>
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 4 }" (click)="go('businesses')">
+            <i 
+                id="gearIcon" 
+                [ngClass]="{ 
+                    'fa-regular': activeIcon != 4, 
+                    'fa-solid': activeIcon == 4 
+                }"
+                class="fa-user"
+            ></i>
+            <small class="fw3">Profilo</small>
+        </div>
     </ng-container>
 
     <ng-container *ngIf="appMode === 'business'">
-        <i class="fa-solid fa-xmark" (click)="go('home')"></i>
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 0 }"(click)="go('home')">
+            <i class="fa-solid fa-xmark"></i>
+            <small class="fw3">Esci</small>
+        </div>
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 1 }" (click)="go('business-qr', true)">
+            <i class="fa-solid fa-camera"></i>
+            <small class="fw3">Scan</small>
+        </div>
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 2 }" (click)="go('reservations', true)">
+            <i 
+            [ngClass]="{ 
+                'fa-regular': activeIcon != 2,
+                'fa-solid': activeIcon == 2 
+            }"
+            class="fa-regular fa-rectangle-list"></i>
+            <small class="fw3">Prenot.</small>
+        </div>
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 3 }" (click)="go('business', true)">
+            <i class="fa-solid fa-gear"></i>
+            <small class="fw3">Impost.</small>
+        </div>
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 4 }" (click)="go('businesses')">
+            <i id="gearIcon" 
+            [ngClass]="{ 
+                'fa-regular': activeIcon != 4,
+                'fa-solid': activeIcon == 4 
+            }"
+            class="fa-user"></i>
+            <small class="fw3">Profilo</small>
+        </div>
+        <!-- <i class="fa-solid fa-xmark" (click)="go('home')"></i>
         <i class="fa-solid fa-camera" (click)="go('business-qr', true)"></i>
         <i class="fa-regular fa-rectangle-list" (click)="go('reservations', true)"></i>
         <i class="fa-solid fa-gear" (click)="go('business', true)"></i>
-        <i id="gearIcon" class="fa-solid fa-user" (click)="go('businesses')"></i>
+        <i id="gearIcon" class="fa-solid fa-user" (click)="go('businesses')"></i> -->
     </ng-container>
-
-    <!-- <i class="fa-solid fa-house" (click)="go('home')"></i>
-    <i class="fa-solid fa-qrcode" (click)="go('incIntro/any')"></i>
-    <i class="fa-brands fa-instagram ig" (click)="go('incIntro/ig')"></i>
-    <i class="fa-solid fa-gear" (click)="go('settings')"></i>
-    <i class="fa-solid fa-store" (click)="go('businesses')"></i> -->
-
 </div>
 

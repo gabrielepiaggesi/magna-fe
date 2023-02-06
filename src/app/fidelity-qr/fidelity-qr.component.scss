@@ -26,3 +26,23 @@
 label {
     font-size: 21px;
 }
+
+li {
+    margin-bottom: 7px;
+    font-size: 17px;
+}
+.miniBadge {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    // border: solid 1px #dddddd;
+    border: solid 1px rgb(227 28 94 / 35%);
+}
+.brW0 {
+    border-width: 0;
+}
+
+input, select, textarea {
+    outline-color: #212121;
+    font-size: 17px;
+}

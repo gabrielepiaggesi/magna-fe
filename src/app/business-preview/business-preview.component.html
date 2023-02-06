@@ -1,8 +1,7 @@
-<div class="cP flex fColumn gap20 pad10 br10 bgrGG fidBox pRel">
+<!-- <div class="cP flex fColumn gap20 pad10 br10 bgrGG fidBox pRel">
     <div *ngIf="_fidelity?.discount_on_first_user_reservation" class="tRBadge tRBadgeBor bgrR">
         <p>Hai Sconto</p>
     </div>
-
     <div class="flex fRow aCenter gap10">
         <div class="flex fRow fCenter imgBox">
             <i class="fa-solid fa-shop businessImg crG bgrY"></i>
@@ -13,22 +12,13 @@
                 {{_fidelity?.business_address}}
             </p>
         </div>
-        <!-- <div class="flex fRow fCenter pad5 br5 bgrW qrCode" [ngClass]="{ 'op3': discountPresent }">
-            <span class="cap">{{_fidelity?.cap}}</span>
-        </div> -->
         <span class="cap bgrW op8" [ngClass]="{ 'op3': _fidelity?.discount_on_first_user_reservation }">{{_fidelity?.cap}}</span>
     </div>
-
     <div class="flex fRow aCenter gap10">
         <p class="discountInfo">
             {{_fidelity?.business_description}}
         </p>
     </div>
-    <!-- <div class="flex fRow aCenter gap10">
-        <p *ngIf="_fidelity?.discount_on_first_user_reservation" class="discountInfo">
-            Sconto disponibile se prenoti con l'app!
-        </p>
-    </div> -->
     <div class="flex fRow aCenter jBet gap10">
         <span *ngIf="_fidelity?.accept_reservations" class="canAct bgrG">
             Prenotazione
@@ -37,4 +27,46 @@
             Carta Fedeltà
         </span>
     </div>
+</div> -->
+
+
+
+<div class="cP flex fColumn bgrW oHidden pRel">
+    <div *ngIf="discountPresent" class="tRBadge tRBadgeBor bgrR">
+        <p>Hai Sconto</p>
+    </div>
+    <img class="w100 br10" style="object-fit: cover;" height="225"
+        [src]="_fidelity?.business_image_url || 'https://img.freepik.com/free-photo/abstract-blur-food-truck_1339-3329.jpg?w=1380&t=st=1669487530~exp=1669488130~hmac=2193ebdc36a344007af2493f07c4c5f27b651b20620dd570eb60ece2e370759f'"
+        alt="">
+    <div class="card_content br10">
+        <div class="flex fRow aCenter gap10 bgrT pad15">
+            <!-- <div class="flex fRow fCenter imgBox">
+                <i class="fa-solid fa-shop businessImg crG bgrY"></i>
+            </div> -->
+            <div class="flex fColumn gap5 discountBio f1">
+                <h2>{{_fidelity?.business_name}}</h2>
+                <p class="discountInfo fw5">
+                    {{_fidelity?.business_description}}
+                </p>
+                <!-- <div class="flex fRow aCenter gap10 mT5">
+                    <span *ngIf="_fidelity?.accept_reservations" class="canAct bgrAB">
+                        Prenotazioni
+                    </span>
+                    <span *ngIf="_fidelity?.business_expenses_amount" class="canAct bgrAB">
+                        Carta Cliente
+                    </span>
+                </div> -->
+            </div>
+        </div>
+        <img class="arrow" src="assets/arrow.svg" alt="">
+    </div>
+    <div class="cP flex fColumn gap5 padY10 pRel" style="padding-left: 5px;">
+        <h4 class="fw5">{{_fidelity?.business_address}}, {{_fidelity?.cap}}</h4>
+        <h4 class="fw5 crGl" *ngIf="_fidelity?.accept_reservations && _fidelity?.business_expenses_amount">Prenotazione e Carta Cliente disponibile</h4>
+        <h4 class="fw5 crGl" *ngIf="_fidelity?.accept_reservations && !_fidelity?.business_expenses_amount">Prenotazione disponibile</h4>
+        <h4 class="fw5 crGl" *ngIf="!_fidelity?.accept_reservations && _fidelity?.business_expenses_amount">Carta Cliente disponibile</h4>
+    </div>
 </div>
+
+
+

@@ -1,9 +1,9 @@
-<div class="h110 flex fColumn gap30 pad10 pRel" style="padding-bottom: 90px;">
+<div class="h110 flex fColumn gap30 pad10 pRel mT10" style="padding-bottom: 90px;">
     <!-- <h2>Commenti dai Clienti</h2> -->
     <ng-container *ngIf="!loading">
         <ng-container *ngIf="(reviews$ | async) as reviews">
             <div *ngFor="let review of reviews">
-                <div class="flex fColumn boxSha br10 bgrW pad20 cP gap10">
+                <div class="flex fColumn br10 br1ALL bgrW pad20 cP gap10">
                     <!-- https://angular.io/api/common/DatePipe -->
                     <p *ngIf="review.rating" class="fBold">
                         <i *ngFor="let star of review.stars" class="fa-solid fa-star" style="color: #ffa41d;"></i>

@@ -19,9 +19,9 @@
     <form *ngIf="!loading" class="flex fColumn gap10 w100" [formGroup]="employeeForm">
         <!-- <h2>Nuova Attività</h2> -->
         <label for="userIdInput">Scrivi NUMERO UTENTE, che possono trovare sul profilo.<i class="fa-solid fa-user"></i></label>
-        <input id="userIdInput" formControlName="userId" class="indroButton f1 br5 w100 mT30" type="text" placeholder="NUMERO UTENTE">
-        <button type="button" [disabled]="employeeForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="addEmployee()">AGGIUNGI</button>
-        <button type="button" class="btnOutline f1 br5 w100" (click)="newEmployee = false">ANNULLA</button>
+        <input id="userIdInput" formControlName="userId" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="NUMERO UTENTE">
+        <button type="button" [disabled]="employeeForm.invalid" class="w100 br10 bgrAB pad10 brN mB10" (click)="addEmployee()"><h2 class="fw6">Aggiungi</h2></button>
+        <button type="button" class="w100 br10 bgrW pad10 padX30 br2ALL ffG" (click)="newEmployee = false"><h2 class="fw4 crBl">annulla</h2></button>
         <!-- <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p> -->
     </form>
     <div *ngIf="!!loading" class="spinner mAuto"></div>
@@ -31,9 +31,9 @@
     <form *ngIf="!loading" class="flex fColumn gap10 w100" [formGroup]="employeeForm">
         <h3>{{currentEmployee.user_email}}</h3>
         <label for="userIdInput">Non modificare il campo di testo.</label>
-        <input id="userIdInput" formControlName="userId" class="indroButton f1 br5 w100 mT30" type="text">
-        <button type="button" [disabled]="employeeForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="removeEmployee()">RIMUOVI</button>
-        <button type="button" class="btnOutline f1 br5 w100" (click)="closeEmp()">ANNULLA</button>
+        <input id="userIdInput" formControlName="userId" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text">
+        <button type="button" [disabled]="employeeForm.invalid" class="w100 br10 bgrAB pad10 brN mB10" (click)="removeEmployee()"><h2 class="fw6">Rimuovi</h2></button>
+        <button type="button" class="w100 br10 bgrW pad10 padX30 br2ALL ffG" (click)="closeEmp()"><h2 class="fw4 crBl">annulla</h2></button>
         <!-- <p style="text-decoration: underline;" (click)="router.navigateByUrl('signup')">Oppure Registrati</p> -->
     </form>
     <div *ngIf="!!loading" class="spinner mAuto"></div>

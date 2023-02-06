@@ -1,4 +1,4 @@
-<div class="flex fColumn fCenter gap20 pad10 w100">
+<div class="flex fColumn fCenter gap20 pad10 padY20 w100">
     <div *ngIf="!!loading" class="spinner mAuto"></div>
 
     <div class="flex fColumn pad20 bgrG gap10" *ngIf="!!(appService.showHack | async)">
@@ -16,14 +16,31 @@
 
     <ng-container *ngIf="!loading">
         <ng-container *ngIf="(nots$ | async) as nots">
-            <div *ngFor="let not of nots" class="flex fColumn f1 w100 boxSha br10 bgrG pad20 cP gap5">
+            <div *ngFor="let not of nots" class="flex fColumn f1 w100 br10 bgrW pad10 padY20 cP gap15 br1ALL">
+                <div class="flex fRow aCenter gap15">
+                    <div class="flex fRow fCenter bgrAB" style="width: 45px; height: 45px; border-radius: 45px;">
+                        <i class="fa-solid fa-message"></i>
+                    </div>
+                    <div class="flex fColumn gap5 f1">
+                        <h4 class="fw6">{{not.title}}</h4>
+                        <h4 class="fw3">{{not.business_name}}</h4>
+                    </div>
+                    <div class="flex fColumn fCenter padX10">
+                        <i class="fa-solid fa-chevron-right op7"></i>
+                    </div>
+                </div>
+                <div class="flex fRow aCenter gap15">
+                    <div class="flex fRow fCenter bgrAB" style="width: 45px; height: 45px; border-radius: 45px; visibility: hidden;">
+                        <i class="fa-solid fa-message"></i>
+                    </div>
+                    <div class="flex fColumn gap5"> 
+                        <h4 *ngIf="not.body" class="fw4">"{{not.body}}"</h4>
+                        <h5 class="fw3">{{not.created_at | date:'d/M/yy, H:mm'}}</h5>
+                    </div>
+                </div>
                 <!-- https://angular.io/api/common/DatePipe -->
-                <p>{{not.business_name}}</p>
-                <p class="fBold">{{not.title}}</p>
-                <p *ngIf="not.body">{{not.body}}</p>
-                <p>{{not.created_at | date:'d/M/yy, H:mm'}}</p>
             </div>
-            <p *ngIf="!nots.length">Nessun Messagio dai locali.</p>
+            <p *ngIf="!nots.length">Nessun messagio dai locali.</p>
         </ng-container>
     </ng-container>
     <br>

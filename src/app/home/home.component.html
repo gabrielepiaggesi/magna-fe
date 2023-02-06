@@ -1,26 +1,35 @@
 <div class="h110 flex fColumn gap20 pad10 pRel" style="padding-bottom: 90px;">
     <ng-container *ngIf="!loading">
         <ng-container *ngIf="(discounts$ | async) as discounts">
+            <h3 class="fw5 mT10" *ngIf="discounts.length">I tuoi sconti</h3>
             <div *ngFor="let discount of discounts">
                 <app-discount-preview [discount]="discount" (click)="open('discount', discount)"></app-discount-preview>
             </div>
-            <div *ngIf="!discounts.length" class="flex fRow fCenter pad20 br10 bgrR boxSha disc">
-                <h3>{{ (tr?.discountSlogan || 'Completa almeno una carta fedeltà per ricevere i tuoi premi!') }}&nbsp;<i class="fa-solid fa-gift"></i></h3>
+            <div *ngIf="!discounts.length" class="flex fColumn fCenter pad15 br10 gap10 bgrW boxSha2 br1ALL disc mT10">
+                <h4 class="fw5">
+                    {{ (tr?.discountSlogan || 'Completa almeno una carta cliente per ricevere i tuoi premi!') }}&nbsp;&nbsp;<i class="fa-solid fa-gift"></i>
+                </h4>
+                <div *ngIf="appService.userInfo && !appService.userInfo.cap" class="w100 brTOP" style="height: 0px;">
+                </div>
+                <h4 *ngIf="appService.userInfo && !appService.userInfo.cap" class="fw5" (click)="go('businesses')">
+                    {{ (tr?.cap || 'Imposta il CAP della tua zona per trovare locali e sconti vicino a te!') }} &nbsp; <i class="fa-solid fa-arrow-right"></i>
+                </h4>
             </div>
-            <div class="spacer"></div>
+            <!-- <div class="spacer"></div> -->
         </ng-container>
 
         <ng-container *ngIf="(fidelityCards$ | async) as fidelityCards">
+            <h3 class="fw5" *ngIf="fidelityCards.length">I tuoi locali</h3>
+            <button *ngIf="!fidelityCards.length"
+                    type="button" 
+                    class="w100 br10 bgrABG pad15 brN w100" 
+                    (click)="go('incIntro')"
+                >
+                <h3 class="fw6">{{ (tr?.newCard || '+NUOVA CARTA CLIENTE') }}</h3>
+                </button>
             <div *ngFor="let fidelityCard of fidelityCards">
                 <app-fidelity-preview [fidelity]="fidelityCard" [discountPresent]="discountsBusinessIds.includes(fidelityCard.business_id)" (click)="open('fidelity-card', fidelityCard)"></app-fidelity-preview>
             </div>
-            <button *ngIf="!fidelityCards.length"
-                    type="button" 
-                    class="w100 br10 btn1 bgrG boxSha pad20 brN w100" 
-                    (click)="go('incIntro')"
-                >
-                {{ (tr?.newCard || '+NUOVA CARTA FEDELTÀ') }}
-                </button>
             <div *ngIf="!!(appService.showHack | async) && showHack && !!fidelityCards.length" class="flex fColumn pad20 bgrG gap10 br10 pRel" (click)="go('redeem')">
                 <div class="tRBadge tRBadgeBor bgrR">
                     <i class="fa-solid fa-xmark" style="margin-left: auto;" (click)="showHack = false"></i>
@@ -29,12 +38,13 @@
             </div>
         </ng-container>
 
-        <div *ngIf="appService.userInfo && !appService.userInfo.cap" class="flex fColumn pad20 bgrG gap10 br10 pRel" (click)="go('businesses')">
+        <!-- <div *ngIf="appService.userInfo && !appService.userInfo.cap" class="flex fColumn pad20 bgrG gap10 br10 pRel" (click)="go('businesses')">
             <h4 class="fw7">{{ (tr?.cap || 'Imposta il CAP della tua zona per trovare locali e sconti vicino a te!') }} &nbsp; <i class="fa-solid fa-arrow-right"></i></h4>
-        </div>
+        </div> -->
 
         <ng-container *ngIf="(businessesSuggested$ | async) as businessesSuggested">
-            <div *ngIf="businessesSuggested.length" class="spacer"></div>
+            <!-- <div *ngIf="businessesSuggested.length" class="spacer"></div> -->
+            <h3 *ngIf="businessesSuggested.length" class="fw5">Locali vicino a te</h3>
             <div *ngFor="let businessSuggested of businessesSuggested">
                 <app-business-preview [fidelity]="businessSuggested" (click)="open('fidelity-card', businessSuggested, true)"></app-business-preview>
             </div>
@@ -45,7 +55,12 @@
 </div>
 
 
-<app-overlay *ngIf="entityOpened && entityTypeOpened" class="bgrWl" (close)="closeOverlay()">
+<button class="w30 mAuto pAbs br10 pad10 padX20 bgrBl brN" style="bottom: 80px; width: 145px; border-radius: 145px; left: calc(50% - 72.5px); z-index: 5; box-shadow: 0px 3px 10px 0px rgb(255 255 255 / 30%)" (click)="go('incIntro')">
+    <h3 class="fw5">SCAN QR&nbsp;&nbsp;<i class="fa-solid fa-camera"></i></h3>
+</button>
+
+
+<app-overlay *ngIf="entityOpened && entityTypeOpened" class="bgrW" [absoluteMode]="true" (close)="closeOverlay()">
     <app-fidelity-qr *ngIf="entityTypeOpened === 'fidelity-card'" [isSuggested]="isSuggested" [discountPresent]="discountsBusinessIds.includes(entityOpened.business_id)" [fidelityCard]="entityOpened" (clickCard)="clickCard = true" (close)="closeOverlay($event, true)"></app-fidelity-qr>
     <app-discount-qr *ngIf="entityTypeOpened === 'discount'" [discount]="entityOpened" (close)="closeOverlay(null, true)"></app-discount-qr>
 </app-overlay>

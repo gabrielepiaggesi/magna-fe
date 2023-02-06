@@ -1,55 +1,55 @@
 <div class="h110 flex fColumn gap20 pad10 pRel" style="padding-bottom: 90px !important;">
-    <div class="flex fRow aCenter gap10 jBet">
-        <select name="discountType" id="discountTypeSelect" class="br10 brN w100 boxSha" style="font-size: 17px; height: 42px;" (change)="onDateChange($event)">
+    <div class="flex fRow aCenter gap10 jBet mT10">
+        <select name="discountType" id="discountTypeSelect" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;" (change)="onDateChange($event)">
             <option selected value="Tutte">Da Oggi</option>
             <option *ngFor="let opt of (dateOptions$ | async);" [value]="opt"> {{ getDate(opt) }} </option>
         </select>
-        <button class="br10 btn2 bgrW boxSha brN fw4" style="height: 42px;" (click)="openManualRes()">+Prenotazione</button>
+        <button class="br10 w100 br1ALL bgrW fw5 ffG" style="font-size: 15px; height: 42px;" (click)="openManualRes()">+Prenotazione</button>
     </div>
-    <div class="tabs">
+    <div class="tabs br1ALL">
         <!-- <div (click)="setTab('all')" class="tab selected" [ngClass]="{ 'selected': tab === 'all' }"><p>Tutte</p></div> -->
         <div (click)="setTab('pending')" class="tab" [ngClass]="{ 'selected': tab === 'pending' }"><div *ngIf="newPending" class="tabBadge"></div> <p>Attesa</p></div>
         <div (click)="setTab('accepted')" class="tab" [ngClass]="{ 'selected': tab === 'accepted' }"><div *ngIf="newAccepted" class="tabBadge"></div><p>Accettate</p></div>
-        <div (click)="setTab('completed')" class="tab" [ngClass]="{ 'selected': tab === 'completed' }"><div *ngIf="newAccepted" class="tabBadge"></div><p>Finite</p></div>
+        <div (click)="setTab('completed')" class="tab" [ngClass]="{ 'selected': tab === 'completed' }"><div *ngIf="newCompleted" class="tabBadge"></div><p>Finite</p></div>
         <div (click)="setTab('declined')" class="tab" [ngClass]="{ 'selected': tab === 'declined' }"><div *ngIf="newDeclined" class="tabBadge"></div><p>Annullate</p></div>
     </div>
     <ng-container *ngIf="!loading">
-        <div *ngFor="let reservation of (showRes$ | async)">
+        <div *ngFor="let reservation of (showRes$ | async); let idx = index;" class="br1BOT" [ngClass]="{ 'br1TOP': idx == 0 }">
             <app-reservation-preview [reservation]="reservation" (click)="openRes(reservation)"></app-reservation-preview>
         </div>
     </ng-container>
     <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div>
 
-<app-overlay *ngIf="openOverlay" class="bgrWl" (close)="closeOverlay()">
+<app-overlay *ngIf="openOverlay" class="bgrW" [absoluteMode]="true" (close)="closeOverlay()">
     <app-reservation *ngIf="!manualResOpen" [reservation]="currentRes$ | async" (close)="close($event)"></app-reservation>
     
     
     <div *ngIf="!!loading" class="spinner mAuto"></div>
 
 
-    <div *ngIf="!!manualResOpen && !loading" class="flex fColumn gap30 mT20 h100">
+    <div *ngIf="!!manualResOpen && !loading" class="flex fColumn gap30 mT60 h100 pad10">
         <form class="flex fColumn gap20" [formGroup]="manualRes">
-            <h2 class="fw7" for="appt">Prenotazione Manuale Confermata</h2>
-            <input formControlName="name" class="indroButton f1 br10 w100" type="text" placeholder="Nome Prenotazione">
-            <input formControlName="peopleAmount" class="indroButton f1 br10 w100" type="number"
+            <h3 class="fw6" for="appt">Prenotazione Manuale Confermata</h3>
+            <input formControlName="name" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Nome Prenotazione">
+            <input formControlName="peopleAmount" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number"
                 pattern="[0-9]*" min="1" step="1" placeholder="Quante persone">
             
             <div class="flex fRow aCenter gap10 jBet">
-                <input formControlName="userDate" [min]="today" class="indroButton f1 br10 w100 waN" id="dateInp" type="date" lang="it-IT" 
+                <input formControlName="userDate" [min]="today" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG waN ffG" id="dateInp" type="date" lang="it-IT" 
                 placeholder="Data">
-                <input formControlName="userTime" class="indroButton f1 br10 w100 waN" type="time" id="appt" name="appt"
+                <input formControlName="userTime" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG waN ffG" type="time" id="appt" name="appt"
                     min="06:00" max="23:30" placeholder="20:00" required>
             </div>
             
-            <input formControlName="phoneNumber" class="indroButton f1 br10 w100" type="tel" placeholder="+393444444">
-            <input formControlName="tableNumber" class="indroButton f1 br10 w100" type="number"
+            <input formControlName="phoneNumber" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="tel" placeholder="+393444444">
+            <input formControlName="tableNumber" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number"
                 pattern="[0-9]*" min="1" step="1" placeholder="Numero Tavolo">
-            <input formControlName="note" maxlength="50" class="indroButton f1 br10 w100" type="text"
+            <input formControlName="note" maxlength="50" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text"
                 placeholder="Note...">
-            <button [disabled]="manualRes.invalid" class="f1 br10 btn1 bgrGr boxSha pad15 brN" type="button"
-                (click)="sendManualReservation()">INVIA</button>
-                <button class="f1 br10 btn1 bgrW boxSha pad15 brN" (click)="closeOverlay()">ANNULLA</button>
+            <button [disabled]="manualRes.invalid" class="w100 br10 bgrAB pad10 brN mB10" type="button"
+                (click)="sendManualReservation()"><h2 class="fw6">Salva</h2></button>
+                <button class="w100 br10 bgrW pad10 padX30 br2ALL ffG" (click)="closeOverlay()"><h2 class="fw4 crBl">annulla</h2></button>
 
         </form>
     </div>

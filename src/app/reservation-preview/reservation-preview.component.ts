@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class ReservationPreviewComponent implements OnInit {
   @Input() reservation: any;
   @Input() showDescription = false;
+  @Input() disableArrow = false;
   @Input() showBadge = true;
   @Input() isUser = false;
   public today = new Date(Date.now());

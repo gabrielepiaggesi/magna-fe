@@ -4,7 +4,7 @@
         <h3 *ngIf="origin === 'FIDELITY_CARD'">Premio Carta Fedeltà Completata</h3>
         <h3 *ngIf="origin === 'REFERRAL'">Premio Amico Invitato</h3>
 
-        <select name="discountType" id="discountTypeSelect" class="br10 brN w100 boxSha" style="font-size: 17px; height: 42px;" (change)="onTypeChange($event)">
+        <select name="discountType" id="discountTypeSelect" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;" (change)="onTypeChange($event)">
             <option selected disabled [value]="null">-- Seleziona --</option>
             <option [selected]="discountType === 'discount'" value="discount">Buono Sconto</option>
             <option [selected]="discountType === 'free'" value="free">Consumazione/Servizio GRATIS</option>
@@ -12,18 +12,18 @@
 
         <form *ngIf="discountType === 'discount'" class="flex fColumn gap10 w100" [formGroup]="discountForm">
             <label for="discountTypeSelect">Scegli tra Percentuale o Euro:</label>
-            <select formControlName="type" name="discountType" id="discountTypeSelect" class="indroButton f1 br5 w100 mB10">
+            <select formControlName="type" name="discountType" id="discountTypeSelect" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;">
                 <option disabled selected [value]="null"> -- Seleziona -- </option>
                 <option value="EUR">Euro</option>
                 <option value="PERC">Percentuale</option>
             </select>
             
             <label for="discountTypeSelect">Valore (solo il numero):</label>
-            <input formControlName="amount" class="indroButton f1 br5 w100 mB10" type="number"
+            <input formControlName="amount" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number"
                 pattern="[0-9]*" min="1" max="100" step="1" placeholder="5">
             
             <label for="discountTypeSelect">Spesa Minima, se non la vuoi lascia a zero. (Senza il simbolo dell'Euro, solo il numero):</label>
-            <input formControlName="minimum_expense" class="indroButton f1 br5 w100 mB10" type="number"
+            <input formControlName="minimum_expense" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number"
             pattern="[0-9]*" min="1" max="1000" step="1" placeholder="15">
 
             <!-- <ng-container *ngIf="origin === 'IG_POST'">
@@ -31,15 +31,15 @@
                 <input formControlName="monthly_limit" class="indroButton f1 br5 w100 mB10" type="number" min="1" max="1000" step="1" placeholder="100">
             </ng-container> -->
             
-            <button type="button" [disabled]="discountForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="updateDiscount()">SALVA</button>
+            <button type="button" [disabled]="discountForm.invalid" class="w100 br10 bgrAB pad10 brN mB10" (click)="updateDiscount()"><h2 class="fw6">Salva</h2></button>
         </form>
 
 
         <form *ngIf="discountType === 'free'" class="flex fColumn gap10 w100" [formGroup]="discountForm">
             <label for="discountTypeSelect">SLOGAN corto sul premio:</label>
-            <input formControlName="slogan" class="indroButton f1 br5 w100 mB10" type="text" maxlength="50"  placeholder="PRANZO GRATIS!">
+            <input formControlName="slogan" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" maxlength="50"  placeholder="PRANZO GRATIS!">
             
-            <button type="button" [disabled]="discountForm.invalid" class="btnFilledIndro f1 br5 w100" (click)="updateDiscount()">SALVA</button>
+            <button type="button" [disabled]="discountForm.invalid" class="w100 br10 bgrAB pad10 brN mB10" (click)="updateDiscount()"><h2 class="fw6">Salva</h2></button>
         </form>
 
     </ng-container>

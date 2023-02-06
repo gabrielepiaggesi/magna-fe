@@ -150,8 +150,8 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
 
   resetColor() {
     setTimeout(() => {
-      window.document.body.style.backgroundColor = '#F5F5F5';
-      document.body.style.backgroundColor = '#F5F5F5';
+      window.document.body.style.backgroundColor = '#FFFFFF';
+      document.body.style.backgroundColor = '#FFFFFF';
       this.ref.detectChanges();
     }, 300);
   }
@@ -159,7 +159,7 @@ export class BusinessCheckComponent implements OnInit, OnDestroy {
   public cancelScan(goBack = true) {
     this.canceled = true;
     this.resetColor();
-    document.body.style.backgroundColor = "#F5F5F5";
+    document.body.style.backgroundColor = "#FFFFFF";
     (window as any)?.changeColor();
     // (window as any)['QRScanner'].cancelScan();
     (window as any)['QRScanner'].destroy((status: any) => {

@@ -13,7 +13,14 @@ export class AppService {
   public appVersion = undefined;
   public businessId$: BehaviorSubject<number|undefined> = new BehaviorSubject<number|undefined>(undefined);
 
+  public goToBusinessId$: BehaviorSubject<number|undefined> = new BehaviorSubject<number|undefined>(undefined);
+
   constructor() {
+    (window as any).addEventListener('goToBusiness', (e: any) => {
+      const goToBusinessId = (window as any)['goToBusinessId'];
+      console.log('goToBusiness', goToBusinessId);
+      goToBusinessId && this.goToBusinessId$.next(goToBusinessId);
+    }, false);
   }
 
   public logUser(dto: any) {

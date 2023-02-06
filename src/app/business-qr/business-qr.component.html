@@ -4,14 +4,14 @@
         <!-- <p>Un premio/sconto, dopo averlo convalidato non potrà più essere usato.</p> -->
 
         <label for="discountTypeSelect" class="fBold">Quanti punti segnare/timbrare sulla carta del cliente?</label>
-        <input formControlName="pointsToAdd" class="indroButton fBold br5 w100 mB10 textCenter" type="tel" min="1" step="1" placeholder="1">
+        <input formControlName="pointsToAdd" class="br10 w100 br1ALL bgrW pad15 fw5 ffG mB10" type="tel" min="1" step="1" placeholder="1">
 
         <button *ngIf="businessId" 
             type="button" 
-            class="btnFilledIndro br5 w100 bgrG" 
+            class="w100 br10 bgrBl pad10 padX30 brN ffG"
             (click)="go('business-check/'+businessId)"
         >
-        <i class="fa-solid fa-camera"></i>  SCAN QR CLIENTE
+        <h2 class="fw6"><i class="fa-solid fa-camera"></i>  Scan QR cliente</h2>
         </button>
     </form>
 </ng-container>

@@ -1,25 +1,28 @@
-<div class="flex fRow aCenter pad10 discountBox br10 gap10 pRel"
-    [ngClass]="{ 
-        'bgrR': reservation?.status === 'pending', 
-        'bgrG': reservation?.status === 'accepted', 
-        'bgrGr': reservation?.status === 'completed', 
-        'bgrW': reservation?.status === 'declined'
-    }"
->
-    <div *ngIf="showBadge && reservation.new" class="tRBadge bgrBl">
-        <p *ngIf="reservation?.status === 'pending'">Nuovo</p>
-        <p *ngIf="reservation?.status === 'declined'">Ops</p>
-        <p *ngIf="reservation?.status === 'accepted'">Recente</p>
-        <p *ngIf="reservation?.status === 'completed'">Arrivati</p>
-    </div>
-    <div class="flex fRow fCenter dashedBoRight">
-        <div class="flex fRow aCenter pad5 br5 bgrW">
-            <i class="fa-solid fa-xmark"></i>&nbsp;<p>{{ reservation?.people_amount }}</p>
+<!-- [ngClass]="{ 
+    'bgrR': reservation?.status === 'pending', 
+    'bgrG': reservation?.status === 'accepted', 
+    'bgrGr': reservation?.status === 'completed', 
+    'bgrW': reservation?.status === 'declined'
+}" -->
+<div class="flex fRow aCenter pad10 padY20 gap15 pRel">
+    <!-- <div class="flex fRow fCenter dashedBoRight">
+        <div class="flex fRow aCenter pad10 br5 bgrAB" style="border-radius: 100%;">
+            <i class="fa-solid fa-xmark"></i>&nbsp;<h4>{{ reservation?.people_amount }}</h4>
         </div>
+    </div> -->
+    <div class="flex fRow fCenter bgrAB" style="width: 45px; height: 45px; border-radius: 45px;">
+        <h4 class="textCenter"><i class="fa-solid fa-xmark"></i>&nbsp;{{ reservation?.people_amount }}</h4>
     </div>
-    <div class="flex fColumn discountBio f1">
-        <p *ngIf="reservation.business_name" class="incName">{{reservation?.business_name}} - {{reservation?.name}}</p>
-        <p *ngIf="!reservation.business_name" class="incName">{{reservation?.name}}</p>
+    <div class="flex fColumn gap5 f1">
+        <h4 class="fw6" *ngIf="reservation.business_name">{{reservation?.business_name}} - {{reservation?.name}}</h4>
+        <h4 class="fw6" *ngIf="!reservation.business_name">{{reservation?.name}}</h4>
+        <h4 class="fw4" *ngIf="!isUser">
+            {{ getDate(reservation?.user_date) }}
+            <!-- {{ reservation?.user_date | date:'EE, d MMM, H:mm':'+0000' }} -->
+        </h4>
+        <h4 class="fw4" *ngIf="isUser">
+            {{ getDate(reservation?.user_date) }}
+        </h4>
         <p class="discountInfo">
             <span *ngIf="reservation?.status === 'pending'">IN ATTESA
                 <span *ngIf="reservation?.note">
@@ -47,29 +50,35 @@
             </ng-container>
             <span *ngIf="reservation?.status === 'canceled'">ANNULLATA</span>
         </p>
-        <p *ngIf="!isUser" class="discountValue">
-            {{ getDate(reservation?.user_date) }}
-            <!-- {{ reservation?.user_date | date:'EE, d MMM, H:mm':'+0000' }} -->
-        </p>
-        <p *ngIf="isUser" class="discountValue">
-            {{ getDate(reservation?.user_date) }}
-        </p>
+        <!-- *ngIf="showBadge && reservation.new"  -->
+        <div *ngIf="showBadge && reservation.new" style="display: block;" class="mT5 mB5">
+            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation?.status === 'pending'">Nuovo</span>
+            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation?.status === 'declined'">Ops</span>
+            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation?.status === 'accepted'">Recente</span>
+            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation?.status === 'completed'">Arrivati</span>
+        </div>
     </div>
-    <div class="imgBox">
-        <i *ngIf="reservation?.status === 'pending'" class="fa-regular fa-clock"></i>
+    <div *ngIf="!disableArrow" class="fw5" style="font-size: 18px;">
+        <!-- <i *ngIf="reservation?.status === 'pending'" class="fa-regular fa-clock"></i>
         <i *ngIf="reservation?.status === 'accepted'" class="fa-solid fa-circle-check"></i>
         <i *ngIf="reservation?.status === 'completed'" class="fa-solid fa-circle-check"></i>
         <i *ngIf="reservation?.status === 'declined'" class="fa-solid fa-ban"></i>
-        <i *ngIf="reservation?.status === 'canceled'" class="fa-solid fa-xmark"></i>
+        <i *ngIf="reservation?.status === 'canceled'" class="fa-solid fa-xmark"></i> -->
+        <i class="fa-solid fa-chevron-right op7"></i>
     </div>
 </div>
-<div *ngIf="showDescription && reservation?.note" class="flex fRow aCenter pad10 discountBox br10 gap10 pRel mT20"
-    [ngClass]="{ 
-        'bgrR': reservation?.status === 'pending', 
-        'bgrG': reservation?.status === 'accepted', 
-        'bgrGr': reservation?.status === 'completed', 
-        'bgrW': reservation?.status === 'declined'
-    }"
->
-    <p>{{reservation?.note}}</p>
+<!-- [ngClass]="{ 
+    'bgrR': reservation?.status === 'pending', 
+    'bgrG': reservation?.status === 'accepted', 
+    'bgrGr': reservation?.status === 'completed', 
+    'bgrW': reservation?.status === 'declined'
+}" -->
+<div *ngIf="showDescription && reservation?.note" class="flex fRow aCenter pad10 padY20 gap15 pRel" style="padding-top: 0px;">
+    <div class="flex fRow fCenter bgrAB" style="width: 45px; height: 45px; border-radius: 45px; visibility: hidden;">
+        <h4 class="textCenter"><i class="fa-solid fa-xmark"></i>&nbsp;{{ reservation?.people_amount }}</h4>
+    </div>
+    <div class="flex fColumn gap5 f1">
+        <h4 class="fw6">Note per il locale</h4>
+        <h4 class="fw4">{{reservation?.note}}</h4>
+    </div>
 </div>

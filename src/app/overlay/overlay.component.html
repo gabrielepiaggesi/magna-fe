@@ -1,5 +1,12 @@
-<div class="flex h100 w100 fColumn pad10 gap10 oAuto">
-    <div *ngIf="showCross" class="flex fRow jEnd textRight">
+<div *ngIf="!absoluteMode" class="flex h100 w100 fColumn pad10 gap10 oAuto">
+    <div *ngIf="showCross" class="flex fRow jEnd textRight" id="x-icon">
+        <i class="fa-solid fa-xmark" style="margin-left: auto;" (click)="close.emit()"></i>
+    </div>
+    <ng-content></ng-content>
+</div>
+
+<div *ngIf="!!absoluteMode" class="flex h100 w100 fColumn oAuto">
+    <div class="pAbs pTop0 pLeft0 flex fRow fCenter pad10" style="z-index: 2;" id="x-icon">
         <i class="fa-solid fa-xmark" style="margin-left: auto;" (click)="close.emit()"></i>
     </div>
     <ng-content></ng-content>
