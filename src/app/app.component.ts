@@ -20,7 +20,8 @@ export class AppComponent implements OnInit {
 
   constructor(private router: Router, public appService: AppService, public apiService: ApiService, public act: ActivatedRoute, private location: LocationStrategy) {
     (window as any).addEventListener('notification', (e: any) => { this.go('redeem'); }, false);
-    (window as any).addEventListener('refreshList', (e: any) => { (window as any)['refreshList'] = true; }, false);
+    (window as any).addEventListener('reservation', (e: any) => { this.go('user-reservations'); }, false);
+    // (window as any).addEventListener('refreshList', (e: any) => { (window as any)['refreshList'] = true; }, false);
     history.pushState({}, '');
     this.location.onPopState(() => {
       const xIcon = document.getElementById('x-icon');
@@ -97,11 +98,13 @@ export class AppComponent implements OnInit {
       window.open = (window as any)['cordova'].InAppBrowser?.open;
       this.loading = true;
       (window as any).cordova.getAppVersion.getVersionNumber().then((version: any) => {
+        if (version) this.appService.appVersion = +(version.replace('.', '').replace('.', ''));
         this.getUserInfo(+(version.replace('.', '').replace('.', '')));
 
         this.apiService
           .getLastAppVersion()
           .then((appVersion: any) => {
+            this.appService.welcomeMessage = appVersion.welcome_message;
             this.appService.showHack.next(!!appVersion.show_hack);
             console.log(appVersion);
             let latestVersion = 0;

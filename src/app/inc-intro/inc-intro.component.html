@@ -4,15 +4,20 @@
         <div class="flex fColumn fCenter gap10 mB40" style="background-color: transparent;">
             <div class="br10" style="border: solid 5px white; background-color: transparent; width: 250px; height: 250px;">
             </div>
-            <h4 class="fw5 textCenter" style="width: 250px; color: white;">Inquadra il QR per prendere la carta cliente o leggere il menù.</h4>
+            <h4 *ngIf="!timberMode" class="br10 pad10 fw5 textCenter" style="width: 250px; color: #212121; background-color: white;">Inquadra il QR per prendere la carta cliente o leggere il menù</h4>
+            <h4 *ngIf="!!timberMode" class="br10 pad10 fw5 textCenter" style="width: 250px; color: #212121; background-color: white;">Inquadra il QR del tavolo per timbrare la tua carta cliente</h4>
         </div>
-        <button class="w30 mAuto pAbs br10 pad10 padX20 bgrW brN" style="bottom: 80px; width: 250px; border-radius: 250px; left: calc(50% - 125px); z-index: 5; box-shadow: 0px 3px 10px 0px rgb(255 255 255 / 30%)" (click)="cancelScan()">
-            <h2 class="fw5">Annulla</h2>
+        <button *ngIf="!timberMode" class="w30 mAuto pAbs br10 pad10 padX10 bgrW brN" style="bottom: 40px; width: 100px; border-radius: 10px; left: calc(50% - 50px); z-index: 5; box-shadow: 0px 3px 10px 0px rgb(255 255 255 / 30%)" (click)="cancelScan()">
+            <h3 class="fw5">annulla</h3>
+        </button>
+        <button *ngIf="!!timberMode" class="w30 mAuto pAbs br10 pad10 padX10 bgrW brN" style="bottom: 40px; width: 100px; border-radius: 10px; left: calc(50% - 50px); z-index: 5; box-shadow: 0px 3px 10px 0px rgb(255 255 255 / 30%)" (click)="cancelScan()">
+            <h3 class="fw5">annulla</h3>
         </button>
     </div>
 </div>
-<button class="pAbs pTop0 pLeft0 br10 bgrW brN" style="visibility: hidden; height: 0px; width: 0px;" (click)="getBusiness()" id="doneButton" type="button"></button>
+<button class="pAbs pTop0 pLeft0 br10 bgrW brN" style="visibility: hidden; height: 0px; width: 0px;" (click)="addOrNotCard()" id="doneButton" type="button"></button>
 <button class="pAbs pTop0 pLeft0 br10 bgrW brN" style="visibility: hidden; height: 0px; width: 0px;" (click)="scanQR()" id="scanButton" type="button"></button>
+<button class="pAbs pTop0 pLeft0 br10 bgrW brN" style="visibility: hidden; height: 0px; width: 0px;" (click)="goHome()" id="goHome" type="button"></button>
 
 
 <div *ngIf="step !== 6" class="h110 flex fColumn gap30 pad10">

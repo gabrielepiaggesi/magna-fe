@@ -33,6 +33,15 @@ export class RedeemComponent implements OnInit {
     window.open('https://comebackwebapp.web.app/referral', '_system')
   }
 
+  public goBusiness(businessId: number) {
+    // (window as any)['goToBusinessId'] = businessId;
+    // const goToBusinessEvent = new Event('goToBusiness');
+    // (window as any).dispatchEvent(goToBusinessEvent);
+    // this.appService.goToBusinessId$.next(businessId);
+    this.appService.prepareBusinessToOpen(businessId);
+    this.router.navigateByUrl('home', {replaceUrl: true});
+  }
+
   public getNotifications() {
     this.loading = true;
     this.apiService.getUserNotifications()

@@ -22,6 +22,7 @@ export class BusinessesListComponent implements OnInit {
   public capForm = this.fb.group({
     cap: [null, Validators.required]
   });
+  public refreshList = false;
 
   constructor(private router: Router, private apiService: ApiService, private fb: FormBuilder, public appService: AppService) {
   }
@@ -88,6 +89,16 @@ export class BusinessesListComponent implements OnInit {
       })
       .catch((e: any) => console.error(e))
       .finally(() => this.loading = false);
+  }
+
+  public goBusinessOrPlan(business: any) {
+    if (business.must_pay) {
+      alert('Per continuare a usare Comeback, devi aggiornare il tuo abbonamento. Se lo hai gia fatto clicca su aggiorna in basso e riprova.');
+      this.refreshList = true;
+      window.open(`https://comebackwebapp.web.app/plan/${business.id}/?token=${this.apiService.TOKEN}`, '_system');
+    } else {
+      this.go('reservations/' + business.id);
+    }
   }
 
   public getBusinessesList() {
@@ -167,6 +178,8 @@ export class BusinessesListComponent implements OnInit {
   }
 
   public logout() {
+    this.appService.cardsId = [];
+    this.appService.latestUserPosition = null;
     this.deleting = false;
     this.apiService.setToken(undefined);
     this.appService.logOut();

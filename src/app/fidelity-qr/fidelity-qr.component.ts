@@ -14,9 +14,12 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class FidelityQrComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter();
+  @Output() autoTimber = new EventEmitter();
+  @Output() autoTimberFromTakeCard = new EventEmitter();
   @Output() clickCard = new EventEmitter();
   @Input() fidelityCard!: any;
   @Input() discountPresent: boolean = false;
+  @Input() fromQR: number = 0;
   @Input() isSuggested: boolean = false;
   public referral$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
 
@@ -25,8 +28,10 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
   public step = 1;
   public reservationId!: number;
   public intervalId: any;
+  public nToday = new Date(Date.now());
   public stop = false;
-  public fidelityCardEvent = false;
+  public fidelityCardEvent: null|'cassa'|'geo' = null;
+  public noPointsAdded = false;
   public today = (new Date(Date.now()).toISOString().substring(0, 10));
   public reservation$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
   public newRes = this.fb.group({
@@ -36,11 +41,20 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     userTime: ['20:00', Validators.required],
     phoneNumber: [null, Validators.required],
     note: [null],
+    withDiscount: [false]
+  });
+  public discResForm = this.fb.group({
+    userDate: [null, Validators.required],
+    withDiscount: [false, Validators.required]
   });
   public reviewForm = this.fb.group({
     rating: [null, Validators.required],
     text: [null, Validators.required]
   });
+  public availableDates: any[] = [];
+  public moreDates: any[] = [];
+  public showMoreDates = false;
+  public fromDiscRes = false;
 
   public lang = 'it';
   public tr!: any;
@@ -68,7 +82,16 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     public appService: AppService
   ) {
     (window as any).addEventListener('fidelityCardEvent', (e: any) => {
-      this.fidelityCardEvent = true;
+      this.fidelityCardEvent = 'cassa';
+      this.noPointsAdded = false;
+    }, false);
+    (window as any).addEventListener('fidelityCardGeoEvent', (e: any) => {
+      this.fidelityCardEvent = 'geo';
+      this.noPointsAdded = false;
+    }, false);
+    (window as any).addEventListener('noPointsAddedEvent', (e: any) => {
+      this.fidelityCardEvent = null;
+      this.noPointsAdded = true;
     }, false);
   }
 
@@ -87,6 +110,84 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
       this.tr = this.it;
       this.lang = 'it';
     }
+
+    this.availableDates = [
+      {
+        date: '2023-03-14',
+        discount: {
+          amount: 10,
+          type: 'PERC'
+        }
+      },
+      {
+        date: '2023-03-15',
+        discount: {
+          amount: 10,
+          type: 'PERC'
+        }
+      },
+      {
+        date: '2023-03-16',
+        discount: null
+      }
+    ].map(d => ({ ...d, dateParsed: this.getDate(d.date, true) }));
+    this.moreDates = [
+      {
+        date: '2023-03-17',
+        discount: {
+          amount: 10,
+          type: 'PERC'
+        }
+      },
+      {
+        date: '2023-03-18',
+        close: true
+      },
+      {
+        date: '2023-03-19',
+        discount: {
+          amount: 10,
+          type: 'PERC'
+        }
+      },
+      {
+        date: '2023-03-20',
+        discount: {
+          amount: 10,
+          type: 'PERC'
+        }
+      }
+    ].map(d => ({ ...d, dateParsed: this.getDate(d.date, true) }));
+
+  }
+
+  setUserDate(date: any) {
+    if (date.close) {
+      alert('Siamo chiusi in questo giorno.');
+      return;
+    }
+    this.discResForm.setValue({ userDate: date.date.substring(0, 10), withDiscount: !!date.discount });
+  }
+
+  goToRes() {
+    this.fromDiscRes = true;
+    this.newRes.get('userDate')?.setValue(this.discResForm.getRawValue().userDate);
+    this.newRes.get('userDate')?.disable();
+    this.newRes.get('withDiscount')?.setValue(this.discResForm.getRawValue().withDiscount);
+    this.newRes.get('withDiscount')?.disable();
+    this.step = 3.1;
+  }
+
+  goBackFromRes() {
+    this.step = this.fromDiscRes ? 3.0 : 1;
+  }
+
+  forceNormalRes() {
+    this.fromDiscRes = false;
+    this.newRes.reset();
+    this.newRes.get('userDate')?.setValue((new Date(Date.now()).toISOString().substring(0, 10)));
+    this.newRes.get('userTime')?.setValue('20:00');
+    this.step = 3.1;
   }
 
   goReview() {
@@ -104,6 +205,20 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     return isInThePast;
   }
 
+  public reservMsg() {
+    alert("Per prenotare clicca il bottone \n'Prenota ora', in basso a destra.");
+  }
+
+  public showQRMsg() {
+    if (this.appService.goToBusinessId) {
+      alert("Useremo la tua posizione per timbrare la tua carta in sicurezza :)");
+      this.autoTimber.emit();
+    } else {
+      alert("Inquadra il QR sul tavolo, e poi useremo la tua posizione per timbrare la tua carta in sicurezza :)");
+      this.router.navigateByUrl('incIntro/2');
+    }
+  }
+
   call(number: string) {
     window.open('tel:'+number, '_system');
   }
@@ -114,6 +229,7 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
 
   menu(link: string) {
     if (link.includes('comeback')) link = link + `?token=${this.apiService.TOKEN}`;
+    if (link.includes('comebackapp.it')) link = link.replace('comebackapp.it', 'comebackwebapp.web.app');
     window.open(link, '_system');
   }
 
@@ -137,6 +253,32 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
 
   public getQrDiscRaw() {
     return `https://comebackwebapp.web.app/?businessId=${this.fidelityCard.business_id}&entityId=${this.fidelityCard.user_discount_id}&entityType=discount`;
+  }
+
+  getDate(date: string, forReserv = false) {
+    if (!date) return date;
+    // new Date(Date.now()).toLocaleString('sv', {timeZone: 'Europe/Rome'})
+    const userDate = new Date(Date.parse(date.replace(' ', 'T')));
+
+    const userDateISO = date.substring(0, 10);
+    const todayISO = this.nToday.toISOString().substring(0, 10);
+
+    if (userDateISO == todayISO) {
+      const options: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit'};
+      return !forReserv ? 'Oggi, ' + userDate.toLocaleString('it-IT', options) : 'oggi';
+    }
+
+    if (userDate.getFullYear() == this.nToday.getFullYear() && userDate.getMonth() == this.nToday.getMonth() && userDate.getDate() == (this.nToday.getDate() + 1)) {
+        return "domani"; // date2 is one day after date1.
+    }
+
+    let options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit'};
+    if (forReserv) {
+      options = { weekday: 'short', day: '2-digit' };
+    }
+    console.log(typeof date, date, userDate, userDateISO, todayISO);
+    
+    return userDate.toLocaleString('it-IT', options);
   }
 
   public addReservation() {
@@ -258,9 +400,9 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.apiService.addUserFidelityCard(this.fidelityCard.business_id)
       .then(() => {
-        alert('Carta aggiunta!');
-        this.appService.goToBusinessId$.next(this.fidelityCard.business_id);
-        this.close.emit();
+        // alert('Carta aggiunta!');
+        // this.appService.goToBusinessId$.next(this.fidelityCard.business_id);
+        this.appService.prepareBusinessToOpen(this.fidelityCard.business_id);
       })
       .catch((e: any) => {
         alert('Errore');
@@ -277,6 +419,7 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
           bodyTag['business_id_' + (this.fidelityCard.business_id+'')] = this.fidelityCard.business_id;
           (window as any).plugins.OneSignal.sendTags(bodyTag);
         } catch(e) { console.error('ONESIGNAL_ERROR', e); }
+        this.close.emit();
       });
   }
 

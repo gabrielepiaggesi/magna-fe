@@ -17,6 +17,8 @@ export class IncIntroComponent implements OnInit, OnDestroy {
   public businessId!: number;
   public intent!: string;
   public scanning = false;
+  public timberMode = false;
+  public autoAddCard = false;
   public business$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
   public incForm = this.fb.group({
     id: [null, Validators.required]
@@ -64,6 +66,13 @@ export class IncIntroComponent implements OnInit, OnDestroy {
           this.step = 5;
           this.getBusiness(5);
         }
+        if (params['autoAddCard']) {
+          const autoAddCard = +params['autoAddCard'];
+          this.autoAddCard = !!autoAddCard && autoAddCard != 2;
+          this.timberMode = autoAddCard === 2;
+        } else {
+          this.autoAddCard = false;
+        }
       }
     );
   }
@@ -102,6 +111,13 @@ export class IncIntroComponent implements OnInit, OnDestroy {
             this.loading = false;
             if (err) {
              // here we can handle errors and clean up any loose ends.
+             (window as any)['QRScanner'].destroy((status: any) => {
+              this.scanning = false;
+              this.loading = false;
+              document.body.style.backgroundColor = "#FFFFFF";
+              (window as any)?.changeColor();
+              this.resetColor();
+            });
              console.error(err);
             }
             if (status.authorized) {
@@ -117,19 +133,24 @@ export class IncIntroComponent implements OnInit, OnDestroy {
              // The video preview will remain black, and scanning is disabled. We can
              // try to ask the user to change their mind, but we'll have to send them
              // to their device settings with `QRScanner.openSettings()`.
+             try { (window as any)['QRScanner'].openSettings(); } catch(e) { console.error((e)); }
+              const btn = document.getElementById('goHome') as HTMLButtonElement;
+              btn?.click();
             } else {
               this.loading = false;
               // we didn't get permission, but we didn't get permanently denied. (On
               // Android, a denial isn't permanent unless the user checks the "Don't
               // ask again" box.) We can ask again at the next relevant opportunity.
+              const btn = document.getElementById('goHome') as HTMLButtonElement;
+              btn?.click();
             }
-            (window as any)['QRScanner'].destroy((status: any) => {
-              this.scanning = false;
-              this.loading = false;
-              document.body.style.backgroundColor = "#F5F5F5";
-              (window as any)?.changeColor();
-              this.resetColor();
-            });
+            // (window as any)['QRScanner'].destroy((status: any) => {
+            //   this.scanning = false;
+            //   this.loading = false;
+            //   document.body.style.backgroundColor = "#FFFFFF";
+            //   (window as any)?.changeColor();
+            //   this.resetColor();
+            // });
           });
         } else {
           this.loading = false;
@@ -163,6 +184,7 @@ export class IncIntroComponent implements OnInit, OnDestroy {
         console.error(err);
         if(err.name === 'SCAN_CANCELED') {
           console.error('The scan was canceled before a QR code was found.');
+          // alert('Errore inaspettato.');
         } else if (err.name === 'CAMERA_ACCESS_DENIED' || err.name === 'CAMERA_ACCESS_RESTRICTED') {
           alert('Non hai dato il permesso a COMEBACK di usare la fotocamera. Cambia questo dalle impostazioni del telefono. Grazie!');
           (window as any)['QRScanner'].destroy((status: any) => {
@@ -189,6 +211,7 @@ export class IncIntroComponent implements OnInit, OnDestroy {
         // an error occurred, or the scan was canceled (error code `6`)
       } else {
         (window as any)['QRScanner'].destroy((status: any) => {
+          this.loading = true;
           console.log('SCAN DATA', businessUrl);
           console.log(status);
           // this.step = 2;
@@ -212,6 +235,7 @@ export class IncIntroComponent implements OnInit, OnDestroy {
 
   public cancelScan() {
     this.loading = true;
+    this.appService.cardsId = [];
     document.body.style.backgroundColor = "#F5F5F5";
     (window as any)?.changeColor();
     this.resetColor();
@@ -234,6 +258,18 @@ export class IncIntroComponent implements OnInit, OnDestroy {
       document.body.style.backgroundColor = '#FFFFFF';
       this.ref.detectChanges();
     }, 300);
+  }
+
+  public addOrNotCard() {
+    this.businessId = this.incForm.getRawValue().id || this.businessId;
+    this.autoAddCard && this.addFidelityCard();
+    if (this.timberMode) {
+      this.appService.lastQRScanId = 0;
+    }
+    if (!this.autoAddCard) {
+      this.appService.prepareBusinessToOpen(this.businessId, true);
+      this.goHome();
+    }
   }
 
   public getBusiness(step: any = null) {
@@ -264,13 +300,9 @@ export class IncIntroComponent implements OnInit, OnDestroy {
 
   public addFidelityCard() {
     this.loading = true;
-    const business = this.business$.getValue();
     this.apiService.addUserFidelityCard(this.businessId)
       .then(() => {
-        (window as any)['goToBusinessId'] = this.businessId;
-        const goToBusinessEvent = new Event('goToBusiness');
-        (window as any).dispatchEvent(goToBusinessEvent);
-        this.goHome();
+        this.appService.prepareBusinessToOpen(this.businessId, true);
       })
       .catch((e: any) => {
         alert('Errore');
@@ -281,13 +313,12 @@ export class IncIntroComponent implements OnInit, OnDestroy {
         try {
           let bodyTag: any = { 
             user_event: "add_fidelity_card", 
-            business_id: business.id, 
-            business_name: business.name, 
-            business_key: business.name.replace(' ', '_').toLowerCase()
+            business_id: this.businessId, 
           };
-          bodyTag['business_id_' + (business.id+'')] = business.id;
+          bodyTag['business_id_' + (this.businessId+'')] = this.businessId;
           (window as any).plugins.OneSignal.sendTags(bodyTag);
         } catch(e) { console.error('ONESIGNAL_ERROR', e); }
+        this.goHome();
       });
   }
 

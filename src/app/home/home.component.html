@@ -3,7 +3,7 @@
         <ng-container *ngIf="(discounts$ | async) as discounts">
             <h3 class="fw5 mT10" *ngIf="discounts.length">I tuoi sconti</h3>
             <div *ngFor="let discount of discounts">
-                <app-discount-preview [discount]="discount" (click)="open('discount', discount)"></app-discount-preview>
+                <app-discount-preview [discount]="discount" (click)="openDiscount(discount)"></app-discount-preview>
             </div>
             <div *ngIf="!discounts.length" class="flex fColumn fCenter pad15 br10 gap10 bgrW boxSha2 br1ALL disc mT10">
                 <h4 class="fw5">
@@ -23,12 +23,12 @@
             <button *ngIf="!fidelityCards.length"
                     type="button" 
                     class="w100 br10 bgrABG pad15 brN w100" 
-                    (click)="go('incIntro')"
+                    (click)="go('incIntro/1')"
                 >
                 <h3 class="fw6">{{ (tr?.newCard || '+NUOVA CARTA CLIENTE') }}</h3>
                 </button>
             <div *ngFor="let fidelityCard of fidelityCards">
-                <app-fidelity-preview [fidelity]="fidelityCard" [discountPresent]="discountsBusinessIds.includes(fidelityCard.business_id)" (click)="open('fidelity-card', fidelityCard)"></app-fidelity-preview>
+                <app-fidelity-preview [fidelity]="fidelityCard" [discountPresent]="discountsBusinessIds.includes(fidelityCard.business_id)" (click)="openCard(fidelityCard.business_id)"></app-fidelity-preview>
             </div>
             <div *ngIf="!!(appService.showHack | async) && showHack && !!fidelityCards.length" class="flex fColumn pad20 bgrG gap10 br10 pRel" (click)="go('redeem')">
                 <div class="tRBadge tRBadgeBor bgrR">
@@ -46,7 +46,7 @@
             <!-- <div *ngIf="businessesSuggested.length" class="spacer"></div> -->
             <h3 *ngIf="businessesSuggested.length" class="fw5">Locali vicino a te</h3>
             <div *ngFor="let businessSuggested of businessesSuggested">
-                <app-business-preview [fidelity]="businessSuggested" (click)="open('fidelity-card', businessSuggested, true)"></app-business-preview>
+                <app-business-preview [fidelity]="businessSuggested" (click)="openBusiness(businessSuggested)"></app-business-preview>
             </div>
         </ng-container>
 
@@ -55,12 +55,26 @@
 </div>
 
 
-<button class="w30 mAuto pAbs br10 pad10 padX20 bgrBl brN" style="bottom: 80px; width: 145px; border-radius: 145px; left: calc(50% - 72.5px); z-index: 5; box-shadow: 0px 3px 10px 0px rgb(255 255 255 / 30%)" (click)="go('incIntro')">
+<button class="w30 mAuto pAbs br10 pad10 padX20 bgrBl brN" style="bottom: 80px; width: 145px; border-radius: 145px; left: calc(50% - 72.5px); z-index: 5; box-shadow: 0px 3px 10px 0px rgb(255 255 255 / 30%)" (click)="go('incIntro/0')">
     <h3 class="fw5">SCAN QR&nbsp;&nbsp;<i class="fa-solid fa-camera"></i></h3>
 </button>
 
 
 <app-overlay *ngIf="entityOpened && entityTypeOpened" class="bgrW" [absoluteMode]="true" (close)="closeOverlay()">
-    <app-fidelity-qr *ngIf="entityTypeOpened === 'fidelity-card'" [isSuggested]="isSuggested" [discountPresent]="discountsBusinessIds.includes(entityOpened.business_id)" [fidelityCard]="entityOpened" (clickCard)="clickCard = true" (close)="closeOverlay($event, true)"></app-fidelity-qr>
+    <app-fidelity-qr *ngIf="entityTypeOpened === 'fidelity-card'" (autoTimber)="autoTimber()" [isSuggested]="isSuggested" [discountPresent]="!!entityOpened.user_discount" [fidelityCard]="entityOpened" (clickCard)="clickCard = true" [fromQR]="fromQR" (close)="closeOverlay($event, true)"></app-fidelity-qr>
     <app-discount-qr *ngIf="entityTypeOpened === 'discount'" [discount]="entityOpened" (close)="closeOverlay(null, true)"></app-discount-qr>
 </app-overlay>
+
+<div *ngIf="cardToAsk" class="overALL flex fColumn fCenter pad10 backDrop">
+    <div class="flex fColumn gap60 bgrW pad15 br10">
+        <div class="flex fColumn gap20">
+            <h2 class="fw6">Ora sei da "{{ cardToAsk.business_name }}"?</h2>
+            <h3 class="fw4">Con il qr al tavolo e la tua posizione ti daremo il punto sulla tua carta cliente :)</h3>
+        </div>
+    
+        <div class="flex fRow aCenter jBet gap10">
+            <button class="f1 br10 bgrW pad10 padX20 br2ALL op8" style="max-width: 45%;" (click)="notPresent()"><h2 class="fw4">No</h2></button>
+            <button class="f1 br10 bgrAB pad10 padX20 br3ALL" style="max-width: 55%;" (click)="openQRForCard()"><h2 class="fw6">Si, sono qui</h2></button>
+        </div>
+    </div>
+</div>

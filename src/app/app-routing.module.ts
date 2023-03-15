@@ -183,15 +183,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'incIntro/:businessId',
-    component: IncIntroComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: 'Recensione',
-    }
-  },
-  {
-    path: 'incIntro',
+    path: 'incIntro/:autoAddCard',
     component: IncIntroComponent,
     canActivate: [AuthGuard],
     data: {

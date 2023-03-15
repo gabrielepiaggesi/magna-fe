@@ -1,3 +1,13 @@
+
+<ng-container *ngIf="!!mustPay">
+    <div class="flex fColumn pad10 gap10">
+        <h3 class="fw5">Per continuare a usare Comeback, devi aggiornare il tuo abbonamento. Se lo hai gia fatto chiudi l'app e riaprila.</h3>
+        <h4 class="fw4">Attualmente i tuoi clienti non possono usare le loro carte fedeltà, le prenotazioni non possono essere ne accettate ne rifiutate e non possono leggere il menù. Aggiorna l'abbonamento per risolvere.</h4>
+        <h3 class="fw4 txtU" (click)="goPlan()">link per aggiornare l'abbonamento Comeback <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></h3>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="!mustPay">
 <ng-container *ngIf="!loading && !editMode && !sendNot">
     <div *ngIf="(business$ | async) as business" class="h110 flex fColumn gap20 pad10 pRel"
         style="padding-bottom: 90px;">
@@ -29,6 +39,9 @@
             </div>
             <div class="element" (click)="editMenu()">
                 <p>Modifica Menù</p>
+            </div>
+            <div class="element" (click)="openPlan()">
+                <p>Gestisci Piano Comeback</p>
             </div>
             <div class="element" (click)="goToInsight()">
                 <p>Statistiche Locale</p>
@@ -135,3 +148,4 @@
     </form>
     <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div>
+</ng-container>

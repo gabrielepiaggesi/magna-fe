@@ -5,8 +5,8 @@
             <div *ngIf="!!businesses.length" class="flex fColumn gap10">
                 <h2 class="mT10">I tuoi locali</h2>
                 <div class="list br10 bgrW">
-                    <div *ngFor="let business of (businesses$ | async)" class="element flex fRow aCenter jBet" (click)="go('reservations/' + business.id)">
-                        <p>{{business.name}}</p>
+                    <div *ngFor="let business of (businesses$ | async)" class="element flex fRow aCenter jBet" (click)="goBusinessOrPlan(business)">
+                        <p [ngClass]="{ 'crARL': business.must_pay }">{{business.name}}</p>
                         <i class="fa-solid fa-chevron-right op7"></i>
                     </div>
                     <div class="element" (click)="go('new-business')">
@@ -82,6 +82,10 @@
     </ng-container>
     <div *ngIf="!!loading" class="spinner mAuto"></div>
 </div>
+
+<button class="w30 mAuto pAbs br10 pad10 padX20 bgrBl brN" style="bottom: 80px; width: 140px; border-radius: 140px; left: calc(50% - 70px);" (click)="ngOnInit()">
+    <h3 class="fw5">Aggiorna <i class="fa-solid fa-arrows-rotate"></i></h3>
+</button>
 
 <app-overlay *ngIf="deleting" class="bgrW" [absoluteMode]="true" (close)="deleting = false">
     <div *ngIf="!loading" class="flex fColumn mT80 gap20 h100 pad10 mT80">

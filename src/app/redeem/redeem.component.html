@@ -16,7 +16,7 @@
 
     <ng-container *ngIf="!loading">
         <ng-container *ngIf="(nots$ | async) as nots">
-            <div *ngFor="let not of nots" class="flex fColumn f1 w100 br10 bgrW pad10 padY20 cP gap15 br1ALL">
+            <div *ngFor="let not of nots" class="flex fColumn f1 w100 br10 bgrW pad10 padY20 cP gap15 br1ALL" (click)="goBusiness(not.business_id)">
                 <div class="flex fRow aCenter gap15">
                     <div class="flex fRow fCenter bgrAB" style="width: 45px; height: 45px; border-radius: 45px;">
                         <i class="fa-solid fa-message"></i>

@@ -53,6 +53,15 @@
 .gap60 {
     gap: 60px;
 }
+.gap80 {
+    gap: 80px;
+}
+.gap100 {
+    gap: 100px;
+}
+.gap120 {
+    gap: 120px;
+}
 .pad3 {
     padding: 3px;
 }
@@ -719,6 +728,21 @@ select {
 .br2ALL {
     border: solid 1px #212121;
 }
+.br3ALL {
+    border: solid 1px #e31c5e;
+}
+.brCT {
+    border-color: transparent;
+}
+.brW3 {
+    border-width: 3px;
+}
+.brW5 {
+    border-width: 5px;
+}
+.brCW {
+    border-color: white;
+}
 .op3 {
     opacity: 0.3;
 }
@@ -818,4 +842,27 @@ select {
 }
 input[type="checkbox"] {
     accent-color: #e31c5e;
+}
+.overALL {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+.backDrop {
+    background-color: rgba(0, 0, 0, 0.65);
+    color: white;
+}
+.fsI {
+    font-style: italic;
+}
+.bgrABL {
+    background-color: #F8565C;
+    color: white;
+}
+.bgrYD {
+    background-color: #eb9f01;
+    color: white;
 }

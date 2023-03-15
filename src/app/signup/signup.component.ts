@@ -79,7 +79,8 @@ export class SignupComponent implements OnInit {
     
     const body = {
       ...this.signupForm.getRawValue(),
-      lang: window?.navigator?.language ? window?.navigator?.language.substring(0, 2) : (navigator.language ? navigator.language.substring(0, 2) : null)
+      lang: window?.navigator?.language ? window?.navigator?.language.substring(0, 2) : (navigator.language ? navigator.language.substring(0, 2) : null),
+      appVersion: this.appService.appVersion || null
     };
     console.log(body);
     
@@ -109,7 +110,7 @@ export class SignupComponent implements OnInit {
           alert(msg);
           return;
         } else {
-          alert(this.lang == 'ch' ? '欢迎!' : 'Benvenuto!');
+          alert(this.lang == 'ch' ? '欢迎!' : (this.appService.welcomeMessage || 'Benvenuto!'));
           this.appService.logUser(dto);
           this.apiService.setToken(dto.token);
           try {

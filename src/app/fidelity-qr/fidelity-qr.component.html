@@ -154,11 +154,33 @@
         <img class="w100" style="object-fit: cover;" height="200"
         [src]="fidelityCard?.business_image_url || 'https://img.freepik.com/free-photo/abstract-blur-food-truck_1339-3329.jpg?w=1380&t=st=1669487530~exp=1669488130~hmac=2193ebdc36a344007af2493f07c4c5f27b651b20620dd570eb60ece2e370759f'"
             alt="">
+        <div class="pad20 flex fColumn w100 bgrABL gap10">
+            <h2 class="fw6">Prenota con lo sconto!</h2>
+            <h4 class="fw4">Numero limitato di prenotazioni con sconto, <span class="txtU fw5" (click)="step = 3.0" style="display: block;">prenota ora con l'app&nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></span></h4>
+        </div>
         <div class="flex fColumn h100 w100 bgrW padX20">
-            <div *ngIf="!isSuggested && !discountPresent && !fidelityCardEvent" class="flex fColumn bgrW padY20 gap20 br1BOT">
+            <div *ngIf="!isSuggested && !discountPresent && !fidelityCardEvent && !noPointsAdded" class="flex fColumn bgrW padY20 gap20 br1BOT">
                 <h2 class="fw5">La tua carta cliente</h2>
-                <h4 class="fw4"><span class="fw6 txtU">Per ottenere punti e sconti</span>, mostra questo qr in cassa per pagare, o al personale del locale.</h4>
-                <!-- <qrcode class="br10 br1ALL" [qrdata]="getQrRaw()" [width]="200" [errorCorrectionLevel]="'M'"></qrcode> -->
+                <!-- <h3 class="fw4"><span class="fw6 txtU" (click)="showQRMsg()">Per ottenere punti e sconti</span>, mostra questo qr in cassa per pagare, o al personale del locale.</h3> -->
+                <!-- <h3 class="fw4">
+                    <span class="fw5" (click)="showQRMsg()">
+                        <span class="txtU">Inquadra il qr del tavolo&nbsp;<i class="fa-solid fa-hand-pointer" style="transform: rotate(-55deg);"></i></span>
+                    </span>
+                , oppure usa il tuo qr sotto in cassa, per avere punti e sconti.
+                </h3> -->
+
+                <h3 class="fw4" *ngIf="!fidelityCard.recentlyScanned">
+                    <span class="fw5 txtU" (click)="showQRMsg()">
+                        <!-- Per ottenere punti e sconti  -->
+                        {{ (fidelityCard.business_card_geo_msg || 'Clicca qui per avere il punto') }}&nbsp;<i class="fa-solid fa-hand-pointer" style="transform: rotate(-55deg);"></i>
+                    </span>
+                , {{ (fidelityCard.business_card_qr_msg || 'oppure mostra il tuo qr sotto in cassa, per avere punti e sconti.') }}
+                </h3>
+
+                <h3 class="fw4" *ngIf="!!fidelityCard.recentlyScanned">
+                    <span class="fw5">Carta timbrata poco tempo fa</span>, se vuoi ulteriori punti in base al conto, mostra il tuo QR in cassa per pagare :)
+                </h3>
+
                 <div class="flex fColumn fCenter bgrW pad10 br10 br1ALL">
                     <qrcode class="br10" colorDark="#212121" [qrdata]="getQrRaw()" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
                     <small style="margin-top: -13px; z-index: 2;">Codice carta: {{ fidelityCard.id }}</small>
@@ -180,30 +202,49 @@
                         <span *ngIf="fidelityCard?.expenses_array_too_long">...</span>
                         <i style="font-size: 17px; margin-bottom: 1px;" class="fa-solid fa-gift op8"></i>
                     </div>
+                    <h5 *ngIf="fidelityCard?.last_scan" class="fw3">
+                        Ultimo punto {{ getDate(fidelityCard.last_scan) }}
+                    </h5>
+                    <h4 *ngIf="fidelityCard.business_card_show_points_cta" class="txtU fw5" (click)="showQRMsg()">{{ (fidelityCard.business_card_points_cta) || 'Aggiungi punto' }}<i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></h4>
                 </div>
             </div>
 
-            <div *ngIf="!isSuggested && !discountPresent && !!fidelityCardEvent" class="flex fColumn bgrW padY20 gap20 br1BOT">
-                <h2 class="fw5">Carta timbrata con successo!</h2>
-                <h4 class="fw4 mB10"><span class="fw6 txtU">I tuoi punti sono stati aggiornati</span>, ci vediamo la prossima! :)</h4>
+            <div *ngIf="!isSuggested && !discountPresent && (!!fidelityCardEvent || !!noPointsAdded)" class="flex fColumn bgrW padY20 gap20 br1BOT">
+                <h2 *ngIf="!!fidelityCardEvent" class="fw5">Carta cliente timbrata</h2>
+                <h2 *ngIf="!!noPointsAdded" class="fw5">Carta cliente già timbrata</h2>
+                <h4 *ngIf="fidelityCardEvent && fidelityCardEvent == 'geo'" class="fw4">
+                    <span class="fw6 txtU">Carta timbrata in automatico grazie alla tua posizione</span>, se vuoi ulteriori punti in base al conto, mostra il tuo QR in cassa per pagare :)
+                </h4>
+                <h4 *ngIf="fidelityCardEvent && fidelityCardEvent == 'cassa'" class="fw4">
+                    <span class="fw6 txtU">I tuoi punti sono stati aggiornati</span>, grazie e ci vediamo la prossima! :)
+                </h4>
+                <h4 *ngIf="!!noPointsAdded" class="fw4"><span class="fw6 txtU">Carta già timbrata poco tempo fa oggi</span>, se vuoi ulteriori punti in base al conto, mostra il tuo QR in cassa per pagare :)</h4>
+                <h4 class="txtU fw5 mB10" *ngIf="fidelityCardEvent != 'cassa'" (click)="close.emit()">Ok capito, vai al tuo qr <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></h4>
+                <h4 class="txtU fw5 mB10" *ngIf="fidelityCardEvent == 'cassa'" (click)="close.emit()">Ok grazie <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></h4>
             </div>
     
             <div *ngIf="!isSuggested && !!discountPresent && fidelityCard.user_discount_id && !fidelityCardEvent" class="flex fColumn bgrW padY20 gap20 br1BOT">
-                <h2 class="fw5">Ecco il tuo sconto</h2>
-                <h4 class="fw4"><span class="fw6 txtU">Per usare lo sconto</span>, mostra questo qr in cassa per pagare, o al personale del locale.</h4>
-                <div class="flex fColumn fCenter bgrW pad10 br10 br1ALL">
-                    <qrcode class="br10" colorDark="#212121" [qrdata]="getQrDiscRaw()" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
-                    <small style="margin-top: -13px; z-index: 2;">Codice sconto: {{ fidelityCard.user_discount.id }}</small>
-                </div>
-                <h4 class="fw4 mB10" *ngIf="fidelityCard.user_discount?.discount_amount">Sconto {{ fidelityCard.user_discount?.discount_type == 'PERC' ? 'del' : 'di' }} {{fidelityCard.user_discount?.discount_amount}}{{ fidelityCard.user_discount?.discount_type == 'PERC' ? '%' : '€' }}, minimo di spesa di {{fidelityCard.user_discount?.discount_minimum_expense}}€.</h4>
-                <h4 class="fw4 mB10" *ngIf="!fidelityCard.user_discount?.discount_amount">
-                    {{fidelityCard.user_discount?.slogan || 'PASTO GRATIS!'}}
-                </h4>
+                <h2 *ngIf="!fidelityCard.user_discount.validFromTomorrow" class="fw5">Ecco il tuo sconto</h2>
+                <h2 *ngIf="!!fidelityCard.user_discount.validFromTomorrow" class="fw5">Sconto valido da domani</h2>
+                <h4 *ngIf="!fidelityCard.user_discount.validFromTomorrow" class="fw4"><span class="fw6">Per usare lo sconto</span>, mostra questo qr in cassa per pagare, o al personale del locale.</h4>
+                <h4 *ngIf="!!fidelityCard.user_discount.validFromTomorrow" class="fw4"><span class="fw6">Da domani</span>, qui sarà visibile il tuo sconto da mostrare in cassa :)</h4>
+
+                <ng-container *ngIf="!fidelityCard.user_discount.validFromTomorrow">
+                    <div class="flex fColumn fCenter bgrW pad10 br10 br1ALL">
+                        <qrcode class="br10" colorDark="#212121" [qrdata]="getQrDiscRaw()" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+                        <small style="margin-top: -13px; z-index: 2;">Codice sconto: {{ fidelityCard.user_discount.id }}</small>
+                    </div>
+                    <h4 class="fw4 mB10" *ngIf="fidelityCard.user_discount?.discount_amount">Sconto {{ fidelityCard.user_discount?.discount_type == 'PERC' ? 'del' : 'di' }} {{fidelityCard.user_discount?.discount_amount}}{{ fidelityCard.user_discount?.discount_type == 'PERC' ? '%' : '€' }}, minimo di spesa di {{fidelityCard.user_discount?.discount_minimum_expense}}€.</h4>
+                    <h4 class="fw4 mB10" *ngIf="!fidelityCard.user_discount?.discount_amount">
+                        {{fidelityCard.user_discount?.slogan || 'PASTO GRATIS!'}}
+                    </h4>
+                </ng-container>
             </div>
 
             <div *ngIf="!isSuggested && !!discountPresent && fidelityCard.user_discount_id && !!fidelityCardEvent" class="flex fColumn bgrW padY20 gap20 br1BOT">
                 <h2 class="fw5">Sconto applicato con successo!</h2>
-                <h4 class="fw4 mB10"><span class="fw6 txtU">I tuoi punti sono stati resettati</span>, ci vediamo la prossima! :)</h4>
+                <h4 class="fw4"><span class="fw6 txtU">I tuoi punti sono stati resettati</span>, ci vediamo la prossima! :)</h4>
+                <h4 class="txtU fw5 mB10" (click)="close.emit()">Ok fatto <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></h4>
             </div>
     
             <div *ngIf="isSuggested && !fidelityCard?.hasCard" class="flex fColumn bgrW padY20 gap20 br1BOT">
@@ -230,13 +271,13 @@
     
             <div class="flex fColumn bgrW padY30 gap10 br1BOT">
                 <h2 class="fw8 crARL">{{fidelityCard?.business_name}}</h2>
-                <h4 class="fw5 mB10">{{fidelityCard?.business_description || 'Descrizione del locale non disponibile.'}}</h4>
+                <h4 class="fw5 mB10">{{fidelityCard?.business_description || 'Descrizione del locale non disponibile.'}} <span *ngIf="!!fidelityCard?.accept_reservations" class="txtU" (click)="reservMsg()">Prossima volta prenota dall'app!</span></h4>
                 <ng-container *ngIf="fidelityCard?.business_menu_link">
-                    <button *ngIf="(!isSuggested && !!discountPresent && fidelityCard.user_discount_id) || (!isSuggested && !discountPresent) else normalText" class="w100 br10 bgrW pad10 br2ALL" (click)="menu(fidelityCard?.business_menu_link)">
-                        <h2 class="fw5">Leggi il menu e ordina</h2>
+                    <button *ngIf="(!isSuggested && !!discountPresent && fidelityCard.user_discount_id) || (!isSuggested && !discountPresent) else normalText" [disabled]="fidelityCard?.menu_disabled" class="w100 br10 bgrW pad10 br2ALL" (click)="menu(fidelityCard?.business_menu_link)">
+                        <h2 class="fw5">Leggi il menu</h2>
                     </button>
                     <ng-template #normalText>
-                        <h4 class="txtU fw5" (click)="menu(fidelityCard?.business_menu_link)">Leggi il menu e ordina <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></h4>
+                        <h4 class="txtU fw5" (click)="!fidelityCard?.menu_disabled && menu(fidelityCard?.business_menu_link)">Leggi il menu <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></h4>
                     </ng-template>
                 </ng-container>
             </div>
@@ -270,28 +311,32 @@
                     <div class="flex pAbs pTop0 pBot0 pLeft0 pRight0 br10 oHidden w100" style="height: 200px; background-color: transparent; z-index: 1;" (click)="openMaps(fidelityCard?.business_address)">
                     </div>
                 </div>
-                <h4 class="fw4">{{ fidelityCard?.business_address }}</h4>
+                <h4 class="fw4" (click)="openMaps(fidelityCard?.business_address)">{{ fidelityCard?.business_address }}</h4>
             </div>
     
             <div class="flex fColumn bgrW padY30 gap20 mB80">
-                <button *ngIf="!isSuggested" class="w100 br10 bgrW pad10 br2ALL mB10" (click)="step = 4">
+                <button *ngIf="!isSuggested" class="w100 br10 bgrW pad10 br2ALL mB10" [disabled]="fidelityCard?.reserv_disabled" (click)="step = 4">
                     <h2 class="fw5">Scrivi recensione</h2>
                 </button>
-                <h3 class="fw5">Come funziona la carta cliente</h3>
+                <div class="flex fColumn">
+                    <h3 class="fw5">Come funziona la carta cliente</h3>
+                    <small>Di primo livello</small>
+                </div>
                 <h4 class="fw4">{{fidelityCard?.business_card_description || 'Istruzioni non disponibili.' }}</h4>
             </div>
         </div>
 
-        <div class="pAbs pBot0 pLeft0 pRight0 flex fRow aCenter jBet gap15 pad15 padX20 br1TOP bgrW" style="z-index: 2;">
-            <h4 class="fw4">Prenota un tavolo <span style="display: block;">senza chiamare &nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></span></h4>
+        <div *ngIf="!!fidelityCard?.accept_reservations" class="pAbs pBot0 pLeft0 pRight0 flex fRow aCenter jBet gap15 pad15 padX20 br1TOP bgrW" style="z-index: 2;">
+            <!-- <h4 class="fw4">Prenota un tavolo <span style="display: block;">senza chiamare &nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></span></h4> -->
+            <h4 class="fw4">Prenota un tavolo <span class="fw6" style="display: block;">con lo sconto &nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></span></h4>
             <!-- <button class="br10 bgrBl pad10 padX30 brN" (click)="step = 3">
                 <h2 class="fw6">Prenota</h2>
             </button> -->
-            <button *ngIf="(!isSuggested && !!discountPresent && fidelityCard.user_discount_id) || (!isSuggested && !discountPresent) else normalPre" class="br10 bgrAB pad10 padX20 brN" (click)="step = 3">
+            <button *ngIf="(!isSuggested && !!discountPresent && fidelityCard.user_discount_id) || (!isSuggested && !discountPresent) else normalPre" [disabled]="fidelityCard?.reserv_disabled" class="br10 bgrAB pad10 padX20 brN" (click)="step = 3.0">
                 <h2 class="fw6">Prenota ora</h2>
             </button>
             <ng-template #normalPre>
-                <button class="br10 bgrBl pad10 padX20 brN" (click)="step = 3">
+                <button [disabled]="fidelityCard?.reserv_disabled" class="br10 bgrBl pad10 padX20 brN" (click)="step = 3.0">
                     <h2 class="fw6">Prenota ora</h2>
                 </button>
             </ng-template>
@@ -300,53 +345,122 @@
     </ng-container>
 
 
-    <ng-container *ngIf="step == 3">
-        <form class="flex fColumn gap20 mT80 pad20 ffG" [formGroup]="newRes">
-            <div>
-                <h2 class="fw6" for="appt">Prenotazione</h2>
-                <small class="ffG">{{ fidelityCard?.business_name }}</small>
+    <ng-container *ngIf="step >= 3 && step < 4">
+        <form *ngIf="step == 3.1" class="pAbs pTop0 pLeft0 pRight0 pBot0 pad20 ffG" [formGroup]="newRes" style="padding-top: 80px;">
+            <div class="flex fColumn gap20">
+                <div>
+                    <h2 *ngIf="!fromDiscRes" class="fw6" for="appt">Prenotazione</h2>
+                    <h2 *ngIf="!!fromDiscRes" class="fw6" for="appt">Per <span style="text-transform: capitalize;">{{ getDate(discResForm['controls']['userDate'].value, true) }}</span></h2>
+                    <small class="ffG">{{ fidelityCard?.business_name }}</small>
+                </div>
+                <input formControlName="name" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Nome">
+                <input formControlName="peopleAmount" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number" pattern="[0-9]*" min="1"
+                    step="1" placeholder="Quante persone">
+                <div class="flex fRow aCenter gap10 jBet">
+                    <input *ngIf="!fromDiscRes" formControlName="userDate" [min]="today" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG waN ffG" id="dateInp" lang="it-IT"
+                        type="date" placeholder="Data">
+            
+                    <input formControlName="userTime" lang="it-IT" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG waN ffG" type="time" id="appt"
+                        name="appt" min="06:00" max="23:30" placeholder="20:00" required>
+                </div>
+                <input formControlName="phoneNumber" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="tel" placeholder="+393444444">
+                <input *ngIf="!fidelityCard?.business_type" formControlName="note" maxlength="50" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG"
+                    type="text" placeholder="Note oppure specifica il servizio che vuoi...">
+                <input *ngIf="fidelityCard?.business_type == 'food'" formControlName="note" maxlength="50"
+                    class="if1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Note per il locale">
+                <input *ngIf="fidelityCard?.business_type == 'service'" formControlName="note" maxlength="50"
+                    class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Cosa vuoi fare?">
+                <button [disabled]="newRes.invalid" class="w100 f1 br10 bgrABG pad10 padX30 brN ffG" type="button"
+                    (click)="addReservation()"><h2 class="fw6">{{ !fromDiscRes ? 'Invia' : 'Prenota' }}</h2></button>
+                <!-- <button class="w100 f1 br10 bgrW pad10 padX30 br2ALL ffG" (click)="goBackFromRes()"><h2 class="fw4 crBl">annulla</h2></button> -->
+                <button class="w100 f1 br10 bgrW pad10 padX30 brN ffG" (click)="goBackFromRes()" type="button"><h2 class="fw3">annulla</h2></button>
             </div>
-            <input formControlName="name" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Nome">
-            <input formControlName="peopleAmount" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number" pattern="[0-9]*" min="1"
-                step="1" placeholder="Quante persone">
-            <div class="flex fRow aCenter gap10 jBet">
-                <input formControlName="userDate" [min]="today" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG waN ffG" id="dateInp" lang="it-IT"
-                    type="date" placeholder="Data">
-        
-                <input formControlName="userTime" lang="it-IT" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG waN ffG" type="time" id="appt"
-                    name="appt" min="06:00" max="23:30" placeholder="20:00" required>
-            </div>
-            <input formControlName="phoneNumber" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="tel" placeholder="+393444444">
-            <input *ngIf="!fidelityCard?.business_type" formControlName="note" maxlength="50" class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG"
-                type="text" placeholder="Note oppure specifica il servizio che vuoi...">
-            <input *ngIf="fidelityCard?.business_type == 'food'" formControlName="note" maxlength="50"
-                class="if1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Note per il locale">
-            <input *ngIf="fidelityCard?.business_type == 'service'" formControlName="note" maxlength="50"
-                class="f1 br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" placeholder="Cosa vuoi fare?">
-            <button [disabled]="newRes.invalid" class="w100 f1 br10 bgrBl pad10 padX30 brN ffG" type="button"
-                (click)="addReservation()"><h2 class="fw6">Invia</h2></button>
-            <button class="w100 f1 br10 bgrW pad10 padX30 br2ALL ffG" (click)="step = 1"><h2 class="fw4 crBl">annulla</h2></button>
         </form>
+
+        <div *ngIf="step == 3.0" class="pAbs pTop0 pLeft0 pRight0 pBot0 pad20 ffG oAuto" style="padding-top: 80px;">
+            <div class="flex fColumn gap40">
+                <div class="flex fColumn gap10">
+                    <h2 class="fw6" for="appt">Prenotazione</h2>
+                    <h3 class="fw4">Seleziona il giorno e clicca avanti.</h3>
+                </div>
+                <form class="flex fColumn gap20" [formGroup]="discResForm">
+                    <div *ngFor="let date of availableDates" class="w100 flex fRow jBet aCenter pad20 br10 br1ALL" [ngClass]="{ 'op7': !!date?.close, 'boxSha bgrABL brCT fw6': discResForm['controls']['userDate'].value == date.date }" (click)="setUserDate(date)">
+                        <div class="flex fRow gap10 aCenter">
+                            <div class="br1ALL bgrW brW3" style="width: 18px; height: 18px; border-radius: 21px;" [ngClass]="{ 'bgrABL brCW brW5': discResForm['controls']['userDate'].value == date.date }">
+                            </div>
+                            <h3 class="fw4" [ngClass]="{ 'fw6': discResForm['controls']['userDate'].value == date.date }" style="text-transform: capitalize;">{{ date.dateParsed }}</h3>
+                        </div>
+                        <div *ngIf="!!date?.discount && !date?.close" class="flex fRow gap5 aCenter">
+                            <h4 class="fw5 fsI">Sconto {{ date?.discount?.type == 'PERC' ? 'del' : 'di' }} {{date?.discount?.amount}}{{ date?.discount?.type == 'PERC' ? '%' : '€' }}</h4>
+                        </div>
+                        <div *ngIf="!!date?.close" class="flex fRow gap5 aCenter">
+                            <h4 class="fw3">Siamo chiusi</h4>
+                        </div>
+                        <div *ngIf="!date?.discount && !date?.close" class="flex fRow gap5 aCenter">
+                            <h4 class="fw3">Senza sconto</h4>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="!!showMoreDates">
+                        <div *ngFor="let date of moreDates" class="w100 flex fRow jBet aCenter pad20 br10 br1ALL" [ngClass]="{ 'op7': !!date?.close, 'boxSha bgrABL brCT fw6': discResForm['controls']['userDate'].value == date.date }" (click)="setUserDate(date)">
+                            <div class="flex fRow gap10 aCenter">
+                                <div class="br1ALL bgrW brW3" style="width: 18px; height: 18px; border-radius: 21px;" [ngClass]="{ 'bgrABL brCW brW5': discResForm['controls']['userDate'].value == date.date }">
+                                </div>
+                                <h3 class="fw4" [ngClass]="{ 'fw6': discResForm['controls']['userDate'].value == date.date }" style="text-transform: capitalize;">{{ date.dateParsed }}</h3>
+                            </div>
+                            <div *ngIf="!!date?.discount && !date?.close" class="flex fRow gap5 aCenter">
+                                <h4 class="fw5 fsI">Sconto {{ date?.discount?.type == 'PERC' ? 'del' : 'di' }} {{date?.discount?.amount}}{{ date?.discount?.type == 'PERC' ? '%' : '€' }}</h4>
+                            </div>
+                            <div *ngIf="!!date?.close" class="flex fRow gap5 aCenter">
+                                <h4 class="fw3">Siamo chiusi</h4>
+                            </div>
+                            <div *ngIf="!date?.discount && !date?.close" class="flex fRow gap5 aCenter">
+                                <h4 class="fw3">Senza sconto</h4>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <h4 *ngIf="!showMoreDates" (click)="showMoreDates = true" class="txtU fw4 textCenter op7"><i class="fa-solid fa-chevron-down"></i></h4>
+                    
+                    <div class="flex fColumn gap5">
+                        <button [disabled]="discResForm.invalid" class="w100 f1 br10 bgrABG pad10 padX30 brN ffG" (click)="goToRes()" type="button"><h2 class="fw6">Avanti&nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></h2></button>
+                        <button class="w100 f1 br10 bgrW pad10 padX30 brN ffG" (click)="step = 1" type="button"><h2 class="fw3">annulla</h2></button>
+                    </div>
+                </form>
+
+                <!-- <div class="flex fColumn gap10">
+                    <h4 class="fw4">ErYue mette a disposizione un numero limitato di prenotazioni con sconto, se disponibile, lo sconto viene indicato sul giorno desiderato.</h4>
+                    <h4 (click)="forceNormalRes()" class="fw5">Voglio prenotare senza sconto <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i></h4>
+                </div> -->
+            </div>
+        </div>
+
+        <!-- <div class="pAbs pBot0 pLeft0 pRight0 flex fRow aCenter jBet gap15 pad15 padX20 br1TOP bgrW" style="z-index: 2;">
+            <h4 class="fw4">Clicca un giorno disponibile</h4>
+            <button [disabled]="fidelityCard?.reserv_disabled" class="br10 bgrBl pad10 padX20 brN">
+                <h2 class="fw6">Avanti</h2>
+            </button>
+        </div> -->
     </ng-container>
 
 
     <ng-container *ngIf="step == 4">
-        <form class="flex fColumn gap20 mT80 pad20 ffG" [formGroup]="reviewForm">
-            <div>
-                <h2 class="fw6" for="appt">Recensione</h2>
-                <small class="ffG">{{ fidelityCard?.business_name }}</small>
+        <form class="pAbs pTop0 pLeft0 pRight0 pBot0 pad20 ffG" [formGroup]="reviewForm" style="padding-top: 80px;">
+            <div class="flex fColumn gap20">
+                <div>
+                    <h2 class="fw6" for="appt">Recensione</h2>
+                    <small class="ffG">{{ fidelityCard?.business_name }}</small>
+                </div>
+                <select id="ratingSelect" formControlName="rating" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;">
+                    <option [value]="null" selected disabled>-- Seleziona Stelle --</option>
+                    <option value="1">1 Stella</option>
+                    <option value="2">2 Stelle</option>
+                    <option value="3">3 Stelle</option>
+                    <option value="4">4 Stelle</option>
+                    <option value="5">5 Stelle</option>
+                </select>
+                <textarea rows="5" formControlName="text" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" id="review" type="text" placeholder="Mi sono trovato..."></textarea>
+                <button [disabled]="reviewForm.invalid" class="w100 br10 bgrBl pad10 padX30 brN ffG" type="button" (click)="sendReview()"><h2 class="fw6">Invia</h2></button>
+                <button class="w100 br10 bgrW pad10 padX30 br2ALL ffG" (click)="step = 1"><h2 class="fw4 crBl">annulla</h2></button>
             </div>
-            <select id="ratingSelect" formControlName="rating" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;">
-                <option [value]="null" selected disabled>-- Seleziona Stelle --</option>
-                <option value="1">1 Stella</option>
-                <option value="2">2 Stelle</option>
-                <option value="3">3 Stelle</option>
-                <option value="4">4 Stelle</option>
-                <option value="5">5 Stelle</option>
-            </select>
-            <textarea rows="5" formControlName="text" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" id="review" type="text" placeholder="Mi sono trovato..."></textarea>
-            <button [disabled]="reviewForm.invalid" class="w100 br10 bgrBl pad10 padX30 brN ffG" type="button" (click)="sendReview()"><h2 class="fw6">Invia</h2></button>
-            <button class="w100 br10 bgrW pad10 padX30 br2ALL ffG" (click)="step = 1"><h2 class="fw4 crBl">annulla</h2></button>
         </form>
     </ng-container>
 </div>

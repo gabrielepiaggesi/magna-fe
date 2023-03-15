@@ -1043,6 +1043,55 @@ export class ApiService {
     return jsonRes;
   }
 
+  public async updateLastQRScannedAt(userFidelityCardId: number, geoEvent: string|null = null) {
+    const opts = {
+      method: 'POST',
+      body: JSON.stringify({geoEvent}),
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/userFidelityCard/updateLastQRScannedAt/${userFidelityCardId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not updateLastQRScannedAt');
+    }
+    return jsonRes;
+  }
+
+  public async updateLocalyPresentOrNot(userFidelityCardId: number, isPresent: number = 0) {
+    const opts = {
+      method: 'POST',
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/userFidelityCard/updateLocalyPresentOrNot/${userFidelityCardId}/${isPresent}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not updateLastQRScannedAt');
+    }
+    return jsonRes;
+  }
+
+  public async updateLastQRScannedAtAndTimberCard(userFidelityCardId: number) {
+    const opts = {
+      method: 'POST',
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/userFidelityCard/updateLastQRScannedAtAndTimberCard/${userFidelityCardId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not updateLastQRScannedAtAndTimberCard');
+    }
+    return jsonRes;
+  }
+
   public async sendSocialPost(dto: any, businessId: number) {
     const opts = {
       method: 'POST',

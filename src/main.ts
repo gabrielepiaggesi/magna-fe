@@ -40,35 +40,53 @@ const OneSignalInit = () => {
   (window as any).plugins.OneSignal.setNotificationOpenedHandler((jsonData: any) => {
     const not = JSON.parse(JSON.stringify(jsonData));
     console.log('notificationOpenedCallback: ', JSON.stringify(not));
-    if (!jsonData?.notification?.body?.includes('Carta') && 
-    !jsonData?.notification?.body?.includes('remio') && 
-    !jsonData?.notification?.body?.includes('renotazione') && !jsonData?.notification?.body?.includes('Timbrata')
-    ) {
+    const notType = jsonData?.notification?.additionalData?.type;
+
+    if (notType == 'promotion') {
       (window as any)['destination'] = 'promotions';
       const event = new Event('notification');
       (window as any).dispatchEvent(event);
       const notIcon = document.getElementById('notification-page');
-      console.log('notIcon', notIcon);
-      console.log('1', (window as any)['destination']);
       if (notIcon) notIcon.click();
     }
-    if (jsonData?.notification?.body?.includes('Timbrata')) {
+    if (notType == 'user-card-scan' || notType == 'user-discount' || notType == 'user-card-geo') {
       const event = new Event('refreshList');
       (window as any).dispatchEvent(event);
       (window as any)['refreshList'] = true;
+    }
+    if (notType == 'user-reservation') {
+      const event = new Event('reservation');
+      (window as any).dispatchEvent(event);
+      const notIcon = document.getElementById('reserv-page');
+      if (notIcon) notIcon.click();
     }
   });
 
   (window as any).plugins.OneSignal.setNotificationWillShowInForegroundHandler((notificationReceivedEvent: any) => {
     const not = notificationReceivedEvent.getNotification();
     let not2 = JSON.parse(JSON.stringify(not));
-    console.log('not', not2, JSON.stringify(not2));
-    if (not2?.body?.includes('Timbrata') || not2?.body?.includes('applicato')) {
+    const notType = not2?.additionalData?.type;
+
+    if (notType == 'user-card-scan' || notType == 'user-discount') {
       const event1 = new Event('refreshList');
       (window as any).dispatchEvent(event1);
       (window as any)['refreshList'] = true;
       console.log('REFRESH LIST', (window as any)['refreshList']);
       const event2 = new Event('fidelityCardEvent');
+      (window as any).dispatchEvent(event2);
+    }
+    if (notType == 'user-card-no-points') {
+      const event1 = new Event('refreshList');
+      (window as any).dispatchEvent(event1);
+      (window as any)['refreshList'] = true;
+      const event2 = new Event('noPointsAddedEvent');
+      (window as any).dispatchEvent(event2);
+    }
+    if (notType == 'user-card-geo') {
+      const event1 = new Event('refreshList');
+      (window as any).dispatchEvent(event1);
+      (window as any)['refreshList'] = true;
+      const event2 = new Event('fidelityCardGeoEvent');
       (window as any).dispatchEvent(event2);
     }
     notificationReceivedEvent.complete(notificationReceivedEvent.getNotification());
@@ -102,6 +120,13 @@ const DeepLinksInit = () => {
       console.log('NO DeepLink! ' + nomatch.$link.toString()) 
     }
   );
+};
+
+const SmartLookInit = () => {
+  console.log('SmartLookInit INIT');
+  (window as any).SmartlookPlugin.setupAndStartRecording({smartlookAPIKey: "93293864cd3382e641ec721bdaf46817c857740d"});
+  // (window as any).Smartlook.setProjectKey({key: "93293864cd3382e641ec721bdaf46817c857740d"});
+  // (window as any).Smartlook.start();
 };
 
 const BackButtonStrategy = () => {

@@ -35,12 +35,13 @@
             ></i>
             <small class="fw3">Messaggi</small>
         </div>
-        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 2 }" (click)="go('incIntro')">
+        <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 2 }" (click)="go('incIntro/0')">
             <i class="fa-solid fa-plus ig"></i>
             <small class="fw3">Scan QR</small>
         </div>
         <div class="flex fColumn gap5 aCenter w20" [ngClass]="{ 'activeMenu': activeIcon == 3 }" (click)="go('user-reservations')">
             <i
+                id="reserv-page"
                 [ngClass]="{ 
                     'fa-regular': activeIcon != 3,
                     'fa-solid': activeIcon == 3 

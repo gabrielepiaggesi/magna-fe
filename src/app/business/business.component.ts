@@ -14,6 +14,7 @@ export class BusinessComponent implements OnInit {
   public loading = false;
   public editMode = false;
   public sendNot = false;
+  public mustPay = false;
   public businessId!: number;
   public business$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
   public editBusinessForm = this.fb.group({
@@ -44,6 +45,7 @@ export class BusinessComponent implements OnInit {
     public appService: AppService,
     private fb: FormBuilder
   ) {
+    this.mustPay = false;
     this.activateRouter.params.subscribe(
       (params) => {
         this.businessId = +params['businessId'];
@@ -53,6 +55,7 @@ export class BusinessComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.mustPay = false;
     // this.appService.headerData.next({ title: 'Caricamento...'});
     this.businessId && this.getBusiness();
   }
@@ -75,11 +78,20 @@ export class BusinessComponent implements OnInit {
     return isInThePast;
   }
 
+  public goPlan() {
+    window.open(`https://comebackwebapp.web.app/plan/${this.businessId}/?token=${this.apiService.TOKEN}`, '_system');
+  }
+
   public getBusiness() {
     this.loading = true;
     this.apiService
       .getUserBusiness(this.businessId)
       .then((business: any) => {
+        this.mustPay = business.must_pay;
+        if (business.must_pay) {
+          alert("Per continuare a usare Comeback, devi aggiornare il tuo abbonamento. Se lo hai gia fatto chiudi l'app e riaprila.");
+          window.open(`https://comebackwebapp.web.app/plan/${business.id}/?token=${this.apiService.TOKEN}`, '_system');
+        }
         this.appService.headerData.next({ title: business.name });
         this.business$.next(business);
         this.editBusinessForm.get('name')?.setValue(business.name || null);
@@ -142,5 +154,9 @@ export class BusinessComponent implements OnInit {
 
   public editMenu() {
     window.open(`https://comebackwebapp.web.app/menu-list/${this.businessId}/?token=${this.apiService.TOKEN}`, '_system');
+  }
+
+  public openPlan() {
+    window.open(`https://comebackwebapp.web.app/plan/${this.businessId}/?token=${this.apiService.TOKEN}`, '_system');
   }
 }

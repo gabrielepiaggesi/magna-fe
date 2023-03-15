@@ -11,7 +11,7 @@
     </div>
 </div> -->
 
-<div class="flex fRow aCenter pad10 bgrABG br10 gap10">
+<div class="flex fRow aCenter pad10 bgrABG br10 gap10" [ngClass]="{ 'op8': !!discount.validFromTomorrow }">
     <!-- <div class="flex fRow fCenter">
         <div class="flex fRow fCenter pad5 br5 bgrW">
             <img width="50" src="https://boofcv.org/images/thumb/3/35/Example_rendered_qrcode.png/400px-Example_rendered_qrcode.png" alt="">
@@ -20,7 +20,7 @@
     <div class="flex fRow fCenter pad5 br5 bgrW">
         <img width="45" src="https://boofcv.org/images/thumb/3/35/Example_rendered_qrcode.png/400px-Example_rendered_qrcode.png" alt="">
     </div>
-    <div class="flex fColumn discountBio f1">
+    <div *ngIf="!discount.validFromTomorrow" class="flex fColumn discountBio f1">
         <h4 class="fw6">{{discount?.business_name}}</h4>
         <h5 class="fw3" *ngIf="discount?.discount_minimum_expense">
             minimo di spesa di {{discount?.discount_minimum_expense}}€
@@ -33,6 +33,18 @@
         </h3>
         <h3 class="fw5" *ngIf="!discount?.discount_amount">
             {{discount?.slogan || 'PASTO GRATIS!'}}
+        </h3>
+    </div>
+    <div *ngIf="!!discount.validFromTomorrow" class="flex fColumn discountBio f1">
+        <h4 class="fw6">{{discount?.business_name}}</h4>
+        <h5 class="fw3" *ngIf="discount?.discount_amount">
+            {{discount?.discount_amount}}{{ discount?.discount_type == 'PERC' ? '%' : '€' }} di sconto
+        </h5>
+        <h5 class="fw3" *ngIf="!discount?.discount_amount">
+            {{discount?.slogan || 'PASTO GRATIS!'}}
+        </h5>
+        <h3 class="fw5">
+            Valido da domani
         </h3>
     </div>
     <div class="flex fColumn fCenter padX10">
