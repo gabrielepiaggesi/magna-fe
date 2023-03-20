@@ -866,3 +866,7 @@ input[type="checkbox"] {
     background-color: #eb9f01;
     color: white;
 }
+
+.jFEnd {
+    justify-content: flex-end;
+}

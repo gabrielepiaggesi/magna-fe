@@ -64,11 +64,23 @@
     <img class="w100 br10" style="object-fit: cover;" height="200"
         [src]="_fidelity?.business_image_url || 'https://img.freepik.com/free-photo/abstract-blur-food-truck_1339-3329.jpg?w=1380&t=st=1669487530~exp=1669488130~hmac=2193ebdc36a344007af2493f07c4c5f27b651b20620dd570eb60ece2e370759f'"
         alt="">
-    <div class="card_content br10">
+    <div class="card_content br10 jBet" [ngClass]="{
+        'jBet': !!_fidelity?.business_can_reserv_with_discount,
+        'jFEnd': !_fidelity?.business_can_reserv_with_discount
+    }">
+        <div *ngIf="!!_fidelity?.business_can_reserv_with_discount" class="flex fRow aCenter gap10">
+            <span class="pad5 padX10 bgrABL br10 boxSha fw5" 
+            style="
+                font-size: 18px; 
+                border-top-left-radius: 0; 
+                border-bottom-left-radius: 0; 
+                box-shadow: 0px 0px 5px 0px rgb(0 0 0);
+                margin-top: 10px;"
+            >
+                Prenota ora con lo sconto!
+            </span>
+        </div>
         <div class="flex fRow aCenter gap10 bgrT pad15">
-            <!-- <div class="flex fRow fCenter imgBox">
-                <i class="fa-solid fa-shop businessImg crG bgrY"></i>
-            </div> -->
             <div class="flex fColumn discountBio f1">
                 <h2>{{_fidelity?.business_name}}</h2>
                 <p class="discountInfo" style="
@@ -90,7 +102,7 @@
         <h4 *ngIf="!discountPresent" class="fw5">
             Ti mancano 
             {{ (_fidelity?.business_expenses_amount - (_fidelity?.user_expenses_amount - _fidelity?.discount_countdown)) - 1 }} 
-            punti per lo sconto
+            punti per il premio
         </h4>
         <h4 *ngIf="!!discountPresent" class="fw5">
             Qui hai lo SCONTO!

@@ -22,7 +22,7 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
   @Input() fromQR: number = 0;
   @Input() isSuggested: boolean = false;
   public referral$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
-
+  public canDiscountEnded = false;
   public intervalEnded = false;
   public loading = false;
   public step = 1;
@@ -41,11 +41,17 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     userTime: ['20:00', Validators.required],
     phoneNumber: [null, Validators.required],
     note: [null],
-    withDiscount: [false]
+    withDiscount: [false],
+    discountAmount: [null],
+    discountType: [null],
+    discountSlogan: [null]
   });
   public discResForm = this.fb.group({
     userDate: [null, Validators.required],
-    withDiscount: [false, Validators.required]
+    withDiscount: [false, Validators.required],
+    discountAmount: [null],
+    discountType: [null],
+    discountSlogan: [null]
   });
   public reviewForm = this.fb.group({
     rating: [null, Validators.required],
@@ -111,54 +117,79 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
       this.lang = 'it';
     }
 
-    this.availableDates = [
-      {
-        date: '2023-03-14',
-        discount: {
-          amount: 10,
-          type: 'PERC'
-        }
-      },
-      {
-        date: '2023-03-15',
-        discount: {
-          amount: 10,
-          type: 'PERC'
-        }
-      },
-      {
-        date: '2023-03-16',
-        discount: null
-      }
-    ].map(d => ({ ...d, dateParsed: this.getDate(d.date, true) }));
-    this.moreDates = [
-      {
-        date: '2023-03-17',
-        discount: {
-          amount: 10,
-          type: 'PERC'
-        }
-      },
-      {
-        date: '2023-03-18',
-        close: true
-      },
-      {
-        date: '2023-03-19',
-        discount: {
-          amount: 10,
-          type: 'PERC'
-        }
-      },
-      {
-        date: '2023-03-20',
-        discount: {
-          amount: 10,
-          type: 'PERC'
-        }
-      }
-    ].map(d => ({ ...d, dateParsed: this.getDate(d.date, true) }));
+    // this.availableDates = [
+    //   {
+    //     date: new Date(Date.now()).toISOString().substring(0, 10),
+    //     discount: {
+    //       amount: 10,
+    //       type: 'PERC'
+    //     }
+    //   },
+    //   {
+    //     date: (new Date(new Date().getTime() + ((24 * 60 * 60 * 1000) * 1))).toISOString().substring(0, 10),
+    //     discount: {
+    //       amount: 10,
+    //       type: 'PERC'
+    //     }
+    //   },
+    //   {
+    //     date: (new Date(new Date().getTime() + ((24 * 60 * 60 * 1000) * 2))).toISOString().substring(0, 10),
+    //     discount: null
+    //   }
+    // ].map(d => ({ ...d, dateParsed: this.getDate(d.date, true) }));
+    // this.moreDates = [
+    //   {
+    //     date: (new Date(new Date().getTime() + ((24 * 60 * 60 * 1000) * 3))).toISOString().substring(0, 10),
+    //     discount: {
+    //       amount: 10,
+    //       type: 'PERC'
+    //     }
+    //   },
+    //   {
+    //     date: (new Date(new Date().getTime() + ((24 * 60 * 60 * 1000) * 4))).toISOString().substring(0, 10),
+    //     close: true
+    //   },
+    //   {
+    //     date: (new Date(new Date().getTime() + ((24 * 60 * 60 * 1000) * 5))).toISOString().substring(0, 10),
+    //     discount: {
+    //       amount: 10,
+    //       type: 'PERC'
+    //     }
+    //   },
+    //   {
+    //     date: (new Date(new Date().getTime() + ((24 * 60 * 60 * 1000) * 6))).toISOString().substring(0, 10),
+    //     discount: {
+    //       amount: 10,
+    //       type: 'PERC'
+    //     }
+    //   }
+    // ].map(d => ({ ...d, dateParsed: this.getDate(d.date, true) }));
 
+    !!this.fidelityCard.business_can_reserv_with_discount && this.getBusinessDaysForReservations();
+  }
+
+  public getBusinessDaysForReservations(autoShow = false) {
+    this.loading = true;
+    this.apiService.getBusinessDayAvailableForReservation(this.fidelityCard.business_id)
+      .then((bDays: any) => {
+        console.log('bDays', bDays);
+        const bDaysValues = Object.values(bDays).map((bDay: any) => {
+          return {
+            date: bDay.dayFormatted,
+            discount: bDay.can_discount ? { amount: bDay.discount_amount, type: bDay.discount_type, slogan: bDay.discount_slogan } : null,
+            close: bDay.closed,
+            dayIdx: bDay.dayIdx,
+            dateParsed: this.getDate(bDay.dayFormatted, true)
+          }
+        });
+        this.availableDates = bDaysValues.slice(0, 3);
+        this.moreDates = bDaysValues.slice(3);
+        this.canDiscountEnded = [...this.availableDates, ...this.moreDates].every(el => !el.discount);
+        console.log(this.availableDates);
+        if (autoShow) this.step = 3.0;
+      })
+      .catch((e: any) => console.error(e))
+      .finally(() => this.loading = false)
   }
 
   setUserDate(date: any) {
@@ -166,7 +197,13 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
       alert('Siamo chiusi in questo giorno.');
       return;
     }
-    this.discResForm.setValue({ userDate: date.date.substring(0, 10), withDiscount: !!date.discount });
+    this.discResForm.setValue({ 
+      userDate: date.date.substring(0, 10),
+      withDiscount: !!date.discount,
+      discountAmount: date.discount?.amount,
+      discountType: date.discount?.type,
+      discountSlogan: date.discount?.slogan,
+    });
   }
 
   goToRes() {
@@ -175,6 +212,12 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
     this.newRes.get('userDate')?.disable();
     this.newRes.get('withDiscount')?.setValue(this.discResForm.getRawValue().withDiscount);
     this.newRes.get('withDiscount')?.disable();
+    this.newRes.get('discountAmount')?.setValue(this.discResForm.getRawValue().discountAmount);
+    this.newRes.get('discountAmount')?.disable();
+    this.newRes.get('discountType')?.setValue(this.discResForm.getRawValue().discountType);
+    this.newRes.get('discountType')?.disable();
+    this.newRes.get('discountSlogan')?.setValue(this.discResForm.getRawValue().discountSlogan);
+    this.newRes.get('discountSlogan')?.disable();
     this.step = 3.1;
   }
 
@@ -307,6 +350,17 @@ export class FidelityQrComponent implements OnInit, OnDestroy {
         }
         if (res.disable_reservation_today) {
           alert('Ops! Purtroppo oggi il Locale è pieno...ci dispiace tanto :(');
+          return;
+        }
+        if (res.discount_limit_reached) {
+          alert("Ops! Qualcuno ha prenotato prima di te con l'ultimo sconto, riprova senza sconto!");
+          this.newRes.get('userDate')?.setValue((new Date(Date.now()).toISOString().substring(0, 10)));
+          this.newRes.get('withDiscount')?.setValue(false);
+          this.newRes.get('discountAmount')?.setValue(null);
+          this.newRes.get('discountType')?.setValue(null);
+          this.newRes.get('discountSlogan')?.setValue(null);
+          this.discResForm.reset();
+          this.getBusinessDaysForReservations(true);
           return;
         }
         alert('Grazie! Controlla la prenotazione dalla pagina prenotazioni.')

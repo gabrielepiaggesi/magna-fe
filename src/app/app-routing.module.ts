@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
 import { BusinessCardsComponent } from './business-cards/business-cards.component';
 import { BusinessCheckComponent } from './business-check/business-check.component';
+import { BusinessDaysComponent } from './business-days/business-days.component';
 import { BusinessDiscountComponent } from './business-discount/business-discount.component';
 import { BusinessDiscountsComponent } from './business-discounts/business-discounts.component';
 import { BusinessEmployeesComponent } from './business-employees/business-employees.component';
@@ -65,6 +66,14 @@ const routes: Routes = [
     component: BusinessComponent,
     canActivate: [AuthGuard],
     data: {
+    }
+  },
+  {
+    path: 'business-days/:businessId',
+    component: BusinessDaysComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Sconto Prenotazioni',
     }
   },
   {

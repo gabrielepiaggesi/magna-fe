@@ -29,7 +29,7 @@ export class ReservationPreviewComponent implements OnInit {
       return 'Oggi, ' + userDate.toLocaleString('it-IT', options);
     }
 
-    const options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit'};
+    const options: Intl.DateTimeFormatOptions = { weekday: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit'};
     return userDate.toLocaleString('it-IT', options);
   }
 

@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiService {
-  // public BASE_URL = 'http://localhost:8000';
-  public BASE_URL = 'https://magnaapp.herokuapp.com';
+  public BASE_URL = 'http://localhost:8000';
+  // public BASE_URL = 'https://magnaapp.herokuapp.com';
   public TOKEN: string | undefined = undefined;
   public COMPANY_ID!: number;
   public currentCompany: any;
@@ -1422,6 +1422,18 @@ export class ApiService {
     }
     return jsonRes;
   }
+
+  public async getBusinessDayAvailableForReservation(businessId: number) {
+    const response = await fetch(
+      `${this.BASE_URL}/reservation/getBusinessDayAvailableForReservation/${businessId}`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getBusinessDayAvailableForReservation');
+    }
+    return jsonRes;
+  }
   
   public async updateUserCap(cap: string) {
     const opts = {
@@ -1435,6 +1447,35 @@ export class ApiService {
     const jsonRes = await response.json();
     if (!response.ok || (response.status >= 400 && response.status <= 500)) {
       throw new Error(jsonRes?.message || 'Could not updateUserCap');
+    }
+    return jsonRes;
+  }
+
+  public async updateBusinessDay(bDayId: number, dto: any) {
+    const opts = {
+      method: 'POST',
+      body: JSON.stringify(dto),
+      headers: this.getHeaders(),
+    };
+    const response = await fetch(
+      `${this.BASE_URL}/business/updateBusinessDay/${bDayId}`,
+      opts
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not updateBusinessDay');
+    }
+    return jsonRes;
+  }
+
+  public async getBusinessDays(businessId: number) {
+    const response = await fetch(
+      `${this.BASE_URL}/business/getBusinessDays/${businessId}`,
+      { headers: this.getHeaders() }
+    );
+    const jsonRes = await response.json();
+    if (!response.ok || (response.status >= 400 && response.status <= 500)) {
+      throw new Error(jsonRes?.message || 'Could not getBusinessDays');
     }
     return jsonRes;
   }

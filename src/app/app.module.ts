@@ -37,6 +37,7 @@ import { BusinessEmployeesComponent } from './business-employees/business-employ
 import { BusinessNotificationsComponent } from './business-notifications/business-notifications.component';
 import { BusinessPreviewComponent } from './business-preview/business-preview.component';
 import { MenuComponent } from './menu/menu.component';
+import { BusinessDaysComponent } from './business-days/business-days.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { MenuComponent } from './menu/menu.component';
     BusinessEmployeesComponent,
     BusinessNotificationsComponent,
     BusinessPreviewComponent,
-    MenuComponent
+    MenuComponent,
+    BusinessDaysComponent
   ],
   imports: [
     BrowserModule,

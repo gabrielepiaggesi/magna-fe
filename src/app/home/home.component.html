@@ -9,6 +9,13 @@
                 <h4 class="fw5">
                     {{ (tr?.discountSlogan || 'Completa almeno una carta cliente per ricevere i tuoi premi!') }}&nbsp;&nbsp;<i class="fa-solid fa-gift"></i>
                 </h4>
+                <ng-container *ngIf="(fidelityCards$ | async) as fidelityCards">
+                    <div *ngIf="!!(appService.showHack | async) && showHack && !!fidelityCards.length" class="w100 brTOP" style="height: 0px;">
+                    </div>
+                    <h4 *ngIf="!!(appService.showHack | async) && showHack && !!fidelityCards.length" class="fw5" (click)="openWeb('referral')">
+                        Ti diamo 50€ se convinci il tuo locale preferito a usare Comeback&nbsp;<i class="fa-solid fa-arrow-right"></i>
+                    </h4>
+                </ng-container>
                 <div *ngIf="appService.userInfo && !appService.userInfo.cap" class="w100 brTOP" style="height: 0px;">
                 </div>
                 <h4 *ngIf="appService.userInfo && !appService.userInfo.cap" class="fw5" (click)="go('businesses')">
@@ -30,12 +37,12 @@
             <div *ngFor="let fidelityCard of fidelityCards">
                 <app-fidelity-preview [fidelity]="fidelityCard" [discountPresent]="discountsBusinessIds.includes(fidelityCard.business_id)" (click)="openCard(fidelityCard.business_id)"></app-fidelity-preview>
             </div>
-            <div *ngIf="!!(appService.showHack | async) && showHack && !!fidelityCards.length" class="flex fColumn pad20 bgrG gap10 br10 pRel" (click)="go('redeem')">
+            <!-- <div *ngIf="!!(appService.showHack | async) && showHack && !!fidelityCards.length" class="flex fColumn pad20 bgrG gap10 br10 pRel" (click)="go('redeem')">
                 <div class="tRBadge tRBadgeBor bgrR">
                     <i class="fa-solid fa-xmark" style="margin-left: auto;" (click)="showHack = false"></i>
                 </div>
                 <h4 class="fw7">Ti diamo 50€ per ogni locale che convinci a usare COMEBACK!</h4>
-            </div>
+            </div> -->
         </ng-container>
 
         <!-- <div *ngIf="appService.userInfo && !appService.userInfo.cap" class="flex fColumn pad20 bgrG gap10 br10 pRel" (click)="go('businesses')">

@@ -68,6 +68,10 @@ export class HomeComponent implements OnInit {
     // this.appService.goToBusinessId = 0;
   }
 
+  public openWeb(path: string) {
+    window.open('https://comebackwebapp.web.app/'+path, '_system');
+  }
+
   public go(path: string) {
     this.router.navigateByUrl(path);
   }

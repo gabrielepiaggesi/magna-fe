@@ -105,7 +105,7 @@ export class AppComponent implements OnInit {
           .getLastAppVersion()
           .then((appVersion: any) => {
             this.appService.welcomeMessage = appVersion.welcome_message;
-            this.appService.showHack.next(!!appVersion.show_hack);
+            this.appService.showHack.next(!!appVersion.show_business_referral);
             console.log(appVersion);
             let latestVersion = 0;
             let obsoleteVersion = 0;

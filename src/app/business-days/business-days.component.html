@@ -1,0 +1,95 @@
+
+<ng-container *ngIf="!loading && !currentDay">
+    <div *ngIf="(businessDays$ | async)" class="h110 flex fColumn gap20 pad10 pRel" style="padding-bottom: 90px;">
+        <div class="list br10 bgrW">
+            <div class="element" (click)="showDay(1)">
+                <p>Lunedi</p>
+            </div>
+            <div class="element" (click)="showDay(2)">
+                <p>Martedi</p>
+            </div>
+            <div class="element" (click)="showDay(3)">
+                <p>Mercoledi</p>
+            </div>
+            <div class="element" (click)="showDay(4)">
+                <p>Giovedi</p>
+            </div>
+            <div class="element" (click)="showDay(5)">
+                <p>Venerdi</p>
+            </div>
+            <div class="element" (click)="showDay(6)">
+                <p>Sabato</p>
+            </div>
+            <div class="element" (click)="showDay(0)">
+                <p>Domenica</p>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<div *ngIf="!!loading" class="spinner mAuto"></div>
+
+
+<div *ngIf="!!currentDay" class="flex fColumn pad20 gap20 w100">
+    <ng-container *ngIf="!loading">
+        <h3>{{ currentDay.name }}</h3>
+        <select name="discountType" id="discountTypeSelect" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;" (change)="onTypeChange($event)">
+            <option selected disabled [value]="null">-- Seleziona --</option>
+            <option [selected]="discountType === 'discount'" value="discount">Buono Sconto</option>
+            <option [selected]="discountType === 'free'" value="free">Consumazione/Servizio GRATIS</option>
+        </select>
+
+        <form *ngIf="discountType === 'discount'" class="flex fColumn gap10 w100" [formGroup]="discountForm">
+            <label for="discountTypeSelect">Scegli tra Percentuale o Euro:</label>
+            <select formControlName="discountType" name="discountType" id="discountTypeSelect" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" style="font-size: 17px; height: 42px;">
+                <option disabled selected [value]="null"> -- Seleziona -- </option>
+                <option value="EUR">Euro</option>
+                <option value="PERC">Percentuale</option>
+            </select>
+            
+            <label for="discountTypeSelect">Valore (solo il numero):</label>
+            <input formControlName="discountAmount" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number"
+                pattern="[0-9]*" min="1" max="100" step="1" placeholder="5">
+
+            <label for="discountTypeSelect">Quanti questo giorno?:</label>
+            <input formControlName="discountCount" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number"
+                pattern="[0-9]*" min="1" max="1000" step="1" placeholder="5">
+
+            <div class="flex fRow aCenter gap10 w100">
+                <input style="transform: scale(1.5);" formControlName="discountOnReservation" type="checkbox">
+                <span>Sconto prenotazione attivo</span>
+            </div>
+
+            <div class="flex fRow aCenter gap10 w100">
+                <input style="transform: scale(1.5);" formControlName="closed" type="checkbox">
+                <span>Siamo chiusi</span>
+            </div>
+            
+            <button type="button" [disabled]="discountForm.invalid" class="w100 br10 bgrAB pad10 brN mB10 mT20" (click)="saveBusinessDay()"><h2 class="fw6">Salva</h2></button>
+            <button class="w100 f1 br10 bgrW pad10 padX30 brN ffG" (click)="currentDay = null" type="button"><h2 class="fw3">indietro</h2></button>
+        </form>
+
+        <form *ngIf="discountType === 'free'" class="flex fColumn gap10 w100" [formGroup]="discountForm">
+            <label for="discountTypeSelect">SLOGAN corto sul premio:</label>
+            <input formControlName="slogan" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="text" maxlength="50"  placeholder="PRANZO GRATIS!">
+            
+            <label for="discountTypeSelect">Quanti questo giorno?:</label>
+            <input formControlName="discountCount" class="br10 w100 br1ALL bgrW pad15 fw5 ffG" type="number"
+                pattern="[0-9]*" min="1" max="1000" step="1" placeholder="5">
+
+            <div class="flex fRow aCenter gap10 w100">
+                <input style="transform: scale(1.5);" formControlName="discountOnReservation" type="checkbox">
+                <span>Sconto prenotazione attivo</span>
+            </div>
+
+            <div class="flex fRow aCenter gap10 w100">
+                <input style="transform: scale(1.5);" formControlName="closed" type="checkbox">
+                <span>Siamo chiusi</span>
+            </div>
+            
+            <button type="button" [disabled]="discountForm.invalid" class="w100 br10 bgrAB pad10 brN mB10 mT20" (click)="saveBusinessDay()"><h2 class="fw6">Salva</h2></button>
+            <button class="w100 f1 br10 bgrW pad10 padX30 brN ffG" (click)="currentDay = null" type="button"><h2 class="fw3">indietro</h2></button>
+        </form>
+
+    </ng-container>
+    <div *ngIf="!!loading" class="spinner mAuto"></div>
+</div>

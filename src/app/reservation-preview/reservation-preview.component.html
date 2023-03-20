@@ -10,17 +10,20 @@
             <i class="fa-solid fa-xmark"></i>&nbsp;<h4>{{ reservation?.people_amount }}</h4>
         </div>
     </div> -->
-    <div class="flex fRow fCenter bgrAB" style="width: 45px; height: 45px; border-radius: 45px;">
+    <div class="flex fRow fCenter bgrAB" style="width: 45px; height: 45px; border-radius: 45px;" [ngClass]="{
+        'bgrAB': !reservation?.with_discount,
+        'bgrABL': !!reservation?.with_discount
+    }">
         <h4 class="textCenter"><i class="fa-solid fa-xmark"></i>&nbsp;{{ reservation?.people_amount }}</h4>
     </div>
     <div class="flex fColumn gap5 f1">
         <h4 class="fw6" *ngIf="reservation.business_name">{{reservation?.business_name}} - {{reservation?.name}}</h4>
         <h4 class="fw6" *ngIf="!reservation.business_name">{{reservation?.name}}</h4>
-        <h4 class="fw4" *ngIf="!isUser">
+        <h4 class="fw4" *ngIf="!isUser" style="text-transform: capitalize;">
             {{ getDate(reservation?.user_date) }}
             <!-- {{ reservation?.user_date | date:'EE, d MMM, H:mm':'+0000' }} -->
         </h4>
-        <h4 class="fw4" *ngIf="isUser">
+        <h4 class="fw4" *ngIf="isUser" style="text-transform: capitalize;">
             {{ getDate(reservation?.user_date) }}
         </h4>
         <p class="discountInfo">
@@ -51,11 +54,12 @@
             <span *ngIf="reservation?.status === 'canceled'">ANNULLATA</span>
         </p>
         <!-- *ngIf="showBadge && reservation.new"  -->
-        <div *ngIf="showBadge && reservation.new" style="display: block;" class="mT5 mB5">
-            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation?.status === 'pending'">Nuovo</span>
-            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation?.status === 'declined'">Ops</span>
-            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation?.status === 'accepted'">Recente</span>
-            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation?.status === 'completed'">Arrivati</span>
+        <div *ngIf="(showBadge || reservation?.with_discount) && (reservation.new || reservation?.with_discount)" style="display: block;" class="mT5 mB5">
+            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation.new && reservation?.status === 'pending'">Nuovo</span>
+            <span class="br10 bgrABL pad5 fw5 padX10" *ngIf="reservation?.with_discount"><i style="font-size: 14px;" class="fa-solid fa-gift"></i> Con Sconto</span>
+            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation.new && reservation?.status === 'declined'">Ops</span>
+            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation.new && reservation?.status === 'accepted'">Recente</span>
+            <span class="br10 bgrAB pad5 fw5 padX10" *ngIf="reservation.new && reservation?.status === 'completed'">Arrivati</span>
         </div>
     </div>
     <div *ngIf="!disableArrow" class="fw5" style="font-size: 18px;">
@@ -80,5 +84,16 @@
     <div class="flex fColumn gap5 f1">
         <h4 class="fw6">Note per il locale</h4>
         <h4 class="fw4">{{reservation?.note}}</h4>
+    </div>
+</div>
+
+<div *ngIf="showDescription && reservation?.with_discount" class="flex fRow aCenter pad10 padY20 gap15 pRel" style="padding-top: 0px;">
+    <div class="flex fRow fCenter bgrAB" style="width: 45px; height: 45px; border-radius: 45px; visibility: hidden;">
+        <h4 class="textCenter"><i class="fa-solid fa-xmark"></i>&nbsp;{{ reservation?.people_amount }}</h4>
+    </div>
+    <div class="flex fColumn gap5 f1">
+        <h4 class="fw6">Regalo per il Cliente</h4>
+        <h4 *ngIf="!reservation?.slogan && !!reservation?.discount_amount" class="fw4">Sconto {{ reservation?.discount_type == 'PERC' ? 'del' : 'di' }} {{reservation?.discount_amount}}{{ reservation?.discount_type == 'PERC' ? '%' : '€' }}</h4>
+        <h4 *ngIf="!!reservation?.slogan && !reservation?.discount_amount" class="fw4">{{reservation?.slogan}}</h4>
     </div>
 </div>
