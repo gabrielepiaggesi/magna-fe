@@ -167,35 +167,35 @@ const init = () => {
 
 
 
-// document.addEventListener('deviceready', () => init(), false);
+document.addEventListener('deviceready', () => init(), false);
 
 
 
-if (typeof (window as any)['cordova'] !== 'undefined') {
-  (window as any).addEventListener('notification', (e: any) => { 
-    const notIcon = document.getElementById('notification-page');
-    console.log('2 notIcon', notIcon);
-    if (notIcon) notIcon.click();
-  }, false);
-  document.addEventListener(
-    'deviceready',
-    () => {
-      console.log('CORDOVA READY');
-      window.open = (window as any)['cordova'].InAppBrowser?.open;
-      if ((window as any)['MobileAccessibility']) {
-        (window as any)['MobileAccessibility'].usePreferredTextZoom(false);
-      }
-      if ((window as any)['cordova'].MobileAccessibility) {
-        (window as any)['cordova'].MobileAccessibility.usePreferredTextZoom(false);
-      }
-      BackButtonStrategy();
-      bootstrap();
-      OneSignalInit();
-    },
-    false
-  );
-} else {
-  BackButtonStrategy();
-  bootstrap();
-}
+// if (typeof (window as any)['cordova'] !== 'undefined') {
+//   (window as any).addEventListener('notification', (e: any) => { 
+//     const notIcon = document.getElementById('notification-page');
+//     console.log('2 notIcon', notIcon);
+//     if (notIcon) notIcon.click();
+//   }, false);
+//   document.addEventListener(
+//     'deviceready',
+//     () => {
+//       console.log('CORDOVA READY');
+//       window.open = (window as any)['cordova'].InAppBrowser?.open;
+//       if ((window as any)['MobileAccessibility']) {
+//         (window as any)['MobileAccessibility'].usePreferredTextZoom(false);
+//       }
+//       if ((window as any)['cordova'].MobileAccessibility) {
+//         (window as any)['cordova'].MobileAccessibility.usePreferredTextZoom(false);
+//       }
+//       BackButtonStrategy();
+//       bootstrap();
+//       OneSignalInit();
+//     },
+//     false
+//   );
+// } else {
+//   BackButtonStrategy();
+//   bootstrap();
+// }
 

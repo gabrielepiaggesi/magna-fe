@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiService {
-  public BASE_URL = 'http://localhost:8000';
-  // public BASE_URL = 'https://magnaapp.herokuapp.com';
+  // public BASE_URL = 'http://localhost:8000';
+  public BASE_URL = 'https://magnaapp.herokuapp.com';
   public TOKEN: string | undefined = undefined;
   public COMPANY_ID!: number;
   public currentCompany: any;
